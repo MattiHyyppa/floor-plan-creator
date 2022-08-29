@@ -109,6 +109,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
         <Transformer
           ref={transformerRef}
           ignoreStroke={true}
+          rotationSnaps={[0, 90, 180, 270]}
           boundBoxFunc={(oldBox, newBox) => {
             return newBox;
           }}

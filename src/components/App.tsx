@@ -3,10 +3,10 @@ import Konva from 'konva';
 import { Stage, Layer } from 'react-konva';
 import { v4 as uuidv4 } from 'uuid';
 
-import Door from './shapes/Door'
-import type { DoorProps } from './shapes/Door';
-import RectangleHouse from './shapes/RectangleHouse';
-import type { RectangleHouseConfig } from './shapes/RectangleHouse';
+import Door, { type DoorProps } from './shapes/Door'
+import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
+import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
+import Wall, { type WallConfig } from './shapes/Wall';
 import { cmToPixels } from '../utils';
 
 const initialDoors = (): DoorProps[] => {
@@ -33,6 +33,33 @@ const initialHouse = (): RectangleHouseConfig => {
   };
 };
 
+const lShapedHouse = (): LShapedHouseConfig => {
+  return {
+    id: uuidv4(),
+    x: 200,
+    y: 200,
+    exteriorWidth: cmToPixels(1400),
+    exteriorHeight: cmToPixels(1000),
+    wallThickness: cmToPixels(30),
+    draggable: true,
+    firstWingWidth: cmToPixels(500),
+    secondWingWidth: cmToPixels(500),
+  };
+};
+
+const initialWalls = (): WallConfig[] => {
+  return [
+    {
+      id: uuidv4(),
+      x: 150,
+      y: 150,
+      width: cmToPixels(300),
+      wallThickness: cmToPixels(12),
+      draggable: true,
+    }
+  ];
+};
+
 type KonvaEvent<EventType> = Konva.KonvaEventObject<EventType>;
 type SetSelectedIdType = React.Dispatch<React.SetStateAction<string | null>>;
 
@@ -44,13 +71,11 @@ const deselectShape = <EventType,>(e: KonvaEvent<EventType>, setSelectedId: SetS
 };
 
 const App = (): JSX.Element => {
-  const [doors, setDoors] = useState<DoorProps[]>([]);
+  const [doors, setDoors] = useState<DoorProps[]>(initialDoors());
   const [house, setHouse] = useState<RectangleHouseConfig>(initialHouse());
+  const [lHouse, setLHouse] = useState<LShapedHouseConfig>(lShapedHouse());
+  const [walls, setWalls] = useState<WallConfig[]>(initialWalls());
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
-  useEffect(() => {
-    setDoors(initialDoors());
-  }, []);
 
   return (
     <Stage
@@ -60,12 +85,31 @@ const App = (): JSX.Element => {
       onTouchStart={(e) => deselectShape(e, setSelectedId)}
     >
       <Layer>
-      <RectangleHouse
+        <RectangleHouse
           isSelected={house.id === selectedId}
-          onSelect={() => setSelectedId(house.id || null)}
+          onSelect={() => setSelectedId(house.id)}
           onChange={(newAttrs) => setHouse(newAttrs)}
           house={house}
         />
+        <LShapedHouse
+          isSelected={lHouse.id === selectedId}
+          onSelect={() => setSelectedId(lHouse.id)}
+          onChange={(newAttrs) => setLHouse(newAttrs)}
+          house={lHouse}
+        />
+        {walls.map((wall, i) => (
+          <Wall
+            key={wall.id}
+            isSelected={wall.id === selectedId}
+            onSelect={() => setSelectedId(wall.id)}
+            onChange={(newAttrs) => {
+              const wallsCopy = walls.slice();
+              wallsCopy[i] = newAttrs;
+              setWalls(wallsCopy);
+            }}
+            wall={wall}
+          />
+        ))}
         {doors.map((door, i) => (
           <Door
             key={door.id}

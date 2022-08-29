@@ -106,6 +106,7 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
         <Transformer
           ref={transformerRef}
           ignoreStroke={true}
+          rotationSnaps={[0, 90, 180, 270]}
           boundBoxFunc={(oldBox, newBox) => {
             /*  Let's determine if the door has been resized either horizontally or
                 vertically. In such a case, we need to take care of keeping the bounding
