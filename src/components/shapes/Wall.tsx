@@ -12,7 +12,7 @@ export interface WallConfig {
   draggable?: boolean;
   width: number;
   wallThickness: number;
-};
+}
 
 export interface WallProps {
   wall: WallConfig;
@@ -20,9 +20,9 @@ export interface WallProps {
 
   onChange?: (newAttrs: WallConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-};
+}
 
-const Wall = (props: WallProps): JSX.Element => {
+const Wall = (props: WallProps): JSX.Element => {  
   const shapeRef = useRef<Konva.Rect>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -43,6 +43,7 @@ const Wall = (props: WallProps): JSX.Element => {
     <>
       <Rect
         ref={shapeRef}
+        name="object"
         {...rectProps}
         height={wall.wallThickness}
         stroke={theme.strokeColor}
@@ -59,7 +60,7 @@ const Wall = (props: WallProps): JSX.Element => {
             y: e.target.y(),
           });
         }}
-        onTransformEnd={(e) => {
+        onTransformEnd={(_e) => {
           const node = shapeRef.current;
           if (!node) {
             return;
@@ -82,6 +83,7 @@ const Wall = (props: WallProps): JSX.Element => {
       />
       {isSelected && (
         <Transformer
+          id={`${wall.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

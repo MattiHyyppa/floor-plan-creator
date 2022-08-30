@@ -5,22 +5,24 @@ import { Shape, Transformer } from 'react-konva';
 import { degToRadians, almostEqual, cmToPixels } from '../../utils';
 
 interface DoorConfig {
+  id: string;
+  doorWidth?: number;
+  isSelected?: boolean;
+
   onChange?: (newAttrs: DoorProps) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-  isSelected?: boolean;
-  doorWidth?: number;
-};
+}
 
-export type DoorProps = DoorConfig & Konva.ShapeConfig;
+export type DoorProps = DoorConfig & Omit<Konva.ShapeConfig, 'id'>;
 
 // Konva doesn't export the Box type so we need to define it manually
 export interface Box {
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  rotation: number,
-};
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  rotation: number;
+}
 
 const initialDoorWidth = cmToPixels(80);
 
@@ -55,6 +57,7 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
     <>
       <Shape
         ref={shapeRef}
+        name="object"
         onClick={onSelect}
         onTap={onSelect}
         width={doorWidth}
@@ -79,7 +82,7 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
             y: e.target.y(),
           });
         }}
-        onTransformEnd={(e) => {
+        onTransformEnd={(_e) => {
           const node = shapeRef.current;
           if (!node) {
             return;
@@ -104,6 +107,7 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
       />
       {isSelected && (
         <Transformer
+          id={`${props.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

@@ -14,7 +14,7 @@ export interface RectangleHouseConfig {
   exteriorWidth: number;
   exteriorHeight: number;
   wallThickness: number;
-};
+}
 
 export interface RectangleHouseProps {
   house: RectangleHouseConfig;
@@ -22,7 +22,7 @@ export interface RectangleHouseProps {
 
   onChange?: (newAttrs: RectangleHouseConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-};
+}
 
 const defaultExteriorWidth = cmToPixels(1000);
 const defaultExteriorHeight = cmToPixels(800);
@@ -48,6 +48,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
     <>
       <Group
         ref={groupRef}
+        name="object"
         {...house}
         width={house.exteriorWidth}
         height={house.exteriorHeight}
@@ -60,7 +61,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
             y: e.target.y(),
           });
         }}
-        onTransformEnd={(e) => {
+        onTransformEnd={(_e) => {
           const node = groupRef.current;
           if (!node) {
             return;
@@ -107,6 +108,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
       </Group>
       {isSelected && (
         <Transformer
+          id={`${house.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

@@ -17,6 +17,12 @@ export const cmToPixels = (cm: number): number => {
   return cm / 2;
 };
 
-export const almostEqual = (a: number, b: number, epsilon: number = 1e-6): boolean => {
+export const almostEqual = (a: number, b: number, epsilon = 1e-6): boolean => {
   return Math.abs(a - b) < epsilon;
+};
+
+export const assertNever = (value: never): never => {
+  throw new Error(
+    `Exhaustive type checking not done for value: ${JSON.stringify(value)}`
+  );
 };

@@ -26,11 +26,23 @@ import { cmToPixels } from '../../utils';
   2 = exteriorWidth
   3 = firstWingWidth
   4 = secondWingWidth
+
+  The shape can be rotated after which the dimensions are a bit different. For example,
+  a 90 deg rotation in either direction could be interpreted such that at least exteriorWidth
+  and exteriorHeight would be swapped. However, the dimensions as specified in the picture
+  apply for the case when rotation is zero and the names of the dimensions rotate with the shape.
+  Therefore, we don't have to worry about swapping any dimensions when rotating.
+
+  NOTE! All the the custom shapes have a stroke of width `theme.strokeWidth` as determined
+  in the project-dir/src/utils/shapeTheme.ts file. Konva handles drawing the stroke such that
+  half of it is outside and half is inside the bounds of the shape. This means that if the x
+  and y params are both set to 100 and `theme.strokeWidth === 1`, the top-left corner is actually
+  drawn at (99.5, 99.5).
 */
 export interface LShapedHouseConfig extends RectangleHouseConfig {
   firstWingWidth: number;
   secondWingWidth: number;
-};
+}
 
 export interface LShapedHouseProps {
   house: LShapedHouseConfig;
@@ -38,7 +50,7 @@ export interface LShapedHouseProps {
 
   onChange?: (newAttrs: LShapedHouseConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-};
+}
 
 const defaultExteriorWidth = cmToPixels(1400);
 const defaultExteriorHeight = cmToPixels(1000);
@@ -66,6 +78,7 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
     <>
       <Group
         ref={groupRef}
+        name="object"
         {...house}
         width={house.exteriorWidth}
         height={house.exteriorHeight}
@@ -78,7 +91,7 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
             y: e.target.y(),
           });
         }}
-        onTransformEnd={(e) => {
+        onTransformEnd={(_e) => {
           const node = groupRef.current;
           if (!node) {
             return;
@@ -155,6 +168,7 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
       </Group>
       {isSelected && (
         <Transformer
+          id={`${house.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
