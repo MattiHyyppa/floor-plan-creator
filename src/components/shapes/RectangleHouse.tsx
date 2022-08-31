@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { Rect, Transformer, Group } from 'react-konva';
 import _ from 'lodash';
 
-import { theme } from '../../utils/shapeTheme';
+import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
 
 export interface RectangleHouseConfig {
@@ -112,7 +112,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
-          boundBoxFunc={(oldBox, newBox) => {
+          boundBoxFunc={(_oldBox, newBox) => {
             return newBox;
           }}
         />

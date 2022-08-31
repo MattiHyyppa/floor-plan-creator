@@ -4,7 +4,7 @@ import { Shape, Transformer, Group } from 'react-konva';
 import _ from 'lodash';
 
 import { RectangleHouseConfig } from './RectangleHouse';
-import { theme } from '../../utils/shapeTheme';
+import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
 
 /* An L-shaped house has the following dimensions:
@@ -172,7 +172,7 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
-          boundBoxFunc={(oldBox, newBox) => {
+          boundBoxFunc={(_oldBox, newBox) => {
             return newBox;
           }}
         />

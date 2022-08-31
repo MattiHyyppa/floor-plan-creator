@@ -24,9 +24,8 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 0,
     'react/react-in-jsx-scope': 0,
     'semi': 1,
-    '@typescript-eslint/no-unused-vars': [
-      1,
-      { argsIgnorePattern: '^_' }
-    ],
+    '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+    'indent': ['error', 2],
+    'no-trailing-spaces': 'error',
   }
 };

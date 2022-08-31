@@ -1,5 +1,5 @@
 import Konva from 'konva';
-import { theme } from './shapeTheme';
+import theme from './shapeTheme';
 
 export interface ItemBound {
   guide: number;
@@ -25,6 +25,12 @@ export interface LineGuide {
   orientation: 'vertical' | 'horizontal';
 }
 
+/**
+ * Get all points of the `node` which can trigger the snapping effect.
+ * @param node A `Konva.Node` object on the canvas.
+ * @returns Returns both vertical and horizontal points of the `node` that can
+ *   trigger snapping.
+ */
 export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
   /*
   Note that `node.getClientRect()` returns an object which has `x` and `y` fields
@@ -46,6 +52,8 @@ export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
   height -= theme.strokeWidth;
   const { x, y } = node.absolutePosition();
 
+  // Similarly, as in the `getLineGuideStops` function, we can snap over the edges of
+  // each object on the canvas
   return {
     vertical: [
       {
@@ -74,6 +82,16 @@ export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
   };
 };
 
+/**
+ * Get all x and y values that could trigger the snapping effect for all `Konva.Node` objects
+ * on the canvas which have the `name` prop set to `object`. The `skipShape` node is ignored
+ * and not included in the return value.
+ * @param stage The `Konva.Stage` object onto which all layers have been drawn.
+ * @param skipShape The node to be skipped in the search of possible line guide positions.
+ *   This helps preventing snapping the moving object to the object itself.
+ * @returns An object containing an array of possible line guide positions for both vertical
+ *   and horizontal directions.
+ */
 export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): LineGuideStops => {
   const vertical: number[] = [];
   const horizontal: number[] = [];
@@ -87,6 +105,8 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
     width -= theme.strokeWidth;
     height -= theme.strokeWidth;
     const { x, y } = guideItem.absolutePosition();
+
+    // We can snap over the edges of each object on the canvas
     vertical.push(...[x, x + width]);
     horizontal.push(...[y, y + height]);
   });
@@ -97,6 +117,17 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
   };
 };
 
+/**
+ * From all possible line guide positions for the snapping effect, find at most one vertical
+ * and at most one horizontal line guide which are actually close enough the moving node to
+ * be snapped to.
+ * @param lineGuideStops The points of the other nodes on the canvas that can trigger snapping.
+ * @param itemBounds The bounds of the currently considered node the can trigger snapping.
+ * @param guideLineOffset How many pixels is close enough for the snapping to take place.
+ * @returns At most one vertical and at most one horizontal line guide which are close enough the
+ * moving node for the snapping to take place. The returned line guides have minimal distance to
+ * the currently considered node with the `itemBounds` bounds.
+ */
 export const getGuides = (
   lineGuideStops: LineGuideStops,
   itemBounds: NodeSnappingEdges,
@@ -108,12 +139,18 @@ export const getGuides = (
   lineGuideStops.vertical.forEach((lineGuide) => {
     itemBounds.vertical.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
-      if (diff < guideLineOffset) {
+      if (diff <= guideLineOffset) {
         resultV.push({
-          lineGuide,
-          diff,
-          snap: itemBound.snap,
+          lineGuide,                  // The position of the line guide
+          diff,                       // The distance between the line guide and the object
+          snap: itemBound.snap,       // Did the START or END of the object trigger snapping
+          // How much we need to offset the object from the line guide. This is important,
+          // especially, when the end of the object triggered snapping and we don't want to
+          // snap the top-left corner of the object to the line guide but instead the end of
+          // the object.
           offset: itemBound.offset,
+          // The line guide has vertical direction meaning that the `lineGuide` position
+          // determines the x value of the line
           orientation: 'vertical',
         });
       }
@@ -137,9 +174,10 @@ export const getGuides = (
 
   const guides: LineGuide[] = [];
 
+  // Find line guides with minimal distance for both directions
   const minV = resultV.sort((a, b) => a.diff - b.diff);
   const minH = resultH.sort((a, b) => a.diff - b.diff);
-  
+
   if (minV.length > 0) {
     guides.push(minV[0]);
   }

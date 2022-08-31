@@ -3,6 +3,7 @@ import Konva from 'konva';
 import { Shape, Transformer } from 'react-konva';
 
 import { degToRadians, almostEqual, cmToPixels } from '../../utils';
+import theme from '../../utils/shapeTheme';
 
 interface DoorConfig {
   id: string;
@@ -70,8 +71,8 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
           context.closePath();
           context.fillStrokeShape(shape);
         }}
-        stroke="black"
-        strokeWidth={1}
+        stroke={theme.strokeColor}
+        strokeWidth={theme.strokeWidth}
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state

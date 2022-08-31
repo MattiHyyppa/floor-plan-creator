@@ -3,7 +3,7 @@ import Konva from 'konva';
 import { Rect, Transformer } from 'react-konva';
 import _ from 'lodash';
 
-import { theme } from '../../utils/shapeTheme';
+import theme from '../../utils/shapeTheme';
 
 export interface WallConfig {
   id: string;
@@ -22,7 +22,7 @@ export interface WallProps {
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
 
-const Wall = (props: WallProps): JSX.Element => {  
+const Wall = (props: WallProps): JSX.Element => {
   const shapeRef = useRef<Konva.Rect>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -87,7 +87,7 @@ const Wall = (props: WallProps): JSX.Element => {
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
-          boundBoxFunc={(oldBox, newBox) => {
+          boundBoxFunc={(_oldBox, newBox) => {
             return newBox;
           }}
         />
