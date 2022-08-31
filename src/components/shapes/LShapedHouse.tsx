@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Shape, Transformer, Group } from 'react-konva';
-import _ from 'lodash';
 
 import { RectangleHouseConfig } from './RectangleHouse';
 import theme from '../../utils/shapeTheme';
@@ -63,9 +62,6 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
 
   const { isSelected, onSelect, onChange, house } = props;
 
-  // Props for the `Group` component
-  const groupProps = _.pick(house, ['id', 'x', 'y', 'rotation', 'draggable']);
-
   useEffect(() => {
     if (isSelected && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
@@ -114,7 +110,6 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
             secondWingWidth: house.secondWingWidth * scaleX,
           });
         }}
-        {...groupProps}
       >
         <Shape
           x={0}

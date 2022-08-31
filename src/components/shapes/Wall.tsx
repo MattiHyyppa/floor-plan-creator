@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Rect, Transformer } from 'react-konva';
-import _ from 'lodash';
 
 import theme from '../../utils/shapeTheme';
 
@@ -29,9 +28,6 @@ const Wall = (props: WallProps): JSX.Element => {
 
   const { isSelected, onSelect, onChange, wall } = props;
 
-  // Props for the `Rect` component
-  const rectProps = _.pick(wall, ['id', 'x', 'y', 'rotation', 'width', 'draggable']);
-
   useEffect(() => {
     if (isSelected && transformerRef.current && shapeRef.current) {
       // We need to attach the transformer manually
@@ -45,7 +41,7 @@ const Wall = (props: WallProps): JSX.Element => {
       <Rect
         ref={shapeRef}
         name="object"
-        {...rectProps}
+        {...wall}
         height={wall.wallThickness}
         stroke={theme.strokeColor}
         strokeWidth={theme.strokeWidth}

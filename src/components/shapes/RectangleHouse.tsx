@@ -1,7 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Rect, Transformer, Group } from 'react-konva';
-import _ from 'lodash';
 
 import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
@@ -33,9 +32,6 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
   const transformerRef = useRef<Konva.Transformer>(null);
 
   const { isSelected, onSelect, onChange, house } = props;
-
-  // Props for the `Group` component
-  const groupProps = _.pick(house, ['id', 'x', 'y', 'rotation', 'draggable']);
 
   useEffect(() => {
     if (isSelected && transformerRef.current && groupRef.current) {
@@ -83,7 +79,6 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
             exteriorHeight: house.exteriorHeight * scaleY,
           });
         }}
-        {...groupProps}
       >
         <Rect
           x={0}

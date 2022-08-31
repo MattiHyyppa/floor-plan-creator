@@ -1,5 +1,7 @@
 import Konva from 'konva';
+
 import theme from './shapeTheme';
+import { almostEqual } from '.';
 
 export interface ItemBound {
   guide: number;
@@ -32,50 +34,42 @@ export interface LineGuide {
  *   trigger snapping.
  */
 export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
+  const box = node.getClientRect();
   /*
-  Note that `node.getClientRect()` returns an object which has `x` and `y` fields
-  like the object returned by `node.absolutePosition()`. However, `node.absolutePosition`
-  seems to return the same values as the `x` and `y` props passed to the shape component
-  but `node.getClientRect` seems to return the top-left corner of the drawn shape. In case,
-  the shape has no stroke, the values should be the same but otherwise not.
-
-  Check the note in the beginning of the project-dir/src/components/shapes/LShapedHouse.tsx
-  file.
-
   We want to adjust the width and height by subtracting `theme.strokeWidth` to make sure
   the shapes will be snapped such that their strokes are on top of each other when the user
-  drags a shape close to another one. Otherwise, there would be an ugly duplicate stroke
-  between the shapes.
+  drags a shape close to another one. Otherwise, there would be a duplicate stroke between
+  the shapes.
   */
-  let { width, height } = node.getClientRect();
-  width -= theme.strokeWidth;
-  height -= theme.strokeWidth;
-  const { x, y } = node.absolutePosition();
+  box.width -= theme.strokeWidth;
+  box.height -= theme.strokeWidth;
+
+  const absPos = node.absolutePosition();
 
   // Similarly, as in the `getLineGuideStops` function, we can snap over the edges of
   // each object on the canvas
   return {
     vertical: [
       {
-        guide: x,
-        offset: 0,
+        guide: box.x,
+        offset: absPos.x - box.x,
         snap: 'start',
       },
       {
-        guide: x + width,
-        offset: - width,
+        guide: box.x + box.width,
+        offset: absPos.x - box.x - box.width,
         snap: 'end',
       },
     ],
     horizontal: [
       {
-        guide: y,
-        offset: 0,
+        guide: box.y,
+        offset: absPos.y - box.y,
         snap: 'start',
       },
       {
-        guide: y + height,
-        offset: - height,
+        guide: box.y + box.height,
+        offset: absPos.y - box.y - box.height,
         snap: 'end',
       },
     ],
@@ -101,14 +95,37 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
       return;
     }
 
-    let { width, height } = guideItem.getClientRect();
-    width -= theme.strokeWidth;
-    height -= theme.strokeWidth;
-    const { x, y } = guideItem.absolutePosition();
+    const box = guideItem.getClientRect();
+    box.width -= theme.strokeWidth;
+    box.height -= theme.strokeWidth;
 
     // We can snap over the edges of each object on the canvas
-    vertical.push(...[x, x + width]);
-    horizontal.push(...[y, y + height]);
+    vertical.push(...[box.x, box.x + box.width]);
+    horizontal.push(...[box.y, box.y + box.height]);
+
+    // In addition to the exterior bounds, we can snap to the interior bounds
+    // when the `guideItem` node represents a house. For simplicity, we add
+    // the line guides for the interior side of the exterior walls only when
+    // the rotation is divisible by 90.
+
+    const isHouseNode = ('wallThickness' in guideItem.attrs)
+      && ('exteriorWidth' in guideItem.attrs)
+      && ('exteriorHeight' in guideItem.attrs);
+
+    const rotationAlmostDivisibleBy90 = (rotation: number) => {
+      const absMod = Math.abs(rotation % 90);
+      // `absMod` could be something like 0.00000001 or 89.99999999
+      return almostEqual(absMod, 0) || almostEqual(absMod - 90, 0);
+    };
+
+    if (!isHouseNode || !rotationAlmostDivisibleBy90(guideItem.rotation())) {
+      return;
+    }
+
+    const wallThickness = guideItem.getAttr('wallThickness') as number;
+
+    vertical.push(...[box.x + wallThickness, box.x + box.width - wallThickness]);
+    horizontal.push(...[box.y + wallThickness, box.y + box.height - wallThickness]);
   });
 
   return {
