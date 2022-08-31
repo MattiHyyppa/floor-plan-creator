@@ -9,6 +9,7 @@ interface DoorConfig {
   id: string;
   doorWidth?: number;
   isSelected?: boolean;
+  rotation: number;
 
   onChange?: (newAttrs: DoorProps) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
@@ -99,6 +100,7 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
             ...props,
             x: node.x(),
             y: node.y(),
+            rotation: node.rotation(),
             doorWidth: node.width() * scaleX,
             width: node.width() * scaleX,
             height: node.height() * scaleY,

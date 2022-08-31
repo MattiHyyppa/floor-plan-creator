@@ -10,6 +10,7 @@ export interface RectangleHouseConfig {
   id: string;
   x: number;
   y: number;
+  rotation: number;
   draggable?: boolean;
   exteriorWidth: number;
   exteriorHeight: number;
@@ -34,7 +35,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
   const { isSelected, onSelect, onChange, house } = props;
 
   // Props for the `Group` component
-  const groupProps = _.pick(house, ['id', 'x', 'y', 'draggable']);
+  const groupProps = _.pick(house, ['id', 'x', 'y', 'rotation', 'draggable']);
 
   useEffect(() => {
     if (isSelected && transformerRef.current && groupRef.current) {
@@ -77,6 +78,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
             ...house,
             x: node.x(),
             y: node.y(),
+            rotation: node.rotation(),
             exteriorWidth: house.exteriorWidth * scaleX,
             exteriorHeight: house.exteriorHeight * scaleY,
           });

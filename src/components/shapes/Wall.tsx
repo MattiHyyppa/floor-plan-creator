@@ -9,6 +9,7 @@ export interface WallConfig {
   id: string;
   x: number;
   y: number;
+  rotation: number;
   draggable?: boolean;
   width: number;
   wallThickness: number;
@@ -29,7 +30,7 @@ const Wall = (props: WallProps): JSX.Element => {
   const { isSelected, onSelect, onChange, wall } = props;
 
   // Props for the `Rect` component
-  const rectProps = _.pick(wall, ['id', 'x', 'y', 'width', 'draggable']);
+  const rectProps = _.pick(wall, ['id', 'x', 'y', 'rotation', 'width', 'draggable']);
 
   useEffect(() => {
     if (isSelected && transformerRef.current && shapeRef.current) {
@@ -76,6 +77,7 @@ const Wall = (props: WallProps): JSX.Element => {
             ...wall,
             x: node.x(),
             y: node.y(),
+            rotation: node.rotation(),
             width: node.width() * scaleX,
             wallThickness: node.height() * scaleY,
           });

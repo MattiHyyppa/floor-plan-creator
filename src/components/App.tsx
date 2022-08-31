@@ -21,6 +21,7 @@ const initialDoors = (): DoorProps[] => {
       id: uuidv4(),
       x: 10,
       y: 10,
+      rotation: 0,
       doorWidth: cmToPixels(80),
       draggable: true,
     },
@@ -32,6 +33,7 @@ const initialHouse = (): RectangleHouseConfig => {
     id: uuidv4(),
     x: 100,
     y: 100,
+    rotation: 0,
     exteriorWidth: cmToPixels(1200),
     exteriorHeight: cmToPixels(1000),
     wallThickness: cmToPixels(30),
@@ -44,6 +46,7 @@ const lShapedHouse = (): LShapedHouseConfig => {
     id: uuidv4(),
     x: 200,
     y: 200,
+    rotation: 0,
     exteriorWidth: cmToPixels(1400),
     exteriorHeight: cmToPixels(1000),
     wallThickness: cmToPixels(30),
@@ -59,6 +62,7 @@ const initialWalls = (): WallConfig[] => {
       id: uuidv4(),
       x: 150,
       y: 150,
+      rotation: 0,
       width: cmToPixels(300),
       wallThickness: cmToPixels(12),
       draggable: true,
@@ -67,10 +71,14 @@ const initialWalls = (): WallConfig[] => {
 };
 
 const initShapes = (): CustomShapeConfig[] => {
-  return initialDoors()
-    .concat([initialHouse()])
-    .concat([lShapedHouse()])
-    .concat(initialWalls());
+  let shapes: CustomShapeConfig[] = [];
+
+  shapes = shapes.concat(initialDoors());
+  shapes = shapes.concat([initialHouse()]);
+  shapes = shapes.concat([lShapedHouse()]);
+  shapes = shapes.concat(initialWalls());
+
+  return shapes;
 };
 
 
