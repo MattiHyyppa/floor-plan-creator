@@ -26,6 +26,10 @@ import { cmToPixels } from '../../utils';
   3 = firstWingWidth
   4 = secondWingWidth
 
+  The dimensions are measured along the exterior side of the walls so, for example,
+  the length of firstWingWidth measured from the interior side is:
+  firstWingWidth - 2 * wallThickness.
+
   The shape can be rotated after which the dimensions are a bit different. For example,
   a 90 deg rotation in either direction could be interpreted such that at least exteriorWidth
   and exteriorHeight would be swapped. However, the dimensions as specified in the picture

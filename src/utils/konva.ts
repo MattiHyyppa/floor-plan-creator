@@ -1,7 +1,7 @@
 import Konva from 'konva';
 
 import theme from './shapeTheme';
-import { almostEqual } from '.';
+import { almostDivisibleBy, degToRadians, almostEqual } from '.';
 
 export interface ItemBound {
   guide: number;
@@ -112,13 +112,7 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
       && ('exteriorWidth' in guideItem.attrs)
       && ('exteriorHeight' in guideItem.attrs);
 
-    const rotationAlmostDivisibleBy90 = (rotation: number) => {
-      const absMod = Math.abs(rotation % 90);
-      // `absMod` could be something like 0.00000001 or 89.99999999
-      return almostEqual(absMod, 0) || almostEqual(absMod - 90, 0);
-    };
-
-    if (!isHouseNode || !rotationAlmostDivisibleBy90(guideItem.rotation())) {
+    if (!isHouseNode || !almostDivisibleBy(guideItem.rotation(), 90)) {
       return;
     }
 
@@ -126,6 +120,70 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
 
     vertical.push(...[box.x + wallThickness, box.x + box.width - wallThickness]);
     horizontal.push(...[box.y + wallThickness, box.y + box.height - wallThickness]);
+
+    // In addition to the added interior bounds, there are more interior bounds
+    // to be added in the case of an L-shaped house. Of all the interior sides of
+    // the exterior walls, there is one vertical and one horizontal bound still missing.
+    // The corresponding exterior sides of the same two walls are also missing.
+
+    // We already know at this point that the node is a house so let's just check the
+    // L-shaped house specific properties
+    const isLShapedHouse = ('firstWingWidth' in guideItem.attrs) &&
+      ('secondWingWidth' in guideItem.attrs);
+
+    if (!isLShapedHouse) {
+      return;
+    }
+
+    const firstWingWidth = guideItem.getAttr('firstWingWidth') as number;
+    const secondWingWidth = guideItem.getAttr('secondWingWidth') as number;
+
+    const rotationRad = degToRadians(guideItem.rotation());
+    const sin = Math.sin(rotationRad);
+    const cos = Math.cos(rotationRad);
+
+    // As in the case of the other interior walls, we only add line guides when the
+    // rotation is (almost) divisible by 90 degrees. Let's check the 4 possible cases.
+
+    // rotation is (almost) 0, 360, -360 or similar
+    if (almostEqual(cos, 1) && almostEqual(sin, 0)) {
+      // These values can be determined from the illustration in the
+      // project-dir/src/components/shapes/LShapedHouse.tsx file. Note that the angles
+      // work differently in Konva than in mathematics in the sense that rotating the shape
+      // clockwise makes its rotation angle larger, not smaller, and vice versa.
+      vertical.push(...[box.x + secondWingWidth - wallThickness, box.x + secondWingWidth]);
+      horizontal.push(...[
+        box.y + box.height - firstWingWidth + wallThickness,
+        box.y + box.height - firstWingWidth,
+      ]);
+    }
+
+    // rotation is (almost) 90, -270 or similar
+    else if (almostEqual(cos, 0) && almostEqual(sin, 1)) {
+      vertical.push(...[box.x + firstWingWidth - wallThickness, box.x + firstWingWidth]);
+      horizontal.push(...[box.y + secondWingWidth - wallThickness, box.y + secondWingWidth]);
+    }
+
+    // rotation is (almost) 180, -180 or similar
+    else if (almostEqual(cos, -1) && almostEqual(sin, 0)) {
+      vertical.push(...[
+        box.x + box.width - secondWingWidth + wallThickness,
+        box.x + box.width - secondWingWidth,
+      ]);
+      horizontal.push(...[box.y + firstWingWidth - wallThickness, box.y + firstWingWidth]);
+    }
+
+    // rotation is (almost) 270, -90 or similar
+    else if (almostEqual(cos, 0) && almostEqual(sin, -1)) {
+      vertical.push(...[
+        box.x + box.width - firstWingWidth + wallThickness,
+        box.x + box.width - firstWingWidth,
+      ]);
+      horizontal.push(...[
+        box.y + box.height - secondWingWidth + wallThickness,
+        box.y + box.height - secondWingWidth,
+      ]);
+    }
   });
 
   return {

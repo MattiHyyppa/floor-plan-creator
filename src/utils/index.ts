@@ -21,6 +21,12 @@ export const almostEqual = (a: number, b: number, epsilon = 1e-6): boolean => {
   return Math.abs(a - b) < epsilon;
 };
 
+export const almostDivisibleBy = (dividend: number, divisor: number, epsilon = 1e-6): boolean => {
+  const absMod = Math.abs(dividend % divisor);
+  // `absMod` could be something like 0.0000001 or `divisor - 0.0000001`
+  return almostEqual(absMod, 0, epsilon) || almostEqual(absMod - divisor, 0, epsilon);
+};
+
 export const assertNever = (value: never): never => {
   throw new Error(
     `Exhaustive type checking not done for value: ${JSON.stringify(value)}`
