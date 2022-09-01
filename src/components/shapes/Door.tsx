@@ -1,21 +1,24 @@
 import { useEffect, useRef } from 'react';
 import Konva from 'konva';
-import { Shape, Transformer } from 'react-konva';
+import { Shape, Transformer, Group, Rect } from 'react-konva';
 
-import { degToRadians, almostEqual, cmToPixels } from '../../utils';
+import { degToRadians, almostEqual, cmToPixels, } from '../../utils';
 import theme from '../../utils/shapeTheme';
 
 interface DoorConfig {
   id: string;
-  doorWidth?: number;
-  isSelected?: boolean;
+  doorWidth: number;
   rotation: number;
+  wallThickness: number;
+  kind: 'interior' | 'exterior';
+  openingDirection: 'right' | 'left';
+  isSelected?: boolean;
 
   onChange?: (newAttrs: DoorProps) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
 
-export type DoorProps = DoorConfig & Omit<Konva.ShapeConfig, 'id'>;
+export type DoorProps = DoorConfig & Konva.ShapeConfig;
 
 // Konva doesn't export the Box type so we need to define it manually
 export interface Box {
@@ -31,61 +34,54 @@ const initialDoorWidth = cmToPixels(80);
 const initialTransformerBox = (
   x: number | undefined,
   y: number | undefined,
-  rotation: number | undefined
+  rotation: number | undefined,
+  wallThickness: number,
+  kind: 'interior' | 'exterior'
 ): Box => ({
   x: x || 0,
   y: y || 0,
   width: initialDoorWidth,
-  height: initialDoorWidth,
+  height: initialDoorWidth + (kind === 'interior' ? wallThickness : wallThickness / 2),
   rotation: rotation || 0,
 });
 
-const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps): JSX.Element => {
-  const shapeRef = useRef<Konva.Shape>(null);
+const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Element => {
+  const { doorWidth, wallThickness, kind, openingDirection } = props;
+  const additionalHeight = kind === 'interior' ? wallThickness : wallThickness / 2;
+
+  const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const previousTransformerBoxRef = useRef<Box>(
-    initialTransformerBox(props.x, props.y, props.rotation)
+    initialTransformerBox(props.x, props.y, props.rotation, wallThickness, kind)
   );
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && shapeRef.current) {
+    if (isSelected && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
-      transformerRef.current.nodes([shapeRef.current]);
+      transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
   }, [isSelected]);
 
   return (
     <>
-      <Shape
-        ref={shapeRef}
+      <Group
+        ref={groupRef}
         name="object"
-        onClick={onSelect}
-        onTap={onSelect}
+        {...props}
         width={doorWidth}
-        height={doorWidth}
-        sceneFunc={(context, shape) => {
-          context.beginPath();
-          context.moveTo(0, 0);
-          context.lineTo(0, doorWidth);
-          context.arc(0, 0, doorWidth, degToRadians(90), degToRadians(0), true);
-          context.closePath();
-          context.fillStrokeShape(shape);
-        }}
-        stroke={theme.strokeColor}
-        strokeWidth={theme.strokeWidth}
+        height={doorWidth + additionalHeight}
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
             ...props,
-            doorWidth,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
           });
         }}
         onTransformEnd={(_e) => {
-          const node = shapeRef.current;
+          const node = groupRef.current;
           if (!node) {
             return;
           }
@@ -102,26 +98,62 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
             y: node.y(),
             rotation: node.rotation(),
             doorWidth: node.width() * scaleX,
-            width: node.width() * scaleX,
-            height: node.height() * scaleY,
+            width: doorWidth * scaleX,
+            height: (doorWidth + additionalHeight) * scaleY,
           });
         }}
-        {...props}
-      />
+      >
+        <Rect
+          x={0}
+          y={0}
+          width={doorWidth}
+          height={wallThickness}
+          onClick={onSelect}
+          onTap={onSelect}
+          stroke={theme.strokeColor}
+          strokeWidth={theme.strokeWidth}
+          fill={theme.floorColor}
+        />
+        <Shape
+          x={0}
+          y={additionalHeight}
+          onClick={onSelect}
+          onTap={onSelect}
+          width={doorWidth}
+          height={doorWidth}
+          sceneFunc={(context, shape) => {
+            context.beginPath();
+            context.moveTo(0, 0);
+            if (openingDirection === 'right') {
+              context.lineTo(0, doorWidth);
+              context.arc(0, 0, doorWidth, degToRadians(90), degToRadians(0), true);
+            }
+            else {
+              context.arc(doorWidth, 0, doorWidth, degToRadians(180), degToRadians(90), true);
+              context.lineTo(doorWidth, 0);
+            }
+            context.closePath();
+            context.fillStrokeShape(shape);
+          }}
+          stroke={theme.strokeColor}
+          strokeWidth={theme.strokeWidth}
+        />
+      </Group>
+
       {isSelected && (
         <Transformer
           id={`${props.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
-          boundBoxFunc={(oldBox, newBox) => {
+          boundBoxFunc={(_oldBox, newBox) => {
             /*  Let's determine if the door has been resized either horizontally or
-                vertically. In such a case, we need to take care of keeping the bounding
-                box of the door shape a square.
+                vertically. We need to take care that the following equation always
+                holds: `height = width + additionalHeight`.
 
                 Note that we need `previousTransformerBoxRef` for keeping the previous box
                 state because the `oldBox` of the next function call migth not be exactly
-                the same as the `newBox` of the current function call!
+                the same as the `newBox` of the current function call.
             */
             const prevWidth = previousTransformerBoxRef.current.width;
             const prevHeight = previousTransformerBoxRef.current.height;
@@ -132,18 +164,23 @@ const Door = ({ onChange, onSelect, isSelected, doorWidth, ...props }: DoorProps
             if (!almostEqual(prevWidth, newBox.width) && almostEqual(prevHeight, newBox.height)) {
               returnBox = {
                 ...newBox,
-                height: newBox.width,
+                height: newBox.width + additionalHeight,
               };
             }
-            // Height is changed but eidth is not --> manually change width
+            // Height is changed but width is not --> manually change width
             else if (almostEqual(prevWidth, newBox.width) && !almostEqual(prevHeight, newBox.height)) {
               returnBox = {
                 ...newBox,
-                width: newBox.height,
+                width: newBox.height - additionalHeight,
               };
             }
+            // Width and height are being changed the same amount but the height has to be
+            // manually made `additionalHeight` pixels larger.
             else {
-              returnBox = newBox;
+              returnBox = {
+                ...newBox,
+                height: newBox.width + additionalHeight,
+              };
             }
 
             previousTransformerBoxRef.current = returnBox;

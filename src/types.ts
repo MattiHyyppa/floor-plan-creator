@@ -19,5 +19,5 @@ export const isLShapedHouse = (shape: CustomShapeConfig): shape is LShapedHouseC
 
 export const isWall = (shape: CustomShapeConfig): shape is WallConfig => {
   return (shape as WallConfig).wallThickness !== undefined &&
-    !('exteriorWidth' in (shape as WallConfig));
+    !('exteriorWidth' in shape) && !('doorWidth' in shape);
 };
