@@ -16,7 +16,6 @@ export interface SnappingStageConfig {
   allShapes: CustomShapeConfig[];
   children: React.ReactNode;
 
-  updateShape: (id: string, newAttrs: CustomShapeConfig) => void;
   setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -24,7 +23,6 @@ export type SnappingStageProps = SnappingStageConfig & Konva.StageConfig;
 
 const SnappingStage = ({
   allShapes,
-  updateShape,
   setSelectedId,
   children,
   ...props
@@ -120,22 +118,13 @@ const SnappingStage = ({
       }
     });
 
-    // Force the position of the `movedNode` to create the snapping effect...
+    // Force the position of the `movedNode` to create the snapping effect
     movedNode.absolutePosition(absPos);
-
-    // ... and also update the state accordingly.
-    const updatedShape = {
-      ...movedShape,
-      ...absPos,
-    };
-    updateShape(updatedShape.id, updatedShape);
   };
 
   return (
     <Stage
       ref={stageRef}
-      width={window.innerWidth}
-      height={window.innerHeight}
       onMouseDown={(e) => deselectShape(e, setSelectedId)}
       onTouchStart={(e) => deselectShape(e, setSelectedId)}
       {...props}

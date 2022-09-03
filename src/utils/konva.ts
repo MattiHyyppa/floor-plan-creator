@@ -34,7 +34,11 @@ export interface LineGuide {
  *   trigger snapping.
  */
 export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
-  const box = node.getClientRect();
+  const stage = node.getStage();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const box = node.getClientRect({ relativeTo: stage as any });
+
   /*
   We want to adjust the width and height by subtracting `theme.strokeWidth` to make sure
   the shapes will be snapped such that their strokes are on top of each other when the user
@@ -95,7 +99,9 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
       return;
     }
 
-    const box = guideItem.getClientRect();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const box = guideItem.getClientRect({ relativeTo: stage as any });
+
     box.width -= theme.strokeWidth;
     box.height -= theme.strokeWidth;
 
@@ -235,7 +241,7 @@ export const getGuides = (
   lineGuideStops.horizontal.forEach((lineGuide) => {
     itemBounds.horizontal.forEach((itemBound) => {
       const diff = Math.abs(lineGuide - itemBound.guide);
-      if (diff < guideLineOffset) {
+      if (diff <= guideLineOffset) {
         resultH.push({
           lineGuide,
           diff,

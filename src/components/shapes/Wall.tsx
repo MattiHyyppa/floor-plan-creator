@@ -85,9 +85,8 @@ const Wall = (props: WallProps): JSX.Element => {
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
-          boundBoxFunc={(_oldBox, newBox) => {
-            return newBox;
-          }}
+          enabledAnchors={['middle-left', 'top-center', 'middle-right', 'bottom-center']}
+          boundBoxFunc={(_oldBox, newBox) => newBox}
         />
       )}
     </>
