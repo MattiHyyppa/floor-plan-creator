@@ -121,10 +121,6 @@ const App = (): JSX.Element => {
     <div id="container">
       <SnappingStage
         container="container"
-        scaleX={1}
-        scaleY={1}
-        width={window.innerWidth}
-        height={window.innerHeight}
         allShapes={allShapes}
         setSelectedId={setSelectedId}
       >
