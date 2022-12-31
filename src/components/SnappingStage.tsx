@@ -103,12 +103,12 @@ const SnappingStage = ({
     guides.forEach((lg) => {
       switch (lg.orientation) {
       case 'vertical':
-        setVerticalLineGuide({ x: lg.lineGuide, direction: 'vertical' });
-        absPos.x = lg.lineGuide + lg.offset;
+        setVerticalLineGuide({ x: lg.relativePos, direction: 'vertical' });
+        absPos.x = lg.absPos + lg.offset;
         break;
       case 'horizontal':
-        setHorizontalLineGuide({ y: lg.lineGuide, direction: 'horizontal' });
-        absPos.y = lg.lineGuide + lg.offset;
+        setHorizontalLineGuide({ y: lg.relativePos, direction: 'horizontal' });
+        absPos.y = lg.absPos + lg.offset;
         break;
       default:
         assertNever(lg.orientation);

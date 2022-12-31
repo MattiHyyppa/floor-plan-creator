@@ -24,6 +24,7 @@ export const almostEqual = (a: number, b: number, epsilon = 1e-6): boolean => {
 export const almostDivisibleBy = (dividend: number, divisor: number, epsilon = 1e-6): boolean => {
   const absMod = Math.abs(dividend % divisor);
   // `absMod` could be something like 0.0000001 or `divisor - 0.0000001`
+  // if `dividend` were divisible by `divisor`
   return almostEqual(absMod, 0, epsilon) || almostEqual(absMod - divisor, 0, epsilon);
 };
 

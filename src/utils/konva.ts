@@ -4,8 +4,8 @@ import theme from './shapeTheme';
 import { almostDivisibleBy, degToRadians, almostEqual } from '.';
 
 export interface ItemBound {
-  guide: number;
-  offset: number;
+  absPos: number;
+  absoluteOffset: number;
   snap: 'start' | 'end';
 }
 
@@ -14,13 +14,14 @@ export interface NodeSnappingEdges {
   horizontal: ItemBound[];
 }
 
-export interface LineGuideStops {
-  vertical: number[];
-  horizontal: number[];
+export interface LineGuidePositions {
+  vertical: Array<{ absolute: number, relative: number }>;
+  horizontal: Array<{ absolute: number, relative: number }>;
 }
 
 export interface LineGuide {
-  lineGuide: number;
+  absPos: number;
+  relativePos: number;
   offset: number;
   snap: 'start' | 'end';
   diff: number;
@@ -35,9 +36,11 @@ export interface LineGuide {
  */
 export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
   const stage = node.getStage();
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const box = node.getClientRect({ relativeTo: stage as any });
+  if (!stage) {
+    throw new Error('The transformed node doesn\'t have a stage');
+  }
+  const scale = stage.scaleX();
+  const absoluteBox = node.getClientRect();
 
   /*
   We want to adjust the width and height by subtracting `theme.strokeWidth` to make sure
@@ -45,8 +48,8 @@ export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
   drags a shape close to another one. Otherwise, there would be a duplicate stroke between
   the shapes.
   */
-  box.width -= theme.strokeWidth;
-  box.height -= theme.strokeWidth;
+  absoluteBox.width -= theme.strokeWidth * scale;
+  absoluteBox.height -= theme.strokeWidth * scale;
 
   const absPos = node.absolutePosition();
 
@@ -55,25 +58,25 @@ export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
   return {
     vertical: [
       {
-        guide: box.x,
-        offset: absPos.x - box.x,
+        absPos: absoluteBox.x,
+        absoluteOffset: absPos.x - absoluteBox.x,
         snap: 'start',
       },
       {
-        guide: box.x + box.width,
-        offset: absPos.x - box.x - box.width,
+        absPos: absoluteBox.x + absoluteBox.width,
+        absoluteOffset: absPos.x - absoluteBox.x - absoluteBox.width,
         snap: 'end',
       },
     ],
     horizontal: [
       {
-        guide: box.y,
-        offset: absPos.y - box.y,
+        absPos: absoluteBox.y,
+        absoluteOffset: absPos.y - absoluteBox.y,
         snap: 'start',
       },
       {
-        guide: box.y + box.height,
-        offset: absPos.y - box.y - box.height,
+        absPos: absoluteBox.y + absoluteBox.height,
+        absoluteOffset: absPos.y - absoluteBox.y - absoluteBox.height,
         snap: 'end',
       },
     ],
@@ -90,9 +93,9 @@ export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
  * @returns An object containing an array of possible line guide positions for both vertical
  *   and horizontal directions.
  */
-export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): LineGuideStops => {
-  const vertical: number[] = [];
-  const horizontal: number[] = [];
+export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): LineGuidePositions => {
+  const vertical: Array<{ absolute: number, relative: number }> = [];
+  const horizontal: Array<{ absolute: number, relative: number }> = [];
 
   stage.find('.object').forEach((guideItem) => {
     if (guideItem === skipShape) {
@@ -100,14 +103,22 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const box = guideItem.getClientRect({ relativeTo: stage as any });
+    const relBox = guideItem.getClientRect({ relativeTo: stage as any });
+    const absBox = guideItem.getClientRect();
+    const scale = stage.scaleX();
 
-    box.width -= theme.strokeWidth;
-    box.height -= theme.strokeWidth;
+    absBox.width -= theme.strokeWidth * scale;
+    absBox.height -= theme.strokeWidth * scale;
 
     // We can snap over the edges of each object on the canvas
-    vertical.push(...[box.x, box.x + box.width]);
-    horizontal.push(...[box.y, box.y + box.height]);
+    vertical.push(...[
+      { absolute: absBox.x, relative: relBox.x },
+      { absolute: absBox.x + absBox.width, relative: relBox.x + relBox.width }
+    ]);
+    horizontal.push(...[
+      { absolute: absBox.y, relative: relBox.y },
+      { absolute: absBox.y + absBox.height, relative: relBox.y + relBox.height }
+    ]);
 
     // In addition to the exterior bounds, we can snap to the interior bounds
     // when the `guideItem` node represents a house. For simplicity, we add
@@ -123,9 +134,17 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
     }
 
     const wallThickness = guideItem.getAttr('wallThickness') as number;
+    const scaledWallThickness = wallThickness * scale;
 
-    vertical.push(...[box.x + wallThickness, box.x + box.width - wallThickness]);
-    horizontal.push(...[box.y + wallThickness, box.y + box.height - wallThickness]);
+    vertical.push(...[
+      { absolute: absBox.x + scaledWallThickness, relative: relBox.x + wallThickness },
+      { absolute: absBox.x + absBox.width - scaledWallThickness, relative: relBox.x + relBox.width - wallThickness }
+    ]);
+
+    horizontal.push(...[
+      { absolute: absBox.y + scaledWallThickness, relative: relBox.y + wallThickness },
+      { absolute: absBox.y + absBox.height - scaledWallThickness, relative: relBox.y + relBox.height - wallThickness }
+    ]);
 
     // In addition to the added interior bounds, there are more interior bounds
     // to be added in the case of an L-shaped house. Of all the interior sides of
@@ -143,6 +162,8 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
 
     const firstWingWidth = guideItem.getAttr('firstWingWidth') as number;
     const secondWingWidth = guideItem.getAttr('secondWingWidth') as number;
+    const scaledWidth1 = firstWingWidth * scale;
+    const scaledWidth2 = secondWingWidth * scale;
 
     const rotationRad = degToRadians(guideItem.rotation());
     const sin = Math.sin(rotationRad);
@@ -157,37 +178,97 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
       // project-dir/src/components/shapes/LShapedHouse.tsx file. Note that the angles
       // work differently in Konva than in mathematics in the sense that rotating the shape
       // clockwise makes its rotation angle larger, not smaller, and vice versa.
-      vertical.push(...[box.x + secondWingWidth - wallThickness, box.x + secondWingWidth]);
+      vertical.push(...[
+        {
+          absolute: absBox.x + scaledWidth2 - scaledWallThickness,
+          relative: relBox.x + secondWingWidth - wallThickness
+        },
+        {
+          absolute: absBox.x + scaledWidth2,
+          relative: relBox.x + secondWingWidth
+        }
+      ]);
       horizontal.push(...[
-        box.y + box.height - firstWingWidth + wallThickness,
-        box.y + box.height - firstWingWidth,
+        {
+          absolute: absBox.y + absBox.height - scaledWidth1 + scaledWallThickness,
+          relative: relBox.y + relBox.height - firstWingWidth + wallThickness
+        },
+        {
+          absolute: absBox.y + absBox.height - scaledWidth1,
+          relative: relBox.y + relBox.height - firstWingWidth
+        },
       ]);
     }
 
     // rotation is (almost) 90, -270 or similar
     else if (almostEqual(cos, 0) && almostEqual(sin, 1)) {
-      vertical.push(...[box.x + firstWingWidth - wallThickness, box.x + firstWingWidth]);
-      horizontal.push(...[box.y + secondWingWidth - wallThickness, box.y + secondWingWidth]);
+      vertical.push(...[
+        {
+          absolute: absBox.x + scaledWidth1 - scaledWallThickness,
+          relative: relBox.x + firstWingWidth - wallThickness
+        },
+        {
+          absolute: absBox.x + scaledWidth1,
+          relative: relBox.x + firstWingWidth
+        }
+      ]);
+      horizontal.push(...[
+        {
+          absolute: absBox.y + scaledWidth2 - scaledWallThickness,
+          relative: relBox.y + secondWingWidth - wallThickness
+        },
+        {
+          absolute: absBox.y + scaledWidth2,
+          relative: relBox.y + secondWingWidth
+        }
+      ]);
     }
 
     // rotation is (almost) 180, -180 or similar
     else if (almostEqual(cos, -1) && almostEqual(sin, 0)) {
       vertical.push(...[
-        box.x + box.width - secondWingWidth + wallThickness,
-        box.x + box.width - secondWingWidth,
+        {
+          absolute: absBox.x + absBox.width - scaledWidth2 + scaledWallThickness,
+          relative: relBox.x + relBox.width - secondWingWidth + wallThickness,
+        },
+        {
+          absolute: absBox.x + absBox.width - scaledWidth2,
+          relative: relBox.x + relBox.width - secondWingWidth,
+        },
       ]);
-      horizontal.push(...[box.y + firstWingWidth - wallThickness, box.y + firstWingWidth]);
+      horizontal.push(...[
+        {
+          absolute: absBox.y + scaledWidth1 - scaledWallThickness,
+          relative: relBox.y + firstWingWidth - wallThickness,
+        },
+        {
+          absolute: absBox.y + scaledWidth1,
+          relative: relBox.y + firstWingWidth,
+        }
+      ]);
     }
 
     // rotation is (almost) 270, -90 or similar
     else if (almostEqual(cos, 0) && almostEqual(sin, -1)) {
       vertical.push(...[
-        box.x + box.width - firstWingWidth + wallThickness,
-        box.x + box.width - firstWingWidth,
+        {
+          absolute: absBox.x + absBox.width - scaledWidth1 + scaledWallThickness,
+          relative: relBox.x + relBox.width - firstWingWidth + wallThickness,
+        },
+        {
+          absolute: absBox.x + absBox.width - scaledWidth1,
+          relative: relBox.x + relBox.width - firstWingWidth,
+        },
       ]);
       horizontal.push(...[
-        box.y + box.height - secondWingWidth + wallThickness,
-        box.y + box.height - secondWingWidth,
+        {
+          absolute: absBox.y + absBox.height - scaledWidth2 + scaledWallThickness,
+          relative: relBox.y + relBox.height - secondWingWidth + wallThickness,
+        },
+        {
+          absolute: absBox.y + absBox.height - scaledWidth2,
+          relative: relBox.y + relBox.height - secondWingWidth,
+        },
       ]);
     }
   });
@@ -202,7 +283,7 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
  * From all possible line guide positions for the snapping effect, find at most one vertical
  * and at most one horizontal line guide which are actually close enough the moving node to
  * be snapped to.
- * @param lineGuideStops The points of the other nodes on the canvas that can trigger snapping.
+ * @param lineGuidePositions The points of the other nodes on the canvas that can trigger snapping.
  * @param itemBounds The bounds of the currently considered node the can trigger snapping.
  * @param guideLineOffset How many pixels is close enough for the snapping to take place.
  * @returns At most one vertical and at most one horizontal line guide which are close enough the
@@ -210,43 +291,45 @@ export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): Li
  * the currently considered node with the `itemBounds` bounds.
  */
 export const getGuides = (
-  lineGuideStops: LineGuideStops,
+  lineGuidePositions: LineGuidePositions,
   itemBounds: NodeSnappingEdges,
   guideLineOffset = 5
 ): LineGuide[] => {
   const resultV: LineGuide[] = [];
   const resultH: LineGuide[] = [];
 
-  lineGuideStops.vertical.forEach((lineGuide) => {
+  lineGuidePositions.vertical.forEach((lineGuidePos) => {
     itemBounds.vertical.forEach((itemBound) => {
-      const diff = Math.abs(lineGuide - itemBound.guide);
+      const diff = Math.abs(lineGuidePos.absolute - itemBound.absPos);
       if (diff <= guideLineOffset) {
         resultV.push({
-          lineGuide,                  // The position of the line guide
-          diff,                       // The distance between the line guide and the object
-          snap: itemBound.snap,       // Did the START or END of the object trigger snapping
+          absPos: lineGuidePos.absolute,       // The absolute position of the line guide
+          relativePos: lineGuidePos.relative,  // The relative position of the line guide
+          diff,                                // The distance between the line guide and the object
+          snap: itemBound.snap,                // Did the START or END of the object trigger snapping
           // How much we need to offset the object from the line guide. This is important,
           // especially, when the end of the object triggered snapping and we don't want to
           // snap the top-left corner of the object to the line guide but instead the end of
           // the object.
-          offset: itemBound.offset,
-          // The line guide has vertical direction meaning that the `lineGuide` position
-          // determines the x value of the line
+          offset: itemBound.absoluteOffset,
+          // The line guide has vertical direction meaning that `absPos` and `relativePos`
+          // determine the x value of the line
           orientation: 'vertical',
         });
       }
     });
   });
 
-  lineGuideStops.horizontal.forEach((lineGuide) => {
+  lineGuidePositions.horizontal.forEach((lineGuidePos) => {
     itemBounds.horizontal.forEach((itemBound) => {
-      const diff = Math.abs(lineGuide - itemBound.guide);
+      const diff = Math.abs(lineGuidePos.absolute - itemBound.absPos);
       if (diff <= guideLineOffset) {
         resultH.push({
-          lineGuide,
+          absPos: lineGuidePos.absolute,
+          relativePos: lineGuidePos.relative,
           diff,
           snap: itemBound.snap,
-          offset: itemBound.offset,
+          offset: itemBound.absoluteOffset,
           orientation: 'horizontal',
         });
       }
