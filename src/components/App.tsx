@@ -2,19 +2,29 @@ import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Konva from 'konva';
 import { type Vector2d } from 'konva/lib/types';
+import {
+  Box,
+  Alert,
+  AlertIcon,
+  AlertDescription,
+} from '@chakra-ui/react';
+import { useTranslation } from 'react-i18next';
 
 import Door, { type DoorProps } from './shapes/Door';
 import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
 import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
 import Wall, { type WallConfig } from './shapes/Wall';
 import SnappingStage, { handleLineGuidesUpdateOnTransform } from './SnappingStage';
+import Window, { type WindowConfig } from './shapes/Window';
 import { type LineGuideConfig } from './shapes/LineGuide';
 import { cmToPixels } from '../utils';
+import { useWindowSize } from '../hooks';
 import {
   isDoor,
   isRectangleHouse,
   isLShapedHouse,
   isWall,
+  isWindow,
   CustomShapeConfig,
 } from '../types';
 
@@ -98,6 +108,20 @@ const initialWalls = (): WallConfig[] => {
   ];
 };
 
+const initialWindows = (): WindowConfig[] => {
+  return [
+    {
+      id: uuidv4(),
+      x: 400,
+      y: 150,
+      rotation: 0,
+      windowWidth: cmToPixels(200),
+      wallThickness: cmToPixels(30),
+      draggable: true,
+    }
+  ];
+};
+
 const initShapes = (): CustomShapeConfig[] => {
   let shapes: CustomShapeConfig[] = [];
 
@@ -105,6 +129,7 @@ const initShapes = (): CustomShapeConfig[] => {
   shapes = shapes.concat([initialHouse()]);
   shapes = shapes.concat([lShapedHouse()]);
   shapes = shapes.concat(initialWalls());
+  shapes = shapes.concat(initialWindows());
 
   return shapes;
 };
@@ -115,6 +140,11 @@ const App = (): JSX.Element => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [horizontalLineGuide, setHorizontalLineGuide] = useState<LineGuideConfig | null>(null);
   const [verticalLineGuide, setVerticalLineGuide] = useState<LineGuideConfig | null>(null);
+
+  const { t } = useTranslation();
+
+  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const menuWidth = Math.min(windowWidth * 0.3, 280);
 
   const updateShape = (id: string, newAttrs: CustomShapeConfig) => {
     setAllShapes(
@@ -131,8 +161,38 @@ const App = (): JSX.Element => {
     verticalLineGuide && setVerticalLineGuide(null);
   };
 
+  if (windowWidth < 700) {
+    return (
+      <Box w="100%" h="100%" p={2}>
+        <Alert
+          status="info"
+          rounded="md"
+          flexDirection="column"
+          alignItems="center"
+          justifyContent="center"
+          textAlign="center"
+        >
+          <AlertIcon />
+          <AlertDescription mt={1}>{t('alert.screenWidthTooSmall')}</AlertDescription>
+        </Alert>
+      </Box>
+    );
+  }
+
   return (
-    <div id="container">
+    <div id="container" style={{ width: windowWidth, height: windowHeight }}>
+      <Box
+        position="fixed"
+        h={window.innerHeight}
+        w={`${menuWidth}px`}
+        p={2}
+        zIndex={5000}
+        background="gray.100"
+        borderRight="1.5px solid var(--chakra-colors-gray-300)"
+        overflowY="auto"
+      >
+        Hello
+      </Box>
       <SnappingStage
         container="container"
         allShapes={allShapes}
@@ -141,6 +201,7 @@ const App = (): JSX.Element => {
         setHorizontalLineGuide={setHorizontalLineGuide}
         setVerticalLineGuide={setVerticalLineGuide}
         setSelectedId={setSelectedId}
+        menuWidth={menuWidth}
       >
         {allShapes.filter(isRectangleHouse).map((house) => (
           <RectangleHouse
@@ -178,6 +239,15 @@ const App = (): JSX.Element => {
             onSelect={() => setSelectedId(door.id)}
             onChange={(newAttrs) => updateShape(door.id, newAttrs)}
             {...door}
+          />
+        ))}
+        {allShapes.filter(isWindow).map(shape => (
+          <Window
+            key={shape.id}
+            isSelected={shape.id === selectedId}
+            onSelect={() => setSelectedId(shape.id)}
+            onChange={(newAttrs) => updateShape(shape.id, newAttrs)}
+            window={shape}
           />
         ))}
       </SnappingStage>

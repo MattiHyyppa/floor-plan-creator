@@ -21,6 +21,7 @@ export interface SnappingStageConfig {
   horizontalLineGuide: LineGuideConfig | null;
   verticalLineGuide: LineGuideConfig | null;
   children: React.ReactNode;
+  menuWidth: number;
 
   setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
   setHorizontalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>;
@@ -219,6 +220,7 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
     setHorizontalLineGuide,
     setVerticalLineGuide,
     children,
+    menuWidth,
     ...otherProps
   } = props;
 
@@ -242,9 +244,11 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
     handleLineGuidesUpdate(e, stageRef, allShapes, setHorizontalLineGuide, setVerticalLineGuide)
   );
 
+  const zoomButtonsLeftMargin = `${8 + menuWidth}px`;
+
   return (
     <div>
-      <Box position="fixed" zIndex={1000} top={2} left={2}>
+      <Box position="fixed" zIndex={1000} top={2} left={zoomButtonsLeftMargin}>
         <ZoomButtons
           onZoomIn={_e => setScale(scale + 0.1)}
           onZoomOut={_e => setScale(scale - 0.1)}
