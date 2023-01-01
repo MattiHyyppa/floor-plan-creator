@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import Konva from 'konva';
+import { type Vector2d } from 'konva/lib/types';
 
 import Door, { type DoorProps } from './shapes/Door';
 import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
 import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
 import Wall, { type WallConfig } from './shapes/Wall';
-import SnappingStage from './SnappingStage';
+import SnappingStage, { handleLineGuidesUpdateOnTransform } from './SnappingStage';
+import { type LineGuideConfig } from './shapes/LineGuide';
 import { cmToPixels } from '../utils';
 import {
   isDoor,
@@ -110,6 +113,8 @@ const initShapes = (): CustomShapeConfig[] => {
 const App = (): JSX.Element => {
   const [allShapes, setAllShapes] = useState<CustomShapeConfig[]>(initShapes());
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [horizontalLineGuide, setHorizontalLineGuide] = useState<LineGuideConfig | null>(null);
+  const [verticalLineGuide, setVerticalLineGuide] = useState<LineGuideConfig | null>(null);
 
   const updateShape = (id: string, newAttrs: CustomShapeConfig) => {
     setAllShapes(
@@ -117,11 +122,24 @@ const App = (): JSX.Element => {
     );
   };
 
+  const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
+    handleLineGuidesUpdateOnTransform(node, anchorPos, setHorizontalLineGuide, setVerticalLineGuide)
+  );
+
+  const removeLineGuides = (): void => {
+    horizontalLineGuide && setHorizontalLineGuide(null);
+    verticalLineGuide && setVerticalLineGuide(null);
+  };
+
   return (
     <div id="container">
       <SnappingStage
         container="container"
         allShapes={allShapes}
+        horizontalLineGuide={horizontalLineGuide}
+        verticalLineGuide={verticalLineGuide}
+        setHorizontalLineGuide={setHorizontalLineGuide}
+        setVerticalLineGuide={setVerticalLineGuide}
         setSelectedId={setSelectedId}
       >
         {allShapes.filter(isRectangleHouse).map((house) => (
@@ -148,6 +166,8 @@ const App = (): JSX.Element => {
             isSelected={wall.id === selectedId}
             onSelect={() => setSelectedId(wall.id)}
             onChange={(newAttrs) => updateShape(wall.id, newAttrs)}
+            removeLineGuides={removeLineGuides}
+            handleLineGuidesOnTransform={handleLineGuidesOnTransform}
             wall={wall}
           />
         ))}

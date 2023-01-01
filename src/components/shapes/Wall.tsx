@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Rect, Transformer } from 'react-konva';
+import { type Vector2d } from 'konva/lib/types';
 
 import theme from '../../utils/shapeTheme';
 
@@ -20,13 +21,15 @@ export interface WallProps {
 
   onChange?: (newAttrs: WallConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  handleLineGuidesOnTransform: (node: Konva.Node, anchorPos: Vector2d) => ({ x: number } | { y: number })[];
+  removeLineGuides: () => void;
 }
 
 const Wall = (props: WallProps): JSX.Element => {
   const shapeRef = useRef<Konva.Rect>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
-  const { isSelected, onSelect, onChange, wall } = props;
+  const { isSelected, onSelect, onChange, wall, removeLineGuides, handleLineGuidesOnTransform } = props;
 
   useEffect(() => {
     if (isSelected && transformerRef.current && shapeRef.current) {
@@ -77,6 +80,8 @@ const Wall = (props: WallProps): JSX.Element => {
             width: node.width() * scaleX,
             wallThickness: node.height() * scaleY,
           });
+
+          removeLineGuides();
         }}
       />
       {isSelected && (
@@ -87,6 +92,75 @@ const Wall = (props: WallProps): JSX.Element => {
           rotationSnaps={[0, 90, 180, 270]}
           enabledAnchors={['middle-left', 'top-center', 'middle-right', 'bottom-center']}
           boundBoxFunc={(_oldBox, newBox) => newBox}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          anchorDragBoundFunc={(oldAbsPos: any, newAbsPos: any, _event: any) => {
+            if (!transformerRef.current || transformerRef.current.getActiveAnchor() === 'rotater') {
+              // No transformer or the transformer is being used for rotating the object,
+              // not for resizing.
+              return newAbsPos;
+            }
+
+            const node = shapeRef.current;
+            if (!node) {
+              throw new Error('Wall object doesn\'t have a ref to a Konva node.');
+            }
+
+            const stage = node.getStage();
+            if (!stage) {
+              throw new Error('Wall object is not associated with a Konva Stage.');
+            }
+
+            const result = {
+              x: oldAbsPos.x,
+              y: oldAbsPos.y,
+            };
+
+            const activeAchor = transformerRef.current.findOne(
+              '.' + transformerRef.current.getActiveAnchor()
+            );
+            const anchorPos = activeAchor.getAbsolutePosition();
+            if (!anchorPos) {
+              return newAbsPos;
+            }
+
+            const snapPositions = handleLineGuidesOnTransform(node, anchorPos);
+            if (snapPositions.length === 0) {
+              return newAbsPos;
+            }
+
+            snapPositions.forEach(pos => {
+              if ('x' in pos) {
+                result.x = pos.x;
+              }
+              else if ('y' in pos) {
+                result.y = pos.y;
+              }
+            });
+
+            // Refine the result to take the stroke width of the objects in consideration.
+            // We want to snap the objects together so that the stroke of both objects is
+            // on top of each other instead of having the strokes side by side.
+            if (result.x !== oldAbsPos.x) {
+              const x = node.getClientRect().x;
+              if (result.x > x) {
+                result.x += theme.strokeWidth / 2;
+              }
+              else if (result.x < x) {
+                result.x -= theme.strokeWidth / 2;
+              }
+            }
+            if (result.y !== oldAbsPos.y) {
+              const y = node.getClientRect().y;
+              if (result.y > y) {
+                result.y += theme.strokeWidth / 2;
+              }
+              else if (result.y < y) {
+                result.y -= theme.strokeWidth / 2;
+              }
+            }
+
+            return result;
+          }}
         />
       )}
     </>

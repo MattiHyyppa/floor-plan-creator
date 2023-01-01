@@ -93,7 +93,7 @@ export const getNodeSnappingEdges = (node: Konva.Node): NodeSnappingEdges => {
  * @returns An object containing an array of possible line guide positions for both vertical
  *   and horizontal directions.
  */
-export const getLineGuideStops = (stage: Konva.Stage, skipShape: Konva.Node): LineGuidePositions => {
+export const getLineGuidePositions = (stage: Konva.Stage, skipShape: Konva.Node): LineGuidePositions => {
   const vertical: Array<{ absolute: number, relative: number }> = [];
   const horizontal: Array<{ absolute: number, relative: number }> = [];
 
