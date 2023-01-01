@@ -256,6 +256,7 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
       </Box>
       <Stage
         ref={stageRef}
+        x={menuWidth}
         scaleX={scale}
         scaleY={scale}
         width={windowWidth * Math.max(scale, 1)}
