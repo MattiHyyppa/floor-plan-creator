@@ -117,7 +117,7 @@ const initialWindows = (): WindowConfig[] => {
       rotation: 0,
       windowWidth: cmToPixels(200),
       wallThickness: cmToPixels(30),
-      draggable: true,
+      draggable: false,
     }
   ];
 };
@@ -159,6 +159,18 @@ const App = (): JSX.Element => {
   const removeLineGuides = (): void => {
     horizontalLineGuide && setHorizontalLineGuide(null);
     verticalLineGuide && setVerticalLineGuide(null);
+  };
+
+  const setSelectedShape = (shape: CustomShapeConfig | null) => {
+    if (!shape) {
+      selectedId && setSelectedId(null);
+      return;
+    }
+    if (!shape.draggable) {
+      selectedId && setSelectedId(null);
+      return;
+    }
+    setSelectedId(shape.id);
   };
 
   if (windowWidth < 700) {
@@ -207,7 +219,7 @@ const App = (): JSX.Element => {
           <RectangleHouse
             key={house.id}
             isSelected={house.id === selectedId}
-            onSelect={() => setSelectedId(house.id)}
+            onSelect={() => setSelectedShape(house)}
             onChange={(newAttrs) => updateShape(house.id, newAttrs)}
             house={house}
           />
@@ -216,7 +228,7 @@ const App = (): JSX.Element => {
           <LShapedHouse
             key={house.id}
             isSelected={house.id === selectedId}
-            onSelect={() => setSelectedId(house.id)}
+            onSelect={() => setSelectedShape(house)}
             onChange={(newAttrs) => updateShape(house.id, newAttrs)}
             house={house}
           />
@@ -225,7 +237,7 @@ const App = (): JSX.Element => {
           <Wall
             key={wall.id}
             isSelected={wall.id === selectedId}
-            onSelect={() => setSelectedId(wall.id)}
+            onSelect={() => setSelectedShape(wall)}
             onChange={(newAttrs) => updateShape(wall.id, newAttrs)}
             removeLineGuides={removeLineGuides}
             handleLineGuidesOnTransform={handleLineGuidesOnTransform}
@@ -236,7 +248,7 @@ const App = (): JSX.Element => {
           <Door
             key={door.id}
             isSelected={door.id === selectedId}
-            onSelect={() => setSelectedId(door.id)}
+            onSelect={() => setSelectedShape(door)}
             onChange={(newAttrs) => updateShape(door.id, newAttrs)}
             {...door}
           />
@@ -245,7 +257,7 @@ const App = (): JSX.Element => {
           <Window
             key={shape.id}
             isSelected={shape.id === selectedId}
-            onSelect={() => setSelectedId(shape.id)}
+            onSelect={() => setSelectedShape(shape)}
             onChange={(newAttrs) => updateShape(shape.id, newAttrs)}
             window={shape}
           />
