@@ -16,9 +16,8 @@ import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
 import Wall, { type WallConfig } from './shapes/Wall';
 import SnappingStage, { handleLineGuidesUpdateOnTransform } from './SnappingStage';
 import Window, { type WindowConfig } from './shapes/Window';
-import { type LineGuideConfig } from './shapes/LineGuide';
 import { cmToPixels } from '../utils';
-import { useWindowSize } from '../hooks';
+import { useWindowSize, useAppDispatch } from '../hooks';
 import {
   isDoor,
   isRectangleHouse,
@@ -138,9 +137,8 @@ const initShapes = (): CustomShapeConfig[] => {
 const App = (): JSX.Element => {
   const [allShapes, setAllShapes] = useState<CustomShapeConfig[]>(initShapes());
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [horizontalLineGuide, setHorizontalLineGuide] = useState<LineGuideConfig | null>(null);
-  const [verticalLineGuide, setVerticalLineGuide] = useState<LineGuideConfig | null>(null);
 
+  const dispatch = useAppDispatch();
   const { t } = useTranslation();
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
@@ -153,13 +151,8 @@ const App = (): JSX.Element => {
   };
 
   const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
-    handleLineGuidesUpdateOnTransform(node, anchorPos, setHorizontalLineGuide, setVerticalLineGuide)
+    handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
   );
-
-  const removeLineGuides = (): void => {
-    horizontalLineGuide && setHorizontalLineGuide(null);
-    verticalLineGuide && setVerticalLineGuide(null);
-  };
 
   const setSelectedShape = (shape: CustomShapeConfig | null) => {
     if (!shape) {
@@ -208,10 +201,6 @@ const App = (): JSX.Element => {
       <SnappingStage
         container="container"
         allShapes={allShapes}
-        horizontalLineGuide={horizontalLineGuide}
-        verticalLineGuide={verticalLineGuide}
-        setHorizontalLineGuide={setHorizontalLineGuide}
-        setVerticalLineGuide={setVerticalLineGuide}
         setSelectedId={setSelectedId}
         menuWidth={menuWidth}
       >
@@ -239,7 +228,6 @@ const App = (): JSX.Element => {
             isSelected={wall.id === selectedId}
             onSelect={() => setSelectedShape(wall)}
             onChange={(newAttrs) => updateShape(wall.id, newAttrs)}
-            removeLineGuides={removeLineGuides}
             handleLineGuidesOnTransform={handleLineGuidesOnTransform}
             wall={wall}
           />

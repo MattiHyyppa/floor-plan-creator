@@ -1,12 +1,12 @@
 import { Line } from 'react-konva';
 import theme from '../../utils/shapeTheme';
 
-interface HorizontalLineGuideConfig {
+export interface HorizontalLineGuideConfig {
   y: number;
   direction: 'horizontal';
 }
 
-interface VerticalLineGuideConfig {
+export interface VerticalLineGuideConfig {
   x: number;
   direction: 'vertical';
 }
