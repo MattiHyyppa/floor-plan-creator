@@ -1,16 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Konva from 'konva';
 import { type Vector2d } from 'konva/lib/types';
-import {
-  Box,
-  Alert,
-  AlertIcon,
-  AlertDescription,
-} from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import { Box } from '@chakra-ui/react';
 
-import Door, { type DoorProps } from './shapes/Door';
+import Door, { type DoorConfig } from './shapes/Door';
 import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
 import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
 import Wall, { type WallConfig } from './shapes/Wall';
@@ -27,8 +21,10 @@ import {
   CustomShapeConfig,
 } from '../types';
 import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
+import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
+import SmallScreenAlert from './SmallScreenAlert';
 
-const initialDoors = (): DoorProps[] => {
+const initialDoors = (): DoorConfig[] => {
   return [
     {
       id: uuidv4(),
@@ -136,48 +132,31 @@ const initShapes = (): CustomShapeConfig[] => {
 
 
 const App = (): JSX.Element => {
-  const [allShapes, setAllShapes] = useState<CustomShapeConfig[]>(initShapes());
+  const allShapes = useAppSelector((state) => state.shapes);
   const selectedId = useAppSelector((state) => state.selectedId.value);
 
-  const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const menuWidth = Math.min(windowWidth * 0.3, 280);
-
-  const updateShape = (id: string, newAttrs: CustomShapeConfig) => {
-    setAllShapes(
-      allShapes.map((shape) => shape.id === id ? newAttrs : shape)
-    );
-  };
 
   const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
     handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
   );
 
   useEffect(() => {
+    dispatch(setAllShapes(initShapes()));
+  }, []);
+
+  useEffect(() => {
     const selectedShape = allShapes.find((shape) => shape.id === selectedId);
     if (selectedShape && !selectedShape.draggable) {
-      setSelectedId(null);
+      dispatch(setSelectedId(null));
     }
   }, [allShapes]);
 
   if (windowWidth < 700) {
-    return (
-      <Box w="100%" h="100%" p={2}>
-        <Alert
-          status="info"
-          rounded="md"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-        >
-          <AlertIcon />
-          <AlertDescription mt={1}>{t('alert.screenWidthTooSmall')}</AlertDescription>
-        </Alert>
-      </Box>
-    );
+    return <SmallScreenAlert />;
   }
 
   return (
@@ -204,7 +183,7 @@ const App = (): JSX.Element => {
             key={house.id}
             isSelected={house.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(house))}
-            onChange={(newAttrs) => updateShape(house.id, newAttrs)}
+            onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
             house={house}
           />
         ))}
@@ -213,7 +192,7 @@ const App = (): JSX.Element => {
             key={house.id}
             isSelected={house.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(house))}
-            onChange={(newAttrs) => updateShape(house.id, newAttrs)}
+            onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
             house={house}
           />
         ))}
@@ -222,7 +201,7 @@ const App = (): JSX.Element => {
             key={wall.id}
             isSelected={wall.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(wall))}
-            onChange={(newAttrs) => updateShape(wall.id, newAttrs)}
+            onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
             handleLineGuidesOnTransform={handleLineGuidesOnTransform}
             wall={wall}
           />
@@ -232,8 +211,8 @@ const App = (): JSX.Element => {
             key={door.id}
             isSelected={door.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(door))}
-            onChange={(newAttrs) => updateShape(door.id, newAttrs)}
-            {...door}
+            onChange={(newAttrs) => dispatch(updateShape({ id: door.id, newAttrs }))}
+            door={door}
           />
         ))}
         {allShapes.filter(isWindow).map(shape => (
@@ -241,7 +220,7 @@ const App = (): JSX.Element => {
             key={shape.id}
             isSelected={shape.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(shape))}
-            onChange={(newAttrs) => updateShape(shape.id, newAttrs)}
+            onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
             window={shape}
           />
         ))}

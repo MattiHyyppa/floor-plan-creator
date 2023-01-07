@@ -197,7 +197,6 @@ export const handleLineGuidesUpdateOnTransform: LineGuideUpdateOnTransformFunc =
 };
 
 export interface SnappingStageConfig {
-  allShapes: CustomShapeConfig[];
   children: React.ReactNode;
   menuWidth: number;
 }
@@ -206,7 +205,6 @@ export type SnappingStageProps = SnappingStageConfig & Konva.StageConfig;
 
 const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   const {
-    allShapes,
     children,
     menuWidth,
     ...otherProps
@@ -218,6 +216,7 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
 
   const verticalLineGuide = useAppSelector((state) => state.lineGuides.vertical);
   const horizontalLineGuide = useAppSelector((state) => state.lineGuides.horizontal);
+  const allShapes = useAppSelector((state) => state.shapes);
 
   const dispatch = useAppDispatch();
 
