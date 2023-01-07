@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { ReactReduxContext, Provider } from 'react-redux';
 import Konva from 'konva';
 import { Stage, Layer } from 'react-konva';
 import { Box } from '@chakra-ui/react';
@@ -7,35 +8,22 @@ import { type Vector2d } from 'konva/lib/types';
 import ZoomButtons from './ZoomButtons';
 import LineGuide from './shapes/LineGuide';
 import { type CustomShapeConfig } from '../types';
-import { type LineGuideConfig } from './shapes/LineGuide';
 import { assertNever } from '../utils';
 import {
   getNodeSnappingEdges,
   getLineGuidePositions,
   getGuides,
 } from '../utils/konva';
-import { useWindowSize } from '../hooks';
-
-export interface SnappingStageConfig {
-  allShapes: CustomShapeConfig[];
-  horizontalLineGuide: LineGuideConfig | null;
-  verticalLineGuide: LineGuideConfig | null;
-  children: React.ReactNode;
-  menuWidth: number;
-
-  setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
-  setHorizontalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>;
-  setVerticalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>;
-}
-
-export type SnappingStageProps = SnappingStageConfig & Konva.StageConfig;
+import { useWindowSize, useAppSelector, useAppDispatch } from '../hooks';
+import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
+import { setSelectedId } from '../redux/slices/selectedIdSlice';
+import type { AppDispatch } from '../redux';
 
 type LineGuideUpdateFunc = (
   e: Konva.KonvaEventObject<DragEvent>,
   stageRef: React.RefObject<Konva.Stage>,
   allShapes: CustomShapeConfig[],
-  setHorizontalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>,
-  setVerticalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>
+  dispatch: AppDispatch,
 ) => void;
 
 /**
@@ -49,8 +37,7 @@ const handleLineGuidesUpdate: LineGuideUpdateFunc = (
   e,
   stageRef,
   allShapes,
-  setHorizontalLineGuide,
-  setVerticalLineGuide
+  dispatch
 ) => {
   if (!stageRef || !stageRef.current) {
     throw new Error('Stage ref is either null or it doesn\'t have the current property.');
@@ -85,28 +72,28 @@ const handleLineGuidesUpdate: LineGuideUpdateFunc = (
 
   if (!guides.length) {
     // No guides closeby at all
-    setHorizontalLineGuide(null);
-    setVerticalLineGuide(null);
+    dispatch(setHorizontalLineGuide(null));
+    dispatch(setVerticalLineGuide(null));
     return;
   }
   if (!guides.find((guide) => guide.orientation === 'horizontal')) {
     // No horizontal guides but there are vertical ones.
-    setHorizontalLineGuide(null);
+    dispatch(setHorizontalLineGuide(null));
   }
   if (!guides.find((guide) => guide.orientation === 'vertical')) {
     // No vertical guides but there are horizontal ones.
-    setVerticalLineGuide(null);
+    dispatch(setVerticalLineGuide(null));
   }
   const absPos = movedNode.absolutePosition();
 
   guides.forEach((lg) => {
     switch (lg.orientation) {
     case 'vertical':
-      setVerticalLineGuide({ x: lg.relativePos, direction: 'vertical' });
+      dispatch(setVerticalLineGuide({ x: lg.relativePos, direction: 'vertical' }));
       absPos.x = lg.absPos + lg.offset;
       break;
     case 'horizontal':
-      setHorizontalLineGuide({ y: lg.relativePos, direction: 'horizontal' });
+      dispatch(setHorizontalLineGuide({ y: lg.relativePos, direction: 'horizontal' }));
       absPos.y = lg.absPos + lg.offset;
       break;
     default:
@@ -121,15 +108,13 @@ const handleLineGuidesUpdate: LineGuideUpdateFunc = (
 type LineGuideUpdateOnTransformFunc = (
   node: Konva.Node,
   anchorPos: Vector2d,
-  setHorizontalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>,
-  setVerticalLineGuide: React.Dispatch<React.SetStateAction<LineGuideConfig | null>>
+  dispatch: AppDispatch
 ) => ({ x: number } | { y: number })[];
 
 export const handleLineGuidesUpdateOnTransform: LineGuideUpdateOnTransformFunc = (
   node,
   anchorPos,
-  setHorizontalLineGuide,
-  setVerticalLineGuide
+  dispatch
 ) => {
 
   const stage = node.getStage();
@@ -195,30 +180,31 @@ export const handleLineGuidesUpdateOnTransform: LineGuideUpdateOnTransformFunc =
   const result: ({ x: number } | { y: number })[] = [];
 
   if (minV.length === 0 && minH.length === 0) {
-    setHorizontalLineGuide(null);
-    setVerticalLineGuide(null);
+    dispatch(setHorizontalLineGuide(null));
+    dispatch(setVerticalLineGuide(null));
   }
 
   if (minV.length > 0) {
-    setVerticalLineGuide({ x: minV[0].xRel, direction: 'vertical' });
+    dispatch(setVerticalLineGuide({ x: minV[0].xRel, direction: 'vertical' }));
     result.push({ x: minV[0].xAbs });
   }
   if (minH.length > 0) {
-    setHorizontalLineGuide({ y: minH[0].yRel, direction: 'horizontal' });
+    dispatch(setHorizontalLineGuide({ y: minH[0].yRel, direction: 'horizontal' }));
     result.push({ y: minH[0].yAbs });
   }
 
   return result;
 };
 
+export interface SnappingStageConfig {
+  children: React.ReactNode;
+  menuWidth: number;
+}
+
+export type SnappingStageProps = SnappingStageConfig & Konva.StageConfig;
+
 const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   const {
-    allShapes,
-    horizontalLineGuide,
-    verticalLineGuide,
-    setSelectedId,
-    setHorizontalLineGuide,
-    setVerticalLineGuide,
     children,
     menuWidth,
     ...otherProps
@@ -228,20 +214,26 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const stageRef = useRef<Konva.Stage | null>(null);
 
+  const verticalLineGuide = useAppSelector((state) => state.lineGuides.vertical);
+  const horizontalLineGuide = useAppSelector((state) => state.lineGuides.horizontal);
+  const allShapes = useAppSelector((state) => state.shapes);
+
+  const dispatch = useAppDispatch();
+
   const removeLineGuides = (): void => {
-    horizontalLineGuide && setHorizontalLineGuide(null);
-    verticalLineGuide && setVerticalLineGuide(null);
+    horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
+    verticalLineGuide && dispatch(setVerticalLineGuide(null));
   };
 
   const deselectShape = <EventType,>(e: Konva.KonvaEventObject<EventType>) => {
     const clickedStage = e.target === e.target.getStage();
     if (clickedStage) {
-      setSelectedId(null);
+      dispatch(setSelectedId(null));
     }
   };
 
   const handleLineGuidesOnMove = (e: Konva.KonvaEventObject<DragEvent>) => (
-    handleLineGuidesUpdate(e, stageRef, allShapes, setHorizontalLineGuide, setVerticalLineGuide)
+    handleLineGuidesUpdate(e, stageRef, allShapes, dispatch)
   );
 
   const zoomButtonsLeftMargin = `${8 + menuWidth}px`;
@@ -254,26 +246,32 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
           onZoomOut={_e => setScale(scale - 0.1)}
         />
       </Box>
-      <Stage
-        ref={stageRef}
-        x={menuWidth}
-        scaleX={scale}
-        scaleY={scale}
-        width={windowWidth * Math.max(scale, 1)}
-        height={windowHeight * Math.max(scale, 1)}
-        onMouseDown={(e) => deselectShape(e)}
-        onTouchStart={(e) => deselectShape(e)}
-        {...otherProps}
-      >
-        <Layer
-          onDragMove={handleLineGuidesOnMove}
-          onDragEnd={(_e) => removeLineGuides()}
-        >
-          {children}
-          {horizontalLineGuide && <LineGuide {...horizontalLineGuide} />}
-          {verticalLineGuide && <LineGuide {...verticalLineGuide} />}
-        </Layer>
-      </Stage>
+      <ReactReduxContext.Consumer>
+        {({ store }) => (
+          <Stage
+            ref={stageRef}
+            x={menuWidth}
+            scaleX={scale}
+            scaleY={scale}
+            width={windowWidth * Math.max(scale, 1)}
+            height={windowHeight * Math.max(scale, 1)}
+            onMouseDown={(e) => deselectShape(e)}
+            onTouchStart={(e) => deselectShape(e)}
+            {...otherProps}
+          >
+            <Provider store={store}>
+              <Layer
+                onDragMove={handleLineGuidesOnMove}
+                onDragEnd={(_e) => removeLineGuides()}
+              >
+                {children}
+                {horizontalLineGuide && <LineGuide {...horizontalLineGuide} />}
+                {verticalLineGuide && <LineGuide {...verticalLineGuide} />}
+              </Layer>
+            </Provider>
+          </Stage>
+        )}
+      </ReactReduxContext.Consumer>
     </div>
   );
 };

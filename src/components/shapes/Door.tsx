@@ -4,21 +4,27 @@ import { Shape, Transformer, Group, Rect } from 'react-konva';
 
 import { degToRadians, almostEqual, cmToPixels, } from '../../utils';
 import theme from '../../utils/shapeTheme';
+import { useAppSelector } from '../../hooks';
 
-interface DoorConfig {
+export interface DoorConfig {
   id: string;
+  x: number;
+  y: number;
   doorWidth: number;
   rotation: number;
   wallThickness: number;
   kind: 'interior' | 'exterior';
   openingDirection: 'right' | 'left';
   isSelected?: boolean;
-
-  onChange?: (newAttrs: DoorProps) => void;
-  onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+  draggable?: boolean;
 }
 
-export type DoorProps = DoorConfig & Konva.ShapeConfig;
+interface DoorProps {
+  door: DoorConfig;
+
+  onChange?: (newAttrs: DoorConfig) => void;
+  onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
+}
 
 // Konva doesn't export the Box type so we need to define it manually
 export interface Box {
@@ -31,28 +37,35 @@ export interface Box {
 
 const initialDoorWidth = cmToPixels(80);
 
-const initialTransformerBox = (
-  x: number | undefined,
-  y: number | undefined,
-  rotation: number | undefined,
-  wallThickness: number,
+type InitialTransformerBoxFunc = (
+  x: number,
+  y: number,
+  rotation:number,
+  wallThickness:number,
   kind: 'interior' | 'exterior'
-): Box => ({
-  x: x || 0,
-  y: y || 0,
-  width: initialDoorWidth,
-  height: initialDoorWidth + (kind === 'interior' ? wallThickness : wallThickness / 2),
-  rotation: rotation || 0,
-});
+) => Box;
 
-const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Element => {
-  const { doorWidth, wallThickness, kind, openingDirection } = props;
+const initialTransformerBox: InitialTransformerBoxFunc = (x, y, rotation, wallThickness, kind) => {
+  return {
+    x,
+    y,
+    width: initialDoorWidth,
+    height: initialDoorWidth + (kind === 'interior' ? wallThickness : wallThickness / 2),
+    rotation: rotation || 0,
+  };
+};
+
+const Door = ({ door, onChange, onSelect }: DoorProps): JSX.Element => {
+  const selectedId = useAppSelector((state) => state.selectedId.value);
+  const isSelected = selectedId === door.id;
+
+  const { doorWidth, wallThickness, kind, openingDirection } = door;
   const additionalHeight = kind === 'interior' ? wallThickness : wallThickness / 2;
 
   const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const previousTransformerBoxRef = useRef<Box>(
-    initialTransformerBox(props.x, props.y, props.rotation, wallThickness, kind)
+    initialTransformerBox(door.x, door.y, door.rotation, wallThickness, kind)
   );
 
   useEffect(() => {
@@ -68,13 +81,13 @@ const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Elem
       <Group
         ref={groupRef}
         name="object"
-        {...props}
+        {...door}
         width={doorWidth}
         height={doorWidth + additionalHeight}
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
-            ...props,
+            ...door,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
@@ -87,19 +100,16 @@ const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Elem
           }
 
           const scaleX = node.scaleX();
-          const scaleY = node.scaleY();
 
           node.scaleX(1);
           node.scaleY(1);
 
           onChange && onChange({
-            ...props,
+            ...door,
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
             doorWidth: node.width() * scaleX,
-            width: doorWidth * scaleX,
-            height: (doorWidth + additionalHeight) * scaleY,
           });
         }}
       >
@@ -142,7 +152,7 @@ const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Elem
 
       {isSelected && (
         <Transformer
-          id={`${props.id}-transformer`}
+          id={`${door.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}
@@ -193,7 +203,6 @@ const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Elem
 };
 
 Door.defaultProps = {
-  doorWidth: initialDoorWidth,
   isSelected: false,
 };
 

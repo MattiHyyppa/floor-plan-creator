@@ -4,6 +4,8 @@ import { Rect, Transformer } from 'react-konva';
 import { type Vector2d } from 'konva/lib/types';
 
 import theme from '../../utils/shapeTheme';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import { setHorizontalLineGuide, setVerticalLineGuide } from '../../redux/slices/lineGuidesSlice';
 
 export interface WallConfig {
   id: string;
@@ -22,14 +24,23 @@ export interface WallProps {
   onChange?: (newAttrs: WallConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
   handleLineGuidesOnTransform: (node: Konva.Node, anchorPos: Vector2d) => ({ x: number } | { y: number })[];
-  removeLineGuides: () => void;
 }
 
 const Wall = (props: WallProps): JSX.Element => {
   const shapeRef = useRef<Konva.Rect>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
-  const { isSelected, onSelect, onChange, wall, removeLineGuides, handleLineGuidesOnTransform } = props;
+  const horizontalLineGuide = useAppSelector((state) => state.lineGuides.horizontal);
+  const verticalLineGuide = useAppSelector((state) => state.lineGuides.vertical);
+
+  const dispatch = useAppDispatch();
+
+  const { isSelected, onSelect, onChange, wall, handleLineGuidesOnTransform } = props;
+
+  const removeLineGuides = (): void => {
+    horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
+    verticalLineGuide && dispatch(setVerticalLineGuide(null));
+  };
 
   useEffect(() => {
     if (isSelected && transformerRef.current && shapeRef.current) {

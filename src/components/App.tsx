@@ -1,24 +1,17 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Konva from 'konva';
 import { type Vector2d } from 'konva/lib/types';
-import {
-  Box,
-  Alert,
-  AlertIcon,
-  AlertDescription,
-} from '@chakra-ui/react';
-import { useTranslation } from 'react-i18next';
+import { Box } from '@chakra-ui/react';
 
-import Door, { type DoorProps } from './shapes/Door';
+import Door, { type DoorConfig } from './shapes/Door';
 import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
 import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
 import Wall, { type WallConfig } from './shapes/Wall';
 import SnappingStage, { handleLineGuidesUpdateOnTransform } from './SnappingStage';
 import Window, { type WindowConfig } from './shapes/Window';
-import { type LineGuideConfig } from './shapes/LineGuide';
 import { cmToPixels } from '../utils';
-import { useWindowSize } from '../hooks';
+import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import {
   isDoor,
   isRectangleHouse,
@@ -27,8 +20,11 @@ import {
   isWindow,
   CustomShapeConfig,
 } from '../types';
+import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
+import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
+import SmallScreenAlert from './SmallScreenAlert';
 
-const initialDoors = (): DoorProps[] => {
+const initialDoors = (): DoorConfig[] => {
   return [
     {
       id: uuidv4(),
@@ -117,7 +113,7 @@ const initialWindows = (): WindowConfig[] => {
       rotation: 0,
       windowWidth: cmToPixels(200),
       wallThickness: cmToPixels(30),
-      draggable: false,
+      draggable: true,
     }
   ];
 };
@@ -136,59 +132,31 @@ const initShapes = (): CustomShapeConfig[] => {
 
 
 const App = (): JSX.Element => {
-  const [allShapes, setAllShapes] = useState<CustomShapeConfig[]>(initShapes());
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [horizontalLineGuide, setHorizontalLineGuide] = useState<LineGuideConfig | null>(null);
-  const [verticalLineGuide, setVerticalLineGuide] = useState<LineGuideConfig | null>(null);
+  const allShapes = useAppSelector((state) => state.shapes);
+  const selectedId = useAppSelector((state) => state.selectedId.value);
 
-  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const menuWidth = Math.min(windowWidth * 0.3, 280);
 
-  const updateShape = (id: string, newAttrs: CustomShapeConfig) => {
-    setAllShapes(
-      allShapes.map((shape) => shape.id === id ? newAttrs : shape)
-    );
-  };
-
   const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
-    handleLineGuidesUpdateOnTransform(node, anchorPos, setHorizontalLineGuide, setVerticalLineGuide)
+    handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
   );
 
-  const removeLineGuides = (): void => {
-    horizontalLineGuide && setHorizontalLineGuide(null);
-    verticalLineGuide && setVerticalLineGuide(null);
-  };
+  useEffect(() => {
+    dispatch(setAllShapes(initShapes()));
+  }, []);
 
-  const setSelectedShape = (shape: CustomShapeConfig | null) => {
-    if (!shape) {
-      selectedId && setSelectedId(null);
-      return;
+  useEffect(() => {
+    const selectedShape = allShapes.find((shape) => shape.id === selectedId);
+    if (selectedShape && !selectedShape.draggable) {
+      dispatch(setSelectedId(null));
     }
-    if (!shape.draggable) {
-      selectedId && setSelectedId(null);
-      return;
-    }
-    setSelectedId(shape.id);
-  };
+  }, [allShapes]);
 
   if (windowWidth < 700) {
-    return (
-      <Box w="100%" h="100%" p={2}>
-        <Alert
-          status="info"
-          rounded="md"
-          flexDirection="column"
-          alignItems="center"
-          justifyContent="center"
-          textAlign="center"
-        >
-          <AlertIcon />
-          <AlertDescription mt={1}>{t('alert.screenWidthTooSmall')}</AlertDescription>
-        </Alert>
-      </Box>
-    );
+    return <SmallScreenAlert />;
   }
 
   return (
@@ -208,19 +176,14 @@ const App = (): JSX.Element => {
       <SnappingStage
         container="container"
         allShapes={allShapes}
-        horizontalLineGuide={horizontalLineGuide}
-        verticalLineGuide={verticalLineGuide}
-        setHorizontalLineGuide={setHorizontalLineGuide}
-        setVerticalLineGuide={setVerticalLineGuide}
-        setSelectedId={setSelectedId}
         menuWidth={menuWidth}
       >
         {allShapes.filter(isRectangleHouse).map((house) => (
           <RectangleHouse
             key={house.id}
             isSelected={house.id === selectedId}
-            onSelect={() => setSelectedShape(house)}
-            onChange={(newAttrs) => updateShape(house.id, newAttrs)}
+            onSelect={() => dispatch(setSelectedShape(house))}
+            onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
             house={house}
           />
         ))}
@@ -228,8 +191,8 @@ const App = (): JSX.Element => {
           <LShapedHouse
             key={house.id}
             isSelected={house.id === selectedId}
-            onSelect={() => setSelectedShape(house)}
-            onChange={(newAttrs) => updateShape(house.id, newAttrs)}
+            onSelect={() => dispatch(setSelectedShape(house))}
+            onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
             house={house}
           />
         ))}
@@ -237,9 +200,8 @@ const App = (): JSX.Element => {
           <Wall
             key={wall.id}
             isSelected={wall.id === selectedId}
-            onSelect={() => setSelectedShape(wall)}
-            onChange={(newAttrs) => updateShape(wall.id, newAttrs)}
-            removeLineGuides={removeLineGuides}
+            onSelect={() => dispatch(setSelectedShape(wall))}
+            onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
             handleLineGuidesOnTransform={handleLineGuidesOnTransform}
             wall={wall}
           />
@@ -248,17 +210,17 @@ const App = (): JSX.Element => {
           <Door
             key={door.id}
             isSelected={door.id === selectedId}
-            onSelect={() => setSelectedShape(door)}
-            onChange={(newAttrs) => updateShape(door.id, newAttrs)}
-            {...door}
+            onSelect={() => dispatch(setSelectedShape(door))}
+            onChange={(newAttrs) => dispatch(updateShape({ id: door.id, newAttrs }))}
+            door={door}
           />
         ))}
         {allShapes.filter(isWindow).map(shape => (
           <Window
             key={shape.id}
             isSelected={shape.id === selectedId}
-            onSelect={() => setSelectedShape(shape)}
-            onChange={(newAttrs) => updateShape(shape.id, newAttrs)}
+            onSelect={() => dispatch(setSelectedShape(shape))}
+            onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
             window={shape}
           />
         ))}
