@@ -4,7 +4,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type {
   HorizontalLineGuideConfig,
   VerticalLineGuideConfig
-} from '../../components/shapes/LineGuide';
+} from '../../components/Shapes/LineGuide';
 
 export interface LineGuideState {
   vertical: VerticalLineGuideConfig | null;

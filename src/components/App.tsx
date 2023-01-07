@@ -4,12 +4,12 @@ import Konva from 'konva';
 import { type Vector2d } from 'konva/lib/types';
 import { Box } from '@chakra-ui/react';
 
-import Door, { type DoorConfig } from './shapes/Door';
-import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
-import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
-import Wall, { type WallConfig } from './shapes/Wall';
+import Door, { type DoorConfig } from './Shapes/Door';
+import RectangleHouse, { type RectangleHouseConfig } from './Shapes/RectangleHouse';
+import LShapedHouse, { type LShapedHouseConfig } from './Shapes/LShapedHouse';
+import Wall, { type WallConfig } from './Shapes/Wall';
 import SnappingStage from './SnappingStage';
-import Window, { type WindowConfig } from './shapes/Window';
+import Window, { type WindowConfig } from './Shapes/Window';
 import { cmToPixels } from '../utils';
 import { handleLineGuidesUpdateOnTransform } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';

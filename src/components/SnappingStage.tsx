@@ -5,7 +5,7 @@ import { Stage, Layer } from 'react-konva';
 import { Box } from '@chakra-ui/react';
 
 import ZoomButtons from './ZoomButtons';
-import LineGuide from './shapes/LineGuide';
+import LineGuide from './Shapes/LineGuide';
 import { handleLineGuidesUpdate } from '../utils/snappingStage';
 import { useWindowSize, useAppSelector, useAppDispatch } from '../hooks';
 import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
