@@ -16,6 +16,7 @@ import {
 } from '../utils/konva';
 import { useWindowSize, useAppSelector, useAppDispatch } from '../hooks';
 import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
+import { setSelectedId } from '../redux/slices/selectedIdSlice';
 import type { AppDispatch } from '../redux';
 
 type LineGuideUpdateFunc = (
@@ -199,8 +200,6 @@ export interface SnappingStageConfig {
   allShapes: CustomShapeConfig[];
   children: React.ReactNode;
   menuWidth: number;
-
-  setSelectedId: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 export type SnappingStageProps = SnappingStageConfig & Konva.StageConfig;
@@ -208,7 +207,6 @@ export type SnappingStageProps = SnappingStageConfig & Konva.StageConfig;
 const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   const {
     allShapes,
-    setSelectedId,
     children,
     menuWidth,
     ...otherProps
@@ -231,7 +229,7 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   const deselectShape = <EventType,>(e: Konva.KonvaEventObject<EventType>) => {
     const clickedStage = e.target === e.target.getStage();
     if (clickedStage) {
-      setSelectedId(null);
+      dispatch(setSelectedId(null));
     }
   };
 

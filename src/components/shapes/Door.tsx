@@ -4,6 +4,7 @@ import { Shape, Transformer, Group, Rect } from 'react-konva';
 
 import { degToRadians, almostEqual, cmToPixels, } from '../../utils';
 import theme from '../../utils/shapeTheme';
+import { useAppSelector } from '../../hooks';
 
 interface DoorConfig {
   id: string;
@@ -45,7 +46,10 @@ const initialTransformerBox = (
   rotation: rotation || 0,
 });
 
-const Door = ({ onChange, onSelect, isSelected, ...props }: DoorProps): JSX.Element => {
+const Door = ({ onChange, onSelect, ...props }: DoorProps): JSX.Element => {
+  const selectedId = useAppSelector((state) => state.selectedId.value);
+  const isSelected = selectedId === props.id;
+
   const { doorWidth, wallThickness, kind, openingDirection } = props;
   const additionalHeight = kind === 'interior' ? wallThickness : wallThickness / 2;
 

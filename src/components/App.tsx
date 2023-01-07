@@ -17,7 +17,7 @@ import Wall, { type WallConfig } from './shapes/Wall';
 import SnappingStage, { handleLineGuidesUpdateOnTransform } from './SnappingStage';
 import Window, { type WindowConfig } from './shapes/Window';
 import { cmToPixels } from '../utils';
-import { useWindowSize, useAppDispatch } from '../hooks';
+import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import {
   isDoor,
   isRectangleHouse,
@@ -26,6 +26,7 @@ import {
   isWindow,
   CustomShapeConfig,
 } from '../types';
+import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
 
 const initialDoors = (): DoorProps[] => {
   return [
@@ -136,10 +137,10 @@ const initShapes = (): CustomShapeConfig[] => {
 
 const App = (): JSX.Element => {
   const [allShapes, setAllShapes] = useState<CustomShapeConfig[]>(initShapes());
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selectedId = useAppSelector((state) => state.selectedId.value);
 
-  const dispatch = useAppDispatch();
   const { t } = useTranslation();
+  const dispatch = useAppDispatch();
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const menuWidth = Math.min(windowWidth * 0.3, 280);
@@ -153,18 +154,6 @@ const App = (): JSX.Element => {
   const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
     handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
   );
-
-  const setSelectedShape = (shape: CustomShapeConfig | null) => {
-    if (!shape) {
-      selectedId && setSelectedId(null);
-      return;
-    }
-    if (!shape.draggable) {
-      selectedId && setSelectedId(null);
-      return;
-    }
-    setSelectedId(shape.id);
-  };
 
   useEffect(() => {
     const selectedShape = allShapes.find((shape) => shape.id === selectedId);
@@ -208,14 +197,13 @@ const App = (): JSX.Element => {
       <SnappingStage
         container="container"
         allShapes={allShapes}
-        setSelectedId={setSelectedId}
         menuWidth={menuWidth}
       >
         {allShapes.filter(isRectangleHouse).map((house) => (
           <RectangleHouse
             key={house.id}
             isSelected={house.id === selectedId}
-            onSelect={() => setSelectedShape(house)}
+            onSelect={() => dispatch(setSelectedShape(house))}
             onChange={(newAttrs) => updateShape(house.id, newAttrs)}
             house={house}
           />
@@ -224,7 +212,7 @@ const App = (): JSX.Element => {
           <LShapedHouse
             key={house.id}
             isSelected={house.id === selectedId}
-            onSelect={() => setSelectedShape(house)}
+            onSelect={() => dispatch(setSelectedShape(house))}
             onChange={(newAttrs) => updateShape(house.id, newAttrs)}
             house={house}
           />
@@ -233,7 +221,7 @@ const App = (): JSX.Element => {
           <Wall
             key={wall.id}
             isSelected={wall.id === selectedId}
-            onSelect={() => setSelectedShape(wall)}
+            onSelect={() => dispatch(setSelectedShape(wall))}
             onChange={(newAttrs) => updateShape(wall.id, newAttrs)}
             handleLineGuidesOnTransform={handleLineGuidesOnTransform}
             wall={wall}
@@ -243,7 +231,7 @@ const App = (): JSX.Element => {
           <Door
             key={door.id}
             isSelected={door.id === selectedId}
-            onSelect={() => setSelectedShape(door)}
+            onSelect={() => dispatch(setSelectedShape(door))}
             onChange={(newAttrs) => updateShape(door.id, newAttrs)}
             {...door}
           />
@@ -252,7 +240,7 @@ const App = (): JSX.Element => {
           <Window
             key={shape.id}
             isSelected={shape.id === selectedId}
-            onSelect={() => setSelectedShape(shape)}
+            onSelect={() => dispatch(setSelectedShape(shape))}
             onChange={(newAttrs) => updateShape(shape.id, newAttrs)}
             window={shape}
           />
