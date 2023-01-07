@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import Konva from 'konva';
 import { type Vector2d } from 'konva/lib/types';
@@ -116,7 +116,7 @@ const initialWindows = (): WindowConfig[] => {
       rotation: 0,
       windowWidth: cmToPixels(200),
       wallThickness: cmToPixels(30),
-      draggable: false,
+      draggable: true,
     }
   ];
 };
@@ -165,6 +165,13 @@ const App = (): JSX.Element => {
     }
     setSelectedId(shape.id);
   };
+
+  useEffect(() => {
+    const selectedShape = allShapes.find((shape) => shape.id === selectedId);
+    if (selectedShape && !selectedShape.draggable) {
+      setSelectedId(null);
+    }
+  }, [allShapes]);
 
   if (windowWidth < 700) {
     return (
