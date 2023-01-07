@@ -8,9 +8,10 @@ import Door, { type DoorConfig } from './shapes/Door';
 import RectangleHouse, { type RectangleHouseConfig } from './shapes/RectangleHouse';
 import LShapedHouse, { type LShapedHouseConfig } from './shapes/LShapedHouse';
 import Wall, { type WallConfig } from './shapes/Wall';
-import SnappingStage, { handleLineGuidesUpdateOnTransform } from './SnappingStage';
+import SnappingStage from './SnappingStage';
 import Window, { type WindowConfig } from './shapes/Window';
 import { cmToPixels } from '../utils';
+import { handleLineGuidesUpdateOnTransform } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import {
   isDoor,
