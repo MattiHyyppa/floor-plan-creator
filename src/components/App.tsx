@@ -24,7 +24,7 @@ import {
 import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
 import SmallScreenAlert from './SmallScreenAlert';
-import EditShapesForm from './Forms/EditShapesForm';
+import Menu from './Menu';
 
 const initialDoors = (): DoorConfig[] => {
   return [
@@ -140,7 +140,7 @@ const App = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
-  const menuWidth = Math.min(windowWidth * 0.3, 280);
+  const menuWidth = Math.min(windowWidth * 0.28, 260);
 
   const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
     handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
@@ -167,13 +167,12 @@ const App = (): JSX.Element => {
         position="fixed"
         h={window.innerHeight}
         w={`${menuWidth}px`}
-        p={2}
         zIndex={5000}
         background="gray.100"
         borderRight="1.5px solid var(--chakra-colors-gray-300)"
         overflowY="auto"
       >
-        <EditShapesForm />
+        <Menu />
       </Box>
       <SnappingStage
         container="container"
