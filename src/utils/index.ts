@@ -17,6 +17,26 @@ export const cmToPixels = (cm: number): number => {
   return cm / 2;
 };
 
+export const pixelsToCm = (pixels: number): number => {
+  return 2 * pixels;
+};
+
+export const pixelsToMeters = (pixels: number): number => {
+  return pixelsToCm(pixels) / 100;
+};
+
+export const metersToPixels = (m: number): number => {
+  return cmToPixels(m * 100);
+};
+
+export const round = (value: number, decimals = 2): number => {
+  return Number(value.toFixed(decimals));
+};
+
+export const numDecimals = (num: number): number => {
+  return num.toString().replace('.', '').length - num.toFixed().length;
+};
+
 export const almostEqual = (a: number, b: number, epsilon = 1e-6): boolean => {
   return Math.abs(a - b) < epsilon;
 };

@@ -24,6 +24,7 @@ import {
 import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
 import SmallScreenAlert from './SmallScreenAlert';
+import EditShapesForm from './Forms/EditShapesForm';
 
 const initialDoors = (): DoorConfig[] => {
   return [
@@ -147,14 +148,14 @@ const App = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setAllShapes(initShapes()));
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const selectedShape = allShapes.find((shape) => shape.id === selectedId);
     if (selectedShape && !selectedShape.draggable) {
       dispatch(setSelectedId(null));
     }
-  }, [allShapes]);
+  }, [allShapes, selectedId, dispatch]);
 
   if (windowWidth < 700) {
     return <SmallScreenAlert />;
@@ -172,7 +173,7 @@ const App = (): JSX.Element => {
         borderRight="1.5px solid var(--chakra-colors-gray-300)"
         overflowY="auto"
       >
-        Hello
+        <EditShapesForm />
       </Box>
       <SnappingStage
         container="container"
