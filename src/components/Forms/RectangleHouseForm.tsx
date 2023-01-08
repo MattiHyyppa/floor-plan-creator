@@ -1,5 +1,6 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 
 import NumberFormControl from './NumberFormControl';
 import { RectangleHouseConfig } from '../Shapes/RectangleHouse';
@@ -19,6 +20,7 @@ interface RectangleHouseFormProps {
 }
 
 const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
+  const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
@@ -42,7 +44,7 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
         <NumberFormControl
           id="rectangleHouseWidth"
           name="exteriorWidth"
-          label="Exterior width"
+          label={t('forms.exteriorWidth')}
           type="number"
           transformedValue={pixelsToMeters(house.exteriorWidth)}
           updateRedux={(value) => updateRedux('exteriorWidth', value)}
@@ -52,7 +54,7 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
         <NumberFormControl
           id="rectangleHouseHeight"
           name="exteriorHeight"
-          label="Exterior height"
+          label={t('forms.exteriorHeight')}
           type="number"
           transformedValue={pixelsToMeters(house.exteriorHeight)}
           updateRedux={(value) => updateRedux('exteriorHeight', value)}
@@ -62,7 +64,7 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
         <NumberFormControl
           id="rectangleHouseWallThickness"
           name="wallThickness"
-          label="Exterior wall thickness"
+          label={t('forms.exteriorWallThickness')}
           type="number"
           transformedValue={pixelsToMeters(house.wallThickness)}
           updateRedux={(value) => updateRedux('wallThickness', value)}
