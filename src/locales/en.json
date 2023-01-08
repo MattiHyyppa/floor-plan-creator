@@ -6,6 +6,8 @@
   "forms": {
     "exteriorWidth": "Exterior width",
     "exteriorHeight": "Exterior height",
-    "exteriorWallThickness": "Exterior wall thickness"
+    "exteriorWallThickness": "Exterior wall thickness",
+    "firstWingWidth": "Width of wing #1",
+    "secondWingWidth": "Width of wing #2"
   }
 }
