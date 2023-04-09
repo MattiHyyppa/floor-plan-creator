@@ -11,7 +11,7 @@ import Wall, { type WallConfig } from './Shapes/Wall';
 import SnappingStage from './SnappingStage';
 import Window, { type WindowConfig } from './Shapes/Window';
 import { cmToPixels } from '../utils';
-import { handleLineGuidesUpdateOnTransform } from '../utils/snappingStage';
+import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import {
   isDoor,
@@ -141,8 +141,8 @@ const App = (): JSX.Element => {
   const { width: windowWidth, height: windowHeight } = useWindowSize();
   const menuWidth = Math.min(windowWidth * 0.3, 280);
 
-  const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
-    handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
+  const handleLineGuidesOnResize = (node: Konva.Node, anchorPos: Vector2d) => (
+    handleLineGuidesUpdateOnResize(node, anchorPos, dispatch)
   );
 
   useEffect(() => {
@@ -203,7 +203,7 @@ const App = (): JSX.Element => {
             isSelected={wall.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(wall))}
             onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
-            handleLineGuidesOnTransform={handleLineGuidesOnTransform}
+            handleLineGuidesOnResize={handleLineGuidesOnResize}
             wall={wall}
           />
         ))}

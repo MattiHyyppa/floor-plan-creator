@@ -23,7 +23,7 @@ export interface WallProps {
 
   onChange?: (newAttrs: WallConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-  handleLineGuidesOnTransform: (node: Konva.Node, anchorPos: Vector2d) => ({ x: number } | { y: number })[];
+  handleLineGuidesOnResize: (node: Konva.Node, anchorPos: Vector2d) => ({ x: number } | { y: number })[];
 }
 
 const Wall = (props: WallProps): JSX.Element => {
@@ -35,7 +35,7 @@ const Wall = (props: WallProps): JSX.Element => {
 
   const dispatch = useAppDispatch();
 
-  const { isSelected, onSelect, onChange, wall, handleLineGuidesOnTransform } = props;
+  const { isSelected, onSelect, onChange, wall, handleLineGuidesOnResize } = props;
 
   const removeLineGuides = (): void => {
     horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
@@ -134,7 +134,7 @@ const Wall = (props: WallProps): JSX.Element => {
               return newAbsPos;
             }
 
-            const snapPositions = handleLineGuidesOnTransform(node, anchorPos);
+            const snapPositions = handleLineGuidesOnResize(node, anchorPos);
             if (snapPositions.length === 0) {
               return newAbsPos;
             }
