@@ -49,7 +49,7 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
           transformedValue={pixelsToMeters(house.exteriorWidth)}
           updateRedux={(value) => updateRedux('exteriorWidth', value)}
           decimals={decimals}
-          mb={2}
+          mb={3}
         />
         <NumberFormControl
           id="rectangleHouseHeight"
@@ -59,7 +59,7 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
           transformedValue={pixelsToMeters(house.exteriorHeight)}
           updateRedux={(value) => updateRedux('exteriorHeight', value)}
           decimals={decimals}
-          mb={2}
+          mb={3}
         />
         <NumberFormControl
           id="rectangleHouseWallThickness"

@@ -57,6 +57,9 @@ interface NumberFormControlProps {
  */
 const NumberFormControl = (props: NumberFormControlProps & InputProps) => {
   const { id, label, name, transformedValue, decimals, updateRedux, ...otherProps } = props;
+  const { m, ml, mr, mt, mb, mx, my, ...inputFieldProps } = otherProps;
+  const marginProps = { m, ml, mr, mt, mb, mx, my };
+
   const [field, meta, helpers] = useField(name);
   const notRoundedFieldValue = useRef<number>(field.value);
 
@@ -76,7 +79,7 @@ const NumberFormControl = (props: NumberFormControlProps & InputProps) => {
   }, [transformedValue, decimals, helpers]);
 
   return (
-    <FormControl isInvalid={meta.error ? true : false}>
+    <FormControl isInvalid={meta.error ? true : false} {...marginProps}>
       <FormLabel htmlFor={id} fontSize="sm" mb={1}>{label}</FormLabel>
       <Field
         as={Input}
@@ -88,7 +91,7 @@ const NumberFormControl = (props: NumberFormControlProps & InputProps) => {
         focusBorderColor={meta.error ? 'red.500' : 'blue.500'}
         rounded="md"
         bg="gray.50"
-        {...otherProps}
+        {...inputFieldProps}
         {...field}
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         onChange={(e: any) => {

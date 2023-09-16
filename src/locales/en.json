@@ -10,7 +10,14 @@
     "exteriorHeight": "Exterior height",
     "exteriorWallThickness": "Exterior wall thickness",
     "firstWingWidth": "Width of wing #1",
-    "secondWingWidth": "Width of wing #2"
+    "secondWingWidth": "Width of wing #2",
+    "doorWidth": "Door width",
+    "interior": "Interior",
+    "exterior": "Exterior",
+    "doorType": "Door type",
+    "doorOpeningDirection": "Opening direction",
+    "right": "Right",
+    "left": "Left"
   },
   "menu": {
     "add": "Add",

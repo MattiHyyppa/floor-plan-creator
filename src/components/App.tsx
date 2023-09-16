@@ -150,6 +150,7 @@ const App = (): JSX.Element => {
     dispatch(setAllShapes(initShapes()));
   }, [dispatch]);
 
+  // Set the currently selected shape to `null` if dragging the shape has been disabled.
   useEffect(() => {
     const selectedShape = allShapes.find((shape) => shape.id === selectedId);
     if (selectedShape && !selectedShape.draggable) {

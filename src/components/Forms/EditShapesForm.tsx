@@ -9,8 +9,13 @@ import { useTranslation } from 'react-i18next';
 
 import RectangleHouseForm from './RectangleHouseForm';
 import LShapedHouseForm from './LShapedHouseForm';
+import DoorForm from './DoorForm';
 import { useAppSelector } from '../../hooks';
-import { isRectangleHouse, isLShapedHouse } from '../../types';
+import {
+  isRectangleHouse,
+  isLShapedHouse,
+  isDoor,
+} from '../../types';
 
 const UnitAlert = (props: AlertProps) => {
   const { t } = useTranslation();
@@ -51,6 +56,15 @@ const EditShapesForm = () => {
       <>
         <UnitAlert mb={3} py={2} px={3} />
         <LShapedHouseForm house={shapeToBeEdited} />
+      </>
+    );
+  }
+
+  if (isDoor(shapeToBeEdited)) {
+    return (
+      <>
+        <UnitAlert mb={3} py={2} px={3} />
+        <DoorForm door={shapeToBeEdited} />
       </>
     );
   }

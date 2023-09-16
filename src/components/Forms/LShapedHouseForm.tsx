@@ -54,7 +54,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           transformedValue={pixelsToMeters(house.exteriorWidth)}
           updateRedux={(value) => updateRedux('exteriorWidth', value)}
           decimals={decimals}
-          mb={2}
+          mb={3}
         />
         <NumberFormControl
           id="lShapedHouseHeight"
@@ -64,7 +64,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           transformedValue={pixelsToMeters(house.exteriorHeight)}
           updateRedux={(value) => updateRedux('exteriorHeight', value)}
           decimals={decimals}
-          mb={2}
+          mb={3}
         />
         <NumberFormControl
           id="lShapedHouseWallThickness"
@@ -74,7 +74,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           transformedValue={pixelsToMeters(house.wallThickness)}
           updateRedux={(value) => updateRedux('wallThickness', value)}
           decimals={decimals}
-          mb={2}
+          mb={3}
         />
         <NumberFormControl
           id="lShapedHouseFirstWingWidth"
@@ -84,7 +84,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           transformedValue={pixelsToMeters(house.firstWingWidth)}
           updateRedux={(value) => updateRedux('firstWingWidth', value)}
           decimals={decimals}
-          mb={2}
+          mb={3}
         />
         <NumberFormControl
           id="lShapedHouseSecondWingWidth"
