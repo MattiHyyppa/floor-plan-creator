@@ -54,6 +54,16 @@ const DoorForm = ({ door }: DoorFormProps) => {
           decimals={decimals}
           mb={3}
         />
+        <NumberFormControl
+          id={`wallThickness-${door.id}`}
+          name="wallThickness"
+          label={t('forms.wallThickness')}
+          type="number"
+          transformedValue={pixelsToMeters(door.wallThickness)}
+          updateRedux={(value) => updateRedux('wallThickness', value)}
+          decimals={decimals}
+          mb={3}
+        />
         <SwitchFormControl
           id={`isExteriorDoor-${door.id}`}
           name="isExteriorDoor"

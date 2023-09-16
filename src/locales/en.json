@@ -17,7 +17,8 @@
     "doorType": "Door type",
     "doorOpeningDirection": "Opening direction",
     "right": "Right",
-    "left": "Left"
+    "left": "Left",
+    "wallThickness": "Wall thickness"
   },
   "menu": {
     "add": "Add",
