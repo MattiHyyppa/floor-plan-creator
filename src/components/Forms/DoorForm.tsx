@@ -8,7 +8,6 @@ import { DoorConfig } from '../Shapes/Door';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape } from '../../redux/slices/shapesSlice';
-import type { CustomShapeConfig } from '../../types';
 
 const validationSchema = Yup.object({
   doorWidth: Yup.number().required().positive(),
@@ -33,11 +32,7 @@ const DoorForm = ({ door }: DoorFormProps) => {
     wallThickness: round(pixelsToMeters(door.wallThickness), decimals),
   };
 
-  const updateRedux = (property: keyof DoorConfig, value: number | string) => {
-    const newAttrs: CustomShapeConfig = {
-      ...door,
-      [property]: value,
-    };
+  const updateRedux = (newAttrs: Partial<DoorConfig>) => {
     dispatch(updateShape({ id: door.id, newAttrs }));
   };
 
@@ -50,7 +45,7 @@ const DoorForm = ({ door }: DoorFormProps) => {
           label={t('forms.doorWidth')}
           type="number"
           transformedValue={pixelsToMeters(door.doorWidth)}
-          updateRedux={(value) => updateRedux('doorWidth', value)}
+          updateRedux={(value) => updateRedux({ doorWidth: value })}
           decimals={decimals}
           mb={3}
         />
@@ -60,7 +55,7 @@ const DoorForm = ({ door }: DoorFormProps) => {
           label={t('forms.wallThickness')}
           type="number"
           transformedValue={pixelsToMeters(door.wallThickness)}
-          updateRedux={(value) => updateRedux('wallThickness', value)}
+          updateRedux={(value) => updateRedux({ wallThickness: value })}
           decimals={decimals}
           mb={3}
         />
@@ -73,7 +68,7 @@ const DoorForm = ({ door }: DoorFormProps) => {
           checked={door.kind === 'exterior'}
           updateRedux={(value) => {
             const doorType: DoorConfig['kind'] = value ? 'exterior': 'interior';
-            updateRedux('kind', doorType);
+            updateRedux({ kind: doorType });
           }}
           mb={3}
         />
@@ -86,7 +81,7 @@ const DoorForm = ({ door }: DoorFormProps) => {
           checked={door.openingDirection === 'right'}
           updateRedux={(value) => {
             const direction: DoorConfig['openingDirection'] = value ? 'right': 'left';
-            updateRedux('openingDirection', direction);
+            updateRedux({ openingDirection: direction });
           }}
         />
       </Form>

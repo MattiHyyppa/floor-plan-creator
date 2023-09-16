@@ -7,7 +7,6 @@ import { LShapedHouseConfig } from '../Shapes/LShapedHouse';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape } from '../../redux/slices/shapesSlice';
-import type { CustomShapeConfig } from '../../types';
 
 const validationSchema = Yup.object({
   exteriorWidth: Yup.number().required().positive(),
@@ -35,11 +34,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
     secondWingWidth: round(pixelsToMeters(house.secondWingWidth), decimals),
   };
 
-  const updateRedux = (property: keyof LShapedHouseConfig, value: number) => {
-    const newAttrs: CustomShapeConfig = {
-      ...house,
-      [property]: value,
-    };
+  const updateRedux = (newAttrs: Partial<LShapedHouseConfig>) => {
     dispatch(updateShape({ id: house.id, newAttrs }));
   };
 
@@ -52,7 +47,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           label={t('forms.exteriorWidth')}
           type="number"
           transformedValue={pixelsToMeters(house.exteriorWidth)}
-          updateRedux={(value) => updateRedux('exteriorWidth', value)}
+          updateRedux={(value) => updateRedux({ exteriorWidth: value })}
           decimals={decimals}
           mb={3}
         />
@@ -62,7 +57,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           label={t('forms.exteriorHeight')}
           type="number"
           transformedValue={pixelsToMeters(house.exteriorHeight)}
-          updateRedux={(value) => updateRedux('exteriorHeight', value)}
+          updateRedux={(value) => updateRedux({ exteriorHeight: value })}
           decimals={decimals}
           mb={3}
         />
@@ -72,7 +67,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           label={t('forms.exteriorWallThickness')}
           type="number"
           transformedValue={pixelsToMeters(house.wallThickness)}
-          updateRedux={(value) => updateRedux('wallThickness', value)}
+          updateRedux={(value) => updateRedux({ wallThickness: value })}
           decimals={decimals}
           mb={3}
         />
@@ -82,7 +77,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           label={t('forms.firstWingWidth')}
           type="number"
           transformedValue={pixelsToMeters(house.firstWingWidth)}
-          updateRedux={(value) => updateRedux('firstWingWidth', value)}
+          updateRedux={(value) => updateRedux({ firstWingWidth: value })}
           decimals={decimals}
           mb={3}
         />
@@ -92,7 +87,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           label={t('forms.secondWingWidth')}
           type="number"
           transformedValue={pixelsToMeters(house.secondWingWidth)}
-          updateRedux={(value) => updateRedux('secondWingWidth', value)}
+          updateRedux={(value) => updateRedux({ secondWingWidth: value })}
           decimals={decimals}
         />
       </Form>
