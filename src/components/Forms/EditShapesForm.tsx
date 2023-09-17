@@ -25,8 +25,8 @@ const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <>
-      <Alert status="info" rounded="md" mb={3} py={2} px={3}>
-        <AlertIcon />
+      <Alert status="info" variant="left-accent" mb={4} py={2} px={3}>
+        <AlertIcon boxSize="16px" />
         <AlertDescription mt={1} fontSize="sm">{t('forms.unitInformation')}</AlertDescription>
       </Alert>
       {children}
