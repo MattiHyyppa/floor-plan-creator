@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import NumberFormControl from './NumberFormControl';
+import SwitchFormControl from './SwitchFormControl';
 import { type LShapedHouseConfig } from '../Shapes/LShapedHouse';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
@@ -14,6 +15,7 @@ const validationSchema = Yup.object({
   wallThickness: Yup.number().required().positive(),
   firstWingWidth: Yup.number().required().positive(),
   secondWingWidth: Yup.number().required().positive(),
+  disabled: Yup.boolean().required(),
 });
 
 
@@ -32,10 +34,16 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
     wallThickness: round(pixelsToMeters(house.wallThickness), decimals),
     firstWingWidth: round(pixelsToMeters(house.firstWingWidth), decimals),
     secondWingWidth: round(pixelsToMeters(house.secondWingWidth), decimals),
+    disabled: !house.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<LShapedHouseConfig>) => {
     dispatch(updateShape({ id: house.id, newAttrs }));
+  };
+
+  const commonNumberFormProps = {
+    decimals,
+    disabled: !house.draggable,
   };
 
   return (
@@ -45,50 +53,53 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           id="lShapedHouseWidth"
           name="exteriorWidth"
           label={t('forms.exteriorWidth')}
-          type="number"
           transformedValue={pixelsToMeters(house.exteriorWidth)}
           updateRedux={(value) => updateRedux({ exteriorWidth: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id="lShapedHouseHeight"
           name="exteriorHeight"
           label={t('forms.exteriorHeight')}
-          type="number"
           transformedValue={pixelsToMeters(house.exteriorHeight)}
           updateRedux={(value) => updateRedux({ exteriorHeight: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id="lShapedHouseWallThickness"
           name="wallThickness"
           label={t('forms.exteriorWallThickness')}
-          type="number"
           transformedValue={pixelsToMeters(house.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id="lShapedHouseFirstWingWidth"
           name="firstWingWidth"
           label={t('forms.firstWingWidth')}
-          type="number"
           transformedValue={pixelsToMeters(house.firstWingWidth)}
           updateRedux={(value) => updateRedux({ firstWingWidth: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id="lShapedHouseSecondWingWidth"
           name="secondWingWidth"
           label={t('forms.secondWingWidth')}
-          type="number"
           transformedValue={pixelsToMeters(house.secondWingWidth)}
           updateRedux={(value) => updateRedux({ secondWingWidth: value })}
-          decimals={decimals}
+          mb={3}
+          {...commonNumberFormProps}
+        />
+        <SwitchFormControl
+          id={`disabled-${house.id}`}
+          name="disabled"
+          label={t('forms.disableEditing')}
+          checked={!house.draggable}
+          updateRedux={(value) => updateRedux({ draggable: !value })}
         />
       </Form>
     </Formik>

@@ -19,7 +19,8 @@
     "right": "Right",
     "left": "Left",
     "wallThickness": "Wall thickness",
-    "width": "Width"
+    "width": "Width",
+    "disableEditing": "Disable editing"
   },
   "menu": {
     "add": "Add",

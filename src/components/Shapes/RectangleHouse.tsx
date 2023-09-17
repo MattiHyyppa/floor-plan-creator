@@ -34,12 +34,12 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
   const { isSelected, onSelect, onChange, house } = props;
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && groupRef.current) {
+    if (isSelected && house.draggable && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, house.draggable]);
 
   return (
     <>
@@ -103,7 +103,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
           onTap={onSelect}
         />
       </Group>
-      {isSelected && (
+      {isSelected && house.draggable && (
         <Transformer
           id={`${house.id}-transformer`}
           ref={transformerRef}

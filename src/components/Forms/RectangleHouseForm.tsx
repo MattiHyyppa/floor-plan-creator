@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import NumberFormControl from './NumberFormControl';
+import SwitchFormControl from './SwitchFormControl';
 import { type RectangleHouseConfig } from '../Shapes/RectangleHouse';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
@@ -12,6 +13,7 @@ const validationSchema = Yup.object({
   exteriorWidth: Yup.number().required().positive(),
   exteriorHeight: Yup.number().required().positive(),
   wallThickness: Yup.number().required().positive(),
+  disabled: Yup.boolean().required(),
 });
 
 interface RectangleHouseFormProps {
@@ -27,10 +29,16 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
     exteriorWidth: round(pixelsToMeters(house.exteriorWidth), decimals),
     exteriorHeight: round(pixelsToMeters(house.exteriorHeight), decimals),
     wallThickness: round(pixelsToMeters(house.wallThickness), decimals),
+    disabled: !house.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<RectangleHouseConfig>) => {
     dispatch(updateShape({ id: house.id, newAttrs }));
+  };
+
+  const commonNumberFormProps = {
+    decimals,
+    disabled: !house.draggable,
   };
 
   return (
@@ -40,30 +48,35 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
           id="rectangleHouseWidth"
           name="exteriorWidth"
           label={t('forms.exteriorWidth')}
-          type="number"
           transformedValue={pixelsToMeters(house.exteriorWidth)}
           updateRedux={(value) => updateRedux({ exteriorWidth: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id="rectangleHouseHeight"
           name="exteriorHeight"
           label={t('forms.exteriorHeight')}
-          type="number"
           transformedValue={pixelsToMeters(house.exteriorHeight)}
           updateRedux={(value) => updateRedux({ exteriorHeight: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id="rectangleHouseWallThickness"
           name="wallThickness"
           label={t('forms.exteriorWallThickness')}
-          type="number"
           transformedValue={pixelsToMeters(house.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
-          decimals={decimals}
+          mb={3}
+          {...commonNumberFormProps}
+        />
+        <SwitchFormControl
+          id={`disabled-${house.id}`}
+          name="disabled"
+          label={t('forms.disableEditing')}
+          checked={!house.draggable}
+          updateRedux={(value) => updateRedux({ draggable: !value })}
         />
       </Form>
     </Formik>

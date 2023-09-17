@@ -21,7 +21,7 @@ import {
   isWindow,
   CustomShapeConfig,
 } from '../types';
-import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
+import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
 import SmallScreenAlert from './SmallScreenAlert';
 import Menu from './Menu';
@@ -37,7 +37,7 @@ const initialDoors = (): DoorConfig[] => {
       kind: 'exterior',
       openingDirection: 'left',
       wallThickness: cmToPixels(30),
-      draggable: true,
+      draggable: false,
     },
     {
       id: uuidv4(),
@@ -115,7 +115,7 @@ const initialWindows = (): WindowConfig[] => {
       rotation: 0,
       windowWidth: cmToPixels(200),
       wallThickness: cmToPixels(30),
-      draggable: true,
+      draggable: false,
     }
   ];
 };
@@ -149,14 +149,6 @@ const App = (): JSX.Element => {
   useEffect(() => {
     dispatch(setAllShapes(initShapes()));
   }, [dispatch]);
-
-  // Set the currently selected shape to `null` if dragging the shape has been disabled.
-  useEffect(() => {
-    const selectedShape = allShapes.find((shape) => shape.id === selectedId);
-    if (selectedShape && !selectedShape.draggable) {
-      dispatch(setSelectedId(null));
-    }
-  }, [allShapes, selectedId, dispatch]);
 
   if (windowWidth < 700) {
     return <SmallScreenAlert />;

@@ -43,12 +43,12 @@ const Wall = (props: WallProps): JSX.Element => {
   };
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && shapeRef.current) {
+    if (isSelected && wall.draggable && transformerRef.current && shapeRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([shapeRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, wall.draggable]);
 
   return (
     <>
@@ -95,7 +95,7 @@ const Wall = (props: WallProps): JSX.Element => {
           removeLineGuides();
         }}
       />
-      {isSelected && (
+      {isSelected && wall.draggable && (
         <Transformer
           id={`${wall.id}-transformer`}
           ref={transformerRef}

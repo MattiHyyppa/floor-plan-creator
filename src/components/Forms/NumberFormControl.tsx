@@ -84,6 +84,7 @@ const NumberFormControl = (props: NumberFormControlProps & InputProps) => {
       <Field
         as={Input}
         id={id}
+        type="number"
         step={Math.pow(10, -decimals)}
         size="sm"
         borderColor="gray.300"

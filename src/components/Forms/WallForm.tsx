@@ -3,6 +3,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import NumberFormControl from './NumberFormControl';
+import SwitchFormControl from './SwitchFormControl';
 import { type WallConfig } from '../Shapes/Wall';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
@@ -11,6 +12,7 @@ import { updateShape } from '../../redux/slices/shapesSlice';
 const validationSchema = Yup.object({
   width: Yup.number().required().positive(),
   wallThickness: Yup.number().required().positive(),
+  disabled: Yup.boolean().required(),
 });
 
 interface WallFormProps {
@@ -25,10 +27,16 @@ const WallForm = ({ wall }: WallFormProps) => {
   const initialValues = {
     width: round(pixelsToMeters(wall.width), decimals),
     wallThickness: round(pixelsToMeters(wall.wallThickness), decimals),
+    disabled: !wall.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<WallConfig>) => {
     dispatch(updateShape({ id: wall.id, newAttrs }));
+  };
+
+  const commonNumberFormProps = {
+    decimals,
+    disabled: !wall.draggable,
   };
 
   return (
@@ -38,21 +46,26 @@ const WallForm = ({ wall }: WallFormProps) => {
           id={`width-${wall.id}`}
           name="width"
           label={t('forms.width')}
-          type="number"
           transformedValue={pixelsToMeters(wall.width)}
           updateRedux={(value) => updateRedux({ width: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id={`wallThickness-${wall.id}`}
           name="wallThickness"
           label={t('forms.wallThickness')}
-          type="number"
           transformedValue={pixelsToMeters(wall.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
+        />
+        <SwitchFormControl
+          id={`disabled-${wall.id}`}
+          name="disabled"
+          label={t('forms.disableEditing')}
+          checked={!wall.draggable}
+          updateRedux={(value) => updateRedux({ draggable: !value })}
         />
       </Form>
     </Formik>

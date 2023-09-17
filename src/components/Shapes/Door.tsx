@@ -61,12 +61,12 @@ const Door = ({ door, onChange, onSelect }: DoorProps): JSX.Element => {
   );
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && groupRef.current) {
+    if (isSelected && door.draggable && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, door.draggable]);
 
   return (
     <>
@@ -142,7 +142,7 @@ const Door = ({ door, onChange, onSelect }: DoorProps): JSX.Element => {
         />
       </Group>
 
-      {isSelected && (
+      {isSelected && door.draggable && (
         <Transformer
           id={`${door.id}-transformer`}
           ref={transformerRef}

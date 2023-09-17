@@ -14,6 +14,7 @@ const validationSchema = Yup.object({
   isExteriorDoor: Yup.boolean().required(),
   opensRight: Yup.boolean().required(),
   wallThickness: Yup.number().required().positive(),
+  disabled: Yup.boolean().required(),
 });
 
 interface DoorFormProps {
@@ -30,10 +31,20 @@ const DoorForm = ({ door }: DoorFormProps) => {
     isExteriorDoor: door.kind === 'exterior',
     opensRight: door.openingDirection === 'right',
     wallThickness: round(pixelsToMeters(door.wallThickness), decimals),
+    disabled: !door.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<DoorConfig>) => {
     dispatch(updateShape({ id: door.id, newAttrs }));
+  };
+
+  const commonNumberFormProps = {
+    decimals,
+    disabled: !door.draggable,
+  };
+
+  const commonSwitchFormProps = {
+    disabled: !door.draggable,
   };
 
   return (
@@ -43,21 +54,19 @@ const DoorForm = ({ door }: DoorFormProps) => {
           id={`doorWidth-${door.id}`}
           name="doorWidth"
           label={t('forms.doorWidth')}
-          type="number"
           transformedValue={pixelsToMeters(door.doorWidth)}
           updateRedux={(value) => updateRedux({ doorWidth: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <NumberFormControl
           id={`wallThickness-${door.id}`}
           name="wallThickness"
           label={t('forms.wallThickness')}
-          type="number"
           transformedValue={pixelsToMeters(door.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
-          decimals={decimals}
           mb={3}
+          {...commonNumberFormProps}
         />
         <SwitchFormControl
           id={`isExteriorDoor-${door.id}`}
@@ -71,6 +80,7 @@ const DoorForm = ({ door }: DoorFormProps) => {
             updateRedux({ kind: doorType });
           }}
           mb={3}
+          {...commonSwitchFormProps}
         />
         <SwitchFormControl
           id={`opensRight-${door.id}`}
@@ -83,6 +93,15 @@ const DoorForm = ({ door }: DoorFormProps) => {
             const direction: DoorConfig['openingDirection'] = value ? 'right': 'left';
             updateRedux({ openingDirection: direction });
           }}
+          mb={3}
+          {...commonSwitchFormProps}
+        />
+        <SwitchFormControl
+          id={`disabled-${door.id}`}
+          name="disabled"
+          label={t('forms.disableEditing')}
+          checked={!door.draggable}
+          updateRedux={(value) => updateRedux({ draggable: !value })}
         />
       </Form>
     </Formik>
