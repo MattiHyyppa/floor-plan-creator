@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
-import { DoorConfig } from '../Shapes/Door';
+import { type DoorConfig } from '../Shapes/Door';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape } from '../../redux/slices/shapesSlice';

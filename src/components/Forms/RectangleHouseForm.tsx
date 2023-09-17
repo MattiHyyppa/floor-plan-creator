@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import NumberFormControl from './NumberFormControl';
-import { RectangleHouseConfig } from '../Shapes/RectangleHouse';
+import { type RectangleHouseConfig } from '../Shapes/RectangleHouse';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape } from '../../redux/slices/shapesSlice';

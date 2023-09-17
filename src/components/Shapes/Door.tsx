@@ -5,6 +5,7 @@ import { Shape, Transformer, Group, Rect } from 'react-konva';
 import { degToRadians, almostEqual, cmToPixels, } from '../../utils';
 import theme from '../../utils/shapeTheme';
 import { useAppSelector } from '../../hooks';
+import type { Box } from '../../types';
 
 export interface DoorConfig {
   id: string;
@@ -24,15 +25,6 @@ interface DoorProps {
 
   onChange?: (newAttrs: DoorConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-}
-
-// Konva doesn't export the Box type so we need to define it manually
-export interface Box {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  rotation: number;
 }
 
 const initialDoorWidth = cmToPixels(80);

@@ -10,11 +10,13 @@ import { useTranslation } from 'react-i18next';
 import RectangleHouseForm from './RectangleHouseForm';
 import LShapedHouseForm from './LShapedHouseForm';
 import DoorForm from './DoorForm';
+import WallForm from './WallForm';
 import { useAppSelector } from '../../hooks';
 import {
   isRectangleHouse,
   isLShapedHouse,
   isDoor,
+  isWall,
 } from '../../types';
 
 const UnitAlert = (props: AlertProps) => {
@@ -65,6 +67,15 @@ const EditShapesForm = () => {
       <>
         <UnitAlert mb={3} py={2} px={3} />
         <DoorForm door={shapeToBeEdited} />
+      </>
+    );
+  }
+
+  if (isWall(shapeToBeEdited)) {
+    return (
+      <>
+        <UnitAlert mb={3} py={2} px={3} />
+        <WallForm wall={shapeToBeEdited} />
       </>
     );
   }
