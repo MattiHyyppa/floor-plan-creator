@@ -3,7 +3,6 @@ import {
   Alert,
   AlertIcon,
   AlertDescription,
-  AlertProps,
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
@@ -19,18 +18,17 @@ import {
   isWall,
 } from '../../types';
 
-const UnitAlert = (props: AlertProps) => {
+const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
 
   return (
-    <Alert
-      status="info"
-      rounded="md"
-      {...props}
-    >
-      <AlertIcon />
-      <AlertDescription mt={1} fontSize="sm">{t('forms.unitInformation')}</AlertDescription>
-    </Alert>
+    <>
+      <Alert status="info" rounded="md" mb={3} py={2} px={3}>
+        <AlertIcon />
+        <AlertDescription mt={1} fontSize="sm">{t('forms.unitInformation')}</AlertDescription>
+      </Alert>
+      {children}
+    </>
   );
 };
 
@@ -46,37 +44,33 @@ const EditShapesForm = () => {
 
   if (isRectangleHouse(shapeToBeEdited)) {
     return (
-      <>
-        <UnitAlert mb={3} py={2} px={3} />
+      <FormWithAlert>
         <RectangleHouseForm house={shapeToBeEdited} />
-      </>
+      </FormWithAlert>
     );
   }
 
   if (isLShapedHouse(shapeToBeEdited)) {
     return (
-      <>
-        <UnitAlert mb={3} py={2} px={3} />
+      <FormWithAlert>
         <LShapedHouseForm house={shapeToBeEdited} />
-      </>
+      </FormWithAlert>
     );
   }
 
   if (isDoor(shapeToBeEdited)) {
     return (
-      <>
-        <UnitAlert mb={3} py={2} px={3} />
+      <FormWithAlert>
         <DoorForm door={shapeToBeEdited} />
-      </>
+      </FormWithAlert>
     );
   }
 
   if (isWall(shapeToBeEdited)) {
     return (
-      <>
-        <UnitAlert mb={3} py={2} px={3} />
+      <FormWithAlert>
         <WallForm wall={shapeToBeEdited} />
-      </>
+      </FormWithAlert>
     );
   }
 
