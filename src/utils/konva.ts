@@ -351,3 +351,47 @@ export const getGuides = (
 
   return guides;
 };
+
+export const isNodeBeingResized = (node: Konva.Node): boolean => {
+  return !almostEqual(node.scaleX(), 1) || !almostEqual(node.scaleY(), 1);
+};
+
+export const isNodeBeingResizedVertically = (node: Konva.Node): boolean => {
+  if (!isNodeBeingResized(node)) {
+    return false;
+  }
+
+  const scaleX = node.scaleX();
+  const scaleY = node.scaleY();
+
+  const widthResized = !almostEqual(scaleX, 1) && almostEqual(scaleY, 1);
+  const heightResized = almostEqual(scaleX, 1) && !almostEqual(scaleY, 1);
+
+  // Rotation between [0, 360[
+  const rotation = ((node.rotation() % 360) + 360) % 360;
+
+  const isResizedVertically = ( (almostEqual(rotation, 0) || almostEqual(rotation, 180)) && heightResized ) ||
+    ( (almostEqual(rotation, 90) || almostEqual(rotation, 270)) && widthResized );
+
+  return isResizedVertically;
+};
+
+export const isNodeBeingResizedHorizontally = (node: Konva.Node): boolean => {
+  if (!isNodeBeingResized(node)) {
+    return false;
+  }
+
+  const scaleX = node.scaleX();
+  const scaleY = node.scaleY();
+
+  const widthResized = !almostEqual(scaleX, 1) && almostEqual(scaleY, 1);
+  const heightResized = almostEqual(scaleX, 1) && !almostEqual(scaleY, 1);
+
+  // Rotation between [0, 360[
+  const rotation = ((node.rotation() % 360) + 360) % 360;
+
+  const isResizedHorizontally = ( (almostEqual(rotation, 0) || almostEqual(rotation, 180)) && widthResized ) ||
+    ( (almostEqual(rotation, 90) || almostEqual(rotation, 270)) && heightResized );
+
+  return isResizedHorizontally;
+};

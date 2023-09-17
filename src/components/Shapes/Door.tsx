@@ -5,6 +5,7 @@ import { Shape, Transformer, Group, Rect } from 'react-konva';
 import { degToRadians, almostEqual, cmToPixels, } from '../../utils';
 import theme from '../../utils/shapeTheme';
 import { useAppSelector } from '../../hooks';
+import type { Box } from '../../types';
 
 export interface DoorConfig {
   id: string;
@@ -24,15 +25,6 @@ interface DoorProps {
 
   onChange?: (newAttrs: DoorConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
-}
-
-// Konva doesn't export the Box type so we need to define it manually
-export interface Box {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  rotation: number;
 }
 
 const initialDoorWidth = cmToPixels(80);
@@ -69,12 +61,12 @@ const Door = ({ door, onChange, onSelect }: DoorProps): JSX.Element => {
   );
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && groupRef.current) {
+    if (isSelected && door.draggable && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, door.draggable]);
 
   return (
     <>
@@ -150,7 +142,7 @@ const Door = ({ door, onChange, onSelect }: DoorProps): JSX.Element => {
         />
       </Group>
 
-      {isSelected && (
+      {isSelected && door.draggable && (
         <Transformer
           id={`${door.id}-transformer`}
           ref={transformerRef}

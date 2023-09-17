@@ -13,7 +13,7 @@ const SmallScreenAlert = () => {
     <Box w="100%" h="100%" p={2}>
       <Alert
         status="info"
-        rounded="md"
+        variant="left-accent"
         flexDirection="column"
         alignItems="center"
         justifyContent="center"

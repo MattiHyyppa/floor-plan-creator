@@ -2,5 +2,28 @@
   "common": {},
   "alert": {
     "screenWidthTooSmall": "The screen width of your device is too small. If your are using this app on a phone or a tablet, rotate the screen, please. The user experience is optimized for devices with a larger screen."
+  },
+  "forms": {
+    "noShapeSelected": "Select a shape to start editing.",
+    "unitInformation": "All units are in meters.",
+    "exteriorWidth": "Exterior width",
+    "exteriorHeight": "Exterior height",
+    "exteriorWallThickness": "Exterior wall thickness",
+    "firstWingWidth": "Width of wing #1",
+    "secondWingWidth": "Width of wing #2",
+    "doorWidth": "Door width",
+    "interior": "Interior",
+    "exterior": "Exterior",
+    "doorType": "Door type",
+    "doorOpeningDirection": "Opening direction",
+    "right": "Right",
+    "left": "Left",
+    "wallThickness": "Wall thickness",
+    "width": "Width",
+    "disableEditing": "Disable editing"
+  },
+  "menu": {
+    "add": "Add",
+    "edit": "Edit"
   }
 }

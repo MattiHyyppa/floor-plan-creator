@@ -11,7 +11,7 @@ import Wall, { type WallConfig } from './Shapes/Wall';
 import SnappingStage from './SnappingStage';
 import Window, { type WindowConfig } from './Shapes/Window';
 import { cmToPixels } from '../utils';
-import { handleLineGuidesUpdateOnTransform } from '../utils/snappingStage';
+import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import {
   isDoor,
@@ -21,9 +21,10 @@ import {
   isWindow,
   CustomShapeConfig,
 } from '../types';
-import { setSelectedId, setSelectedShape } from '../redux/slices/selectedIdSlice';
+import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
 import SmallScreenAlert from './SmallScreenAlert';
+import Menu from './Menu';
 
 const initialDoors = (): DoorConfig[] => {
   return [
@@ -36,7 +37,7 @@ const initialDoors = (): DoorConfig[] => {
       kind: 'exterior',
       openingDirection: 'left',
       wallThickness: cmToPixels(30),
-      draggable: true,
+      draggable: false,
     },
     {
       id: uuidv4(),
@@ -114,7 +115,7 @@ const initialWindows = (): WindowConfig[] => {
       rotation: 0,
       windowWidth: cmToPixels(200),
       wallThickness: cmToPixels(30),
-      draggable: true,
+      draggable: false,
     }
   ];
 };
@@ -139,22 +140,15 @@ const App = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
   const { width: windowWidth, height: windowHeight } = useWindowSize();
-  const menuWidth = Math.min(windowWidth * 0.3, 280);
+  const menuWidth = Math.min(windowWidth * 0.28, 260);
 
-  const handleLineGuidesOnTransform = (node: Konva.Node, anchorPos: Vector2d) => (
-    handleLineGuidesUpdateOnTransform(node, anchorPos, dispatch)
+  const handleLineGuidesOnResize = (node: Konva.Node, anchorPos: Vector2d) => (
+    handleLineGuidesUpdateOnResize(node, anchorPos, dispatch)
   );
 
   useEffect(() => {
     dispatch(setAllShapes(initShapes()));
-  }, []);
-
-  useEffect(() => {
-    const selectedShape = allShapes.find((shape) => shape.id === selectedId);
-    if (selectedShape && !selectedShape.draggable) {
-      dispatch(setSelectedId(null));
-    }
-  }, [allShapes]);
+  }, [dispatch]);
 
   if (windowWidth < 700) {
     return <SmallScreenAlert />;
@@ -166,13 +160,12 @@ const App = (): JSX.Element => {
         position="fixed"
         h={window.innerHeight}
         w={`${menuWidth}px`}
-        p={2}
         zIndex={5000}
         background="gray.100"
         borderRight="1.5px solid var(--chakra-colors-gray-300)"
         overflowY="auto"
       >
-        Hello
+        <Menu />
       </Box>
       <SnappingStage
         container="container"
@@ -203,7 +196,7 @@ const App = (): JSX.Element => {
             isSelected={wall.id === selectedId}
             onSelect={() => dispatch(setSelectedShape(wall))}
             onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
-            handleLineGuidesOnTransform={handleLineGuidesOnTransform}
+            handleLineGuidesOnResize={handleLineGuidesOnResize}
             wall={wall}
           />
         ))}

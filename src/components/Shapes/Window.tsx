@@ -29,12 +29,12 @@ const Window = (props: WindowProps): JSX.Element => {
   const transformerRef = useRef<Konva.Transformer>(null);
 
   useEffect(() => {
-    if (isSelected && transformerRef.current && shapeRef.current) {
+    if (isSelected && w.draggable && transformerRef.current && shapeRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([shapeRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, w.draggable]);
 
   const width = w.windowWidth;
   const height = w.wallThickness;
@@ -95,7 +95,7 @@ const Window = (props: WindowProps): JSX.Element => {
           context.fillStrokeShape(shape);
         }}
       />
-      {isSelected && (
+      {isSelected && w.draggable && (
         <Transformer
           id={`${w.id}-transformer`}
           ref={transformerRef}

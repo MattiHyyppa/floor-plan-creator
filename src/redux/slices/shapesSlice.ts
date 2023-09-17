@@ -12,10 +12,15 @@ export const shapesSlice = createSlice({
     setAllShapes: (_state, action: PayloadAction<CustomShapeConfig[]>) => {
       return action.payload;
     },
-    updateShape: (state, action: PayloadAction<{ id: string, newAttrs: CustomShapeConfig }>) => {
+    updateShape: (state, action: PayloadAction<{ id: string, newAttrs: Partial<CustomShapeConfig> }>) => {
       const index = state.findIndex((shape) => shape.id === action.payload.id);
       if (index !== -1) {
-        state[index] = action.payload.newAttrs;
+        const currentShape = state[index];
+        const newShape = {
+          ...currentShape,
+          ...action.payload.newAttrs,
+        };
+        state[index] = newShape;
       }
     },
   }

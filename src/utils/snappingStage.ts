@@ -5,7 +5,13 @@ import { CustomShapeConfig } from '../types';
 import { AppDispatch } from '../redux';
 import { assertNever } from '.';
 import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
-import { getLineGuidePositions, getNodeSnappingEdges, getGuides } from './konva';
+import {
+  getLineGuidePositions,
+  getNodeSnappingEdges,
+  getGuides,
+  isNodeBeingResizedVertically,
+  isNodeBeingResizedHorizontally,
+} from './konva';
 
 type LineGuideUpdateFunc = (
   e: Konva.KonvaEventObject<DragEvent>,
@@ -94,13 +100,13 @@ export const handleLineGuidesUpdate: LineGuideUpdateFunc = (
 };
 
 
-type LineGuideUpdateOnTransformFunc = (
+type LineGuideUpdateOnResizeFunc = (
   node: Konva.Node,
   anchorPos: Vector2d,
   dispatch: AppDispatch
 ) => ({ x: number } | { y: number })[];
 
-export const handleLineGuidesUpdateOnTransform: LineGuideUpdateOnTransformFunc = (
+export const handleLineGuidesUpdateOnResize: LineGuideUpdateOnResizeFunc = (
   node,
   anchorPos,
   dispatch
@@ -120,28 +126,35 @@ export const handleLineGuidesUpdateOnTransform: LineGuideUpdateOnTransformFunc =
     return [];
   }
 
+  const isResizedVertically = isNodeBeingResizedVertically(node);
+  const isResizedHorizontally = isNodeBeingResizedHorizontally(node);
+
   // Note that for vertical line guides, we store x values and not y values. A vertical line guide
   // appears when the size of an object has been transformed in the horizontal direction (i.e., in
   // the direction of x-axis and not y-axis).
   const resultV: Array<{ xAbs: number, xRel: number, diff: number }> = [];
   const resultH: Array<{ yAbs: number, yRel: number, diff: number }> = [];
 
+  const guideLineOffset = 5;
+
   lineGuidePositions.vertical.forEach(lineGuidePos => {
     // We want to make sure that the distance between the potential line guide
     // and the pointer would be small enough to trigger snapping.
     const diff = Math.abs(lineGuidePos.absolute - pointerPos.x);
-    // We also want to make sure that the anchor used for transforming the object's size
-    // is close enough to the pointer. Otherwise, it would be possible that the pointer is
-    // very far from the anchor we are trying to snap and the pointer could still trigger snapping
-    // in the other direction (horizontal in this case) in case the pointer is close to a horizontal
-    // potential line guide even if the anchor (and the current object to be transformed) were not.
-    // Using the pointer position is still needed because if we only used the anchor position,
-    // the anchor will get trapped in the first line guide position after snapping and it cannot leave
-    // the snapping point before the transformation ends even if the pointer could move past the
-    // snapping point.
+    const pointerCloseToGuide = diff <= guideLineOffset;
+
+    // Note that the position of the pointer (instead of the anchor) is compared to the position
+    // of the line guides. Otherwise, it would be possible that the anchor would get stuck after
+    // first snapping effect. In such a case when the anchor gets stuck and cannot be moved, the
+    // pointer can still move past the snapping point --> let's use the pointer position, instead.
+
+    // Because of using the pointer position, we also want to make sure that the anchor and the
+    // pointer are close to each other. Otherwise, the snapping could be triggered falsely in the
+    // opposite direction compared to the resize direction.
     const anchorAndPointerDiff = Math.abs(pointerPos.x - anchorPos.x);
-    const guideLineOffset = 5;
-    if (diff <= guideLineOffset && anchorAndPointerDiff <= guideLineOffset) {
+    const pointerCloseToAnchor = anchorAndPointerDiff <= guideLineOffset;
+
+    if (pointerCloseToGuide && pointerCloseToAnchor && !isResizedVertically) {
       resultV.push({
         xAbs: lineGuidePos.absolute,
         xRel: lineGuidePos.relative,
@@ -152,9 +165,11 @@ export const handleLineGuidesUpdateOnTransform: LineGuideUpdateOnTransformFunc =
 
   lineGuidePositions.horizontal.forEach(lineGuidePos => {
     const diff = Math.abs(lineGuidePos.absolute - pointerPos.y);
+    const pointerCloseToGuide = diff <= guideLineOffset;
     const anchorAndPointerDiff = Math.abs(pointerPos.y - anchorPos.y);
-    const guideLineOffset = 5;
-    if (diff <= guideLineOffset && anchorAndPointerDiff <= guideLineOffset) {
+    const pointerCloseToAnchor = anchorAndPointerDiff <= guideLineOffset;
+
+    if (pointerCloseToGuide && pointerCloseToAnchor && !isResizedHorizontally) {
       resultH.push({
         yAbs: lineGuidePos.absolute,
         yRel: lineGuidePos.relative,
