@@ -10,12 +10,14 @@ import RectangleHouseForm from './RectangleHouseForm';
 import LShapedHouseForm from './LShapedHouseForm';
 import DoorForm from './DoorForm';
 import WallForm from './WallForm';
+import WindowForm from './WindowForm';
 import { useAppSelector } from '../../hooks';
 import {
   isRectangleHouse,
   isLShapedHouse,
   isDoor,
   isWall,
+  isWindow,
 } from '../../types';
 
 const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
@@ -70,6 +72,14 @@ const EditShapesForm = () => {
     return (
       <FormWithAlert>
         <WallForm wall={shapeToBeEdited} />
+      </FormWithAlert>
+    );
+  }
+
+  if (isWindow(shapeToBeEdited)) {
+    return (
+      <FormWithAlert>
+        <WindowForm window={shapeToBeEdited} />
       </FormWithAlert>
     );
   }
