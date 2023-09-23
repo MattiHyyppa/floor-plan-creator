@@ -98,7 +98,7 @@ const NumberFormControl = (props: NumberFormControlProps & InputProps) => {
         onChange={(e: any) => {
           const value = getFormattedValue(e.target.value, decimals);
           setFieldValue(name, value);
-          if (typeof value == 'number') {
+          if (typeof value === 'number') {
             updateRedux(metersToPixels(value));
           }
         }}

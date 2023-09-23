@@ -140,7 +140,7 @@ const App = (): JSX.Element => {
 
   const dispatch = useAppDispatch();
 
-  const { width: windowWidth, height: windowHeight } = useWindowSize();
+  const { width: windowWidth } = useWindowSize();
   const menuWidth = Math.min(windowWidth * 0.28, 260);
 
   const handleLineGuidesOnResize = (node: Konva.Node, anchorPos: Vector2d) => (
