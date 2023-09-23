@@ -47,7 +47,7 @@ const EditShapesForm = () => {
   const { t } = useTranslation();
 
   if (!shapeToBeEdited) {
-    return <Text fontSize="sm">{t('forms.noShapeSelected')}</Text>;
+    return <Text px={[2, null, 3]} fontSize="sm">{t('forms.noShapeSelected')}</Text>;
   }
 
   if (isRectangleHouse(shapeToBeEdited)) {
