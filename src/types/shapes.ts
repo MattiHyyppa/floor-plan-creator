@@ -1,8 +1,8 @@
-import { type DoorConfig } from './components/Shapes/Door';
-import { type RectangleHouseConfig } from './components/Shapes/RectangleHouse';
-import { type LShapedHouseConfig } from './components/Shapes/LShapedHouse';
-import { type WallConfig } from './components/Shapes/Wall';
-import { type WindowConfig } from './components/Shapes/Window';
+import { type DoorConfig } from '../components/Shapes/Door';
+import { type RectangleHouseConfig } from '../components/Shapes/RectangleHouse';
+import { type LShapedHouseConfig } from '../components/Shapes/LShapedHouse';
+import { type WallConfig } from '../components/Shapes/Wall';
+import { type WindowConfig } from '../components/Shapes/Window';
 
 export type CustomShapeConfig = DoorConfig | RectangleHouseConfig | LShapedHouseConfig | WallConfig | WindowConfig;
 
@@ -26,12 +26,3 @@ export const isWall = (shape: CustomShapeConfig): shape is WallConfig => {
 export const isWindow = (shape: CustomShapeConfig): shape is WindowConfig => {
   return (shape as WindowConfig).windowWidth !== undefined;
 };
-
-// Konva doesn't export the Box type so we need to define it manually
-export interface Box {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  rotation: number;
-}
