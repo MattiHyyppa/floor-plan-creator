@@ -25,5 +25,13 @@
   "menu": {
     "add": "Add",
     "edit": "Edit"
+  },
+  "stage": {
+    "buttons": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "undo": "Undo",
+      "redo": "Redo"
+    }
   }
 }

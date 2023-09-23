@@ -26,3 +26,18 @@ export const isWall = (shape: CustomShapeConfig): shape is WallConfig => {
 export const isWindow = (shape: CustomShapeConfig): shape is WindowConfig => {
   return (shape as WindowConfig).windowWidth !== undefined;
 };
+
+export type CanvasOperation = 'update' | 'add' | 'delete';
+
+export interface CanvasUpdate {
+  operation: CanvasOperation;
+  previous: CustomShapeConfig;
+  new: CustomShapeConfig;
+  index: number;
+}
+
+export interface CanvasState {
+  shapes: CustomShapeConfig[];
+  previousUpdates: CanvasUpdate[];
+  previousUpdatesIndex: number;
+}

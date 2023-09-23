@@ -5,11 +5,13 @@ import { Stage, Layer } from 'react-konva';
 import { Box } from '@chakra-ui/react';
 
 import ZoomButtons from './ZoomButtons';
+import UndoRedoButtons from './UndoRedoButtons';
 import LineGuide from './Shapes/LineGuide';
 import { handleLineGuidesUpdate } from '../utils/snappingStage';
 import { useWindowSize, useAppSelector, useAppDispatch } from '../hooks';
 import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
 import { setSelectedId } from '../redux/slices/selectedIdSlice';
+import { undoShapeOperation, redoShapeOperation, } from '../redux/slices/canvasSlice';
 
 export interface SnappingStageConfig {
   children: React.ReactNode;
@@ -59,6 +61,12 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
         <ZoomButtons
           onZoomIn={_e => setScale(scale + 0.1)}
           onZoomOut={_e => setScale(scale - 0.1)}
+        />
+      </Box>
+      <Box position="fixed" zIndex={1000} top={2} right={2}>
+        <UndoRedoButtons
+          onUndo={_e => dispatch(undoShapeOperation())}
+          onRedo={_e => dispatch(redoShapeOperation())}
         />
       </Box>
       <ReactReduxContext.Consumer>
