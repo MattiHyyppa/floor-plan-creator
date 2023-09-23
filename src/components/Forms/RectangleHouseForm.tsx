@@ -7,7 +7,7 @@ import SwitchFormControl from './SwitchFormControl';
 import { type RectangleHouseConfig } from '../Shapes/RectangleHouse';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
-import { updateShape } from '../../redux/slices/shapesSlice';
+import { updateShape } from '../../redux/slices/canvasSlice';
 
 const validationSchema = Yup.object({
   exteriorWidth: Yup.number().required().positive(),

@@ -7,7 +7,7 @@ import SwitchFormControl from './SwitchFormControl';
 import { type WindowConfig } from '../Shapes/Window';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
-import { updateShape } from '../../redux/slices/shapesSlice';
+import { updateShape } from '../../redux/slices/canvasSlice';
 
 const validationSchema = Yup.object({
   windowWidth: Yup.number().required().positive(),

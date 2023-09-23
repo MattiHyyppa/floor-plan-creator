@@ -23,7 +23,7 @@ import {
   CustomShapeConfig,
 } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
-import { setAllShapes, updateShape } from '../redux/slices/shapesSlice';
+import { setAllShapes, updateShape } from '../redux/slices/canvasSlice';
 import SmallScreenAlert from './SmallScreenAlert';
 import Menu from './Menu';
 
@@ -135,7 +135,7 @@ const initShapes = (): CustomShapeConfig[] => {
 
 
 const App = (): JSX.Element => {
-  const allShapes = useAppSelector((state) => state.shapes);
+  const allShapes = useAppSelector((state) => state.canvas.shapes);
   const selectedId = useAppSelector((state) => state.selectedId.value);
 
   const dispatch = useAppDispatch();
