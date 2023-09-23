@@ -4,6 +4,7 @@ import Konva from 'konva';
 import { type Vector2d } from 'konva/lib/types';
 import { Box } from '@chakra-ui/react';
 
+import FullScreen from './FullScreen';
 import Door, { type DoorConfig } from './Shapes/Door';
 import RectangleHouse, { type RectangleHouseConfig } from './Shapes/RectangleHouse';
 import LShapedHouse, { type LShapedHouseConfig } from './Shapes/LShapedHouse';
@@ -155,71 +156,74 @@ const App = (): JSX.Element => {
   }
 
   return (
-    <div id="container" style={{ width: windowWidth, height: windowHeight }}>
-      <Box
-        position="fixed"
-        h={window.innerHeight}
-        w={`${menuWidth}px`}
-        zIndex={5000}
-        background="gray.100"
-        borderRight="1.5px solid var(--chakra-colors-gray-300)"
-        overflowY="auto"
-      >
-        <Menu />
-      </Box>
-      <SnappingStage
-        container="container"
-        allShapes={allShapes}
-        menuWidth={menuWidth}
-      >
-        {allShapes.filter(isRectangleHouse).map((house) => (
-          <RectangleHouse
-            key={house.id}
-            isSelected={house.id === selectedId}
-            onSelect={() => dispatch(setSelectedShape(house))}
-            onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
-            house={house}
-          />
-        ))}
-        {allShapes.filter(isLShapedHouse).map((house) => (
-          <LShapedHouse
-            key={house.id}
-            isSelected={house.id === selectedId}
-            onSelect={() => dispatch(setSelectedShape(house))}
-            onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
-            house={house}
-          />
-        ))}
-        {allShapes.filter(isWall).map((wall) => (
-          <Wall
-            key={wall.id}
-            isSelected={wall.id === selectedId}
-            onSelect={() => dispatch(setSelectedShape(wall))}
-            onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
-            handleLineGuidesOnResize={handleLineGuidesOnResize}
-            wall={wall}
-          />
-        ))}
-        {allShapes.filter(isDoor).map((door) => (
-          <Door
-            key={door.id}
-            isSelected={door.id === selectedId}
-            onSelect={() => dispatch(setSelectedShape(door))}
-            onChange={(newAttrs) => dispatch(updateShape({ id: door.id, newAttrs }))}
-            door={door}
-          />
-        ))}
-        {allShapes.filter(isWindow).map(shape => (
-          <Window
-            key={shape.id}
-            isSelected={shape.id === selectedId}
-            onSelect={() => dispatch(setSelectedShape(shape))}
-            onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
-            window={shape}
-          />
-        ))}
-      </SnappingStage>
-    </div>
+    <>
+      <FullScreen />
+      <div id="container" style={{ width: '100%', height: '100%' }}>
+        <Box
+          position="fixed"
+          h="100%"
+          w={`${menuWidth}px`}
+          zIndex={5000}
+          background="gray.100"
+          borderRight="1.5px solid var(--chakra-colors-gray-300)"
+          overflowY="auto"
+        >
+          <Menu />
+        </Box>
+        <SnappingStage
+          container="container"
+          allShapes={allShapes}
+          menuWidth={menuWidth}
+        >
+          {allShapes.filter(isRectangleHouse).map((house) => (
+            <RectangleHouse
+              key={house.id}
+              isSelected={house.id === selectedId}
+              onSelect={() => dispatch(setSelectedShape(house))}
+              onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
+              house={house}
+            />
+          ))}
+          {allShapes.filter(isLShapedHouse).map((house) => (
+            <LShapedHouse
+              key={house.id}
+              isSelected={house.id === selectedId}
+              onSelect={() => dispatch(setSelectedShape(house))}
+              onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
+              house={house}
+            />
+          ))}
+          {allShapes.filter(isWall).map((wall) => (
+            <Wall
+              key={wall.id}
+              isSelected={wall.id === selectedId}
+              onSelect={() => dispatch(setSelectedShape(wall))}
+              onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
+              handleLineGuidesOnResize={handleLineGuidesOnResize}
+              wall={wall}
+            />
+          ))}
+          {allShapes.filter(isDoor).map((door) => (
+            <Door
+              key={door.id}
+              isSelected={door.id === selectedId}
+              onSelect={() => dispatch(setSelectedShape(door))}
+              onChange={(newAttrs) => dispatch(updateShape({ id: door.id, newAttrs }))}
+              door={door}
+            />
+          ))}
+          {allShapes.filter(isWindow).map(shape => (
+            <Window
+              key={shape.id}
+              isSelected={shape.id === selectedId}
+              onSelect={() => dispatch(setSelectedShape(shape))}
+              onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
+              window={shape}
+            />
+          ))}
+        </SnappingStage>
+      </div>
+    </>
   );
 };
 
