@@ -34,5 +34,15 @@
       "undo": "Undo",
       "redo": "Redo"
     }
+  },
+  "shapes": {
+    "houseShapesTitle": "House shapes",
+    "rectangleHouse": "Rectangle",
+    "lShapedHouse": "L-shaped",
+    "otherShapesTitle": "Other shapes",
+    "window": "Window",
+    "wall": "Wall",
+    "exteriorDoor": "Exterior door",
+    "interiorDoor": "Interior door"
   }
 }
