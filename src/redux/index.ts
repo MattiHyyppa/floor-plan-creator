@@ -2,13 +2,13 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import lineGuidesReducer from './slices/lineGuidesSlice';
 import selectedIdReducer from './slices/selectedIdSlice';
-import shapesReducer from './slices/shapesSlice';
+import canvasReducer from './slices/canvasSlice';
 
 export const store = configureStore({
   reducer: {
     lineGuides: lineGuidesReducer,
     selectedId: selectedIdReducer,
-    shapes: shapesReducer,
+    canvas: canvasReducer,
   },
 });
 

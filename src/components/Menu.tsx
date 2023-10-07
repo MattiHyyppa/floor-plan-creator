@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
+import AddShapeCatalogue from './AddShapeCatalogue';
 import EditShapesForm from './Forms/EditShapesForm';
 
 const Menu = () => {
@@ -19,8 +20,8 @@ const Menu = () => {
         <Tab fontSize="sm">{t('menu.edit')}</Tab>
       </TabList>
       <TabPanels h="calc(100% - 40px)">
-        <TabPanel px={1} py={2}>
-          <p>one!</p>
+        <TabPanel px={1} pt={4} pb={0} h="100%">
+          <AddShapeCatalogue />
         </TabPanel>
         <TabPanel px={0} pt={4} pb={0} h="100%">
           <EditShapesForm />

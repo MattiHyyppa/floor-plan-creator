@@ -42,7 +42,7 @@ const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
 
 const EditShapesForm = () => {
   const selectedId = useAppSelector(state => state.selectedId.value);
-  const allShapes = useAppSelector(state => state.shapes);
+  const allShapes = useAppSelector(state => state.canvas.shapes);
   const shapeToBeEdited = allShapes.find(shape => shape.id === selectedId);
   const { t } = useTranslation();
 

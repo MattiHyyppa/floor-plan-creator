@@ -23,9 +23,12 @@ type LineGuideUpdateFunc = (
 /**
  * A function for setting horizontal and vertical line guides correctly so that an object
  * which has been dragged on the canvas can be snapped to objects nearby. This function can
- * be used for the `onDragMove` prop of a Konva `Layer` but cannot be used for setting the
- * line guides when objects are resized (transformed). For that purpose, check the
- * `handleLineGuidesUpdateOnTransform` function.
+ * be used for the `onDragMove` prop of a Konva `Layer`, for example. However, this function
+ * only considers dragging objects but not resizing objects. This function takes into account
+ * the positions of the objects on the canvas whereas handling line guides when objects are
+ * resized would require knowing the position of the transformer's active anchor (which is used
+ * for resizing) and the position of the mouse pointer. To handle resize events, check the
+ * `handleLineGuidesUpdateOnResize` function.
 */
 export const handleLineGuidesUpdate: LineGuideUpdateFunc = (
   e,
@@ -40,9 +43,9 @@ export const handleLineGuidesUpdate: LineGuideUpdateFunc = (
   let movedShape = allShapes.find(shape => shape.id === e.target.id());
   if (!movedShape) {
     // It could be that the user has clicked a shape before dragging it and, therefore,
-    // the transformer of the shape is the `e.target` instead of actual shape corresponding
-    // to the transformer. Each custom shape has a transformer whose id is the same as the
-    // shape's but appended with a '-transformer' string.
+    // the transformer of the shape is active and the transformer is `e.target` instead
+    // of actual shape corresponding to the transformer. Each custom shape has a transformer
+    // whose id is the same as the shape's but appended with a '-transformer' string.
     const possibleTransformerId = e.target.id();
     const shapeId = possibleTransformerId.replace('-transformer', '');
     movedShape = allShapes.find(shape => shape.id === shapeId);
@@ -53,7 +56,7 @@ export const handleLineGuidesUpdate: LineGuideUpdateFunc = (
   const movedNode = movedShape.id === e.target.id()
     // The target is the shape itself
     ? e.target
-    // The target is the transformer and we want to find the node corresponding the actual shape
+    // The target is the transformer and we want to find the node corresponding to the actual shape
     : stageRef.current.findOne(`#${movedShape.id}`);
 
   // Get all x and y values that could trigger the snapping effect for all nodes except for
@@ -106,6 +109,12 @@ type LineGuideUpdateOnResizeFunc = (
   dispatch: AppDispatch
 ) => ({ x: number } | { y: number })[];
 
+/**
+ * A function for setting horizontal and vertical line guides correctly so that an object
+ * which is being resized can be snapped to other nearby objects on the canvas. This function
+ * only considers resize events. For handling drag events, check the `handleLineGuidesUpdate`
+ * function, instead.
+*/
 export const handleLineGuidesUpdateOnResize: LineGuideUpdateOnResizeFunc = (
   node,
   anchorPos,

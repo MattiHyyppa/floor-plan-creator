@@ -2,12 +2,13 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
+import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import { type WindowConfig } from '../Shapes/Window';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
-import { updateShape } from '../../redux/slices/shapesSlice';
+import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 
 const validationSchema = Yup.object({
   windowWidth: Yup.number().required().positive(),
@@ -66,7 +67,15 @@ const WindowForm = ({ window: w }: WindowFormProps) => {
           label={t('forms.disableEditing')}
           checked={!w.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
+          mb={5}
         />
+        <BlackButton
+          width="100%"
+          disabled={!w.draggable}
+          onClick={() => dispatch(deleteShape({ id: w.id }))}
+        >
+          {t('forms.deleteObject')}
+        </BlackButton>
       </Form>
     </Formik>
   );

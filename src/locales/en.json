@@ -20,10 +20,19 @@
     "left": "Left",
     "wallThickness": "Wall thickness",
     "width": "Width",
-    "disableEditing": "Disable editing"
+    "disableEditing": "Disable editing",
+    "deleteObject": "Delete object"
   },
   "menu": {
     "add": "Add",
     "edit": "Edit"
+  },
+  "stage": {
+    "buttons": {
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "undo": "Undo",
+      "redo": "Redo"
+    }
   }
 }
