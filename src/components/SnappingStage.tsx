@@ -33,7 +33,8 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
 
   const verticalLineGuide = useAppSelector((state) => state.lineGuides.vertical);
   const horizontalLineGuide = useAppSelector((state) => state.lineGuides.horizontal);
-  const allShapes = useAppSelector((state) => state.canvas.shapes);
+  const canvasState = useAppSelector((state) => state.canvas);
+  const allShapes = canvasState.shapes;
 
   const dispatch = useAppDispatch();
 
@@ -67,6 +68,8 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
         <UndoRedoButtons
           onUndo={_e => dispatch(undoShapeOperation())}
           onRedo={_e => dispatch(redoShapeOperation())}
+          undoDisabled={canvasState.previousUpdatesIndex < 0}
+          redoDisabled={canvasState.previousUpdatesIndex >= canvasState.previousUpdates.length - 1}
         />
       </Box>
       <ReactReduxContext.Consumer>
