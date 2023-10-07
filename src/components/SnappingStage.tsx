@@ -12,6 +12,7 @@ import { useWindowSize, useAppSelector, useAppDispatch } from '../hooks';
 import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
 import { setSelectedId } from '../redux/slices/selectedIdSlice';
 import { undoShapeOperation, redoShapeOperation, } from '../redux/slices/canvasSlice';
+import { setActiveTab } from '../redux/slices/menuSlice';
 
 export interface SnappingStageConfig {
   children: React.ReactNode;
@@ -47,6 +48,7 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
     const clickedStage = e.target === e.target.getStage();
     if (clickedStage) {
       dispatch(setSelectedId(null));
+      dispatch(setActiveTab(0));
     }
   };
 

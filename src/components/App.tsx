@@ -18,8 +18,10 @@ import {
   isWall,
   isWindow,
 } from '../types';
+import type { CustomShapeConfig } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
+import { setActiveTab } from '../redux/slices/menuSlice';
 import SmallScreenAlert from './SmallScreenAlert';
 import Menu from './Menu';
 
@@ -35,6 +37,11 @@ const App = (): JSX.Element => {
   const handleLineGuidesOnResize = (node: Konva.Node, anchorPos: Vector2d) => (
     handleLineGuidesUpdateOnResize(node, anchorPos, dispatch)
   );
+
+  const selectShape = (shape: CustomShapeConfig) => {
+    dispatch(setSelectedShape(shape));
+    dispatch(setActiveTab(1));
+  };
 
   if (windowWidth < 700) {
     return <SmallScreenAlert />;
@@ -64,7 +71,7 @@ const App = (): JSX.Element => {
             <RectangleHouse
               key={house.id}
               isSelected={house.id === selectedId}
-              onSelect={() => dispatch(setSelectedShape(house))}
+              onSelect={() => selectShape(house)}
               onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
               house={house}
             />
@@ -73,7 +80,7 @@ const App = (): JSX.Element => {
             <LShapedHouse
               key={house.id}
               isSelected={house.id === selectedId}
-              onSelect={() => dispatch(setSelectedShape(house))}
+              onSelect={() => selectShape(house)}
               onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
               house={house}
             />
@@ -82,7 +89,7 @@ const App = (): JSX.Element => {
             <Wall
               key={wall.id}
               isSelected={wall.id === selectedId}
-              onSelect={() => dispatch(setSelectedShape(wall))}
+              onSelect={() => selectShape(wall)}
               onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
               handleLineGuidesOnResize={handleLineGuidesOnResize}
               wall={wall}
@@ -92,7 +99,7 @@ const App = (): JSX.Element => {
             <Door
               key={door.id}
               isSelected={door.id === selectedId}
-              onSelect={() => dispatch(setSelectedShape(door))}
+              onSelect={() => selectShape(door)}
               onChange={(newAttrs) => dispatch(updateShape({ id: door.id, newAttrs }))}
               door={door}
             />
@@ -101,7 +108,7 @@ const App = (): JSX.Element => {
             <Window
               key={shape.id}
               isSelected={shape.id === selectedId}
-              onSelect={() => dispatch(setSelectedShape(shape))}
+              onSelect={() => selectShape(shape)}
               onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
               window={shape}
             />
