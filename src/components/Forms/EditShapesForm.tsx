@@ -27,7 +27,7 @@ const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
 
   return (
     <Flex h="100%" direction="column" justifyContent="space-between">
-      <Box px={[2, null, 3]} pb={2} overflowY="auto">
+      <Box px={[2, null, 3]} pb={2}>
         {children}
       </Box>
       <Box px={[2, null, 3]} mt={4}>

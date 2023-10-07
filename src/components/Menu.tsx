@@ -24,10 +24,10 @@ const Menu = () => {
         <Tab fontSize="sm">{t('menu.edit')}</Tab>
       </TabList>
       <TabPanels h="calc(100% - 40px)">
-        <TabPanel px={1} pt={4} pb={0} h="100%">
+        <TabPanel px={1} pt={4} pb={0} h="100%" overflowY="auto">
           <AddShapeCatalogue />
         </TabPanel>
-        <TabPanel px={0} pt={4} pb={0} h="100%">
+        <TabPanel px={0} pt={4} pb={0} h="100%" overflowY="auto">
           <EditShapesForm />
         </TabPanel>
       </TabPanels>
