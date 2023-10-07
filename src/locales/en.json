@@ -20,7 +20,8 @@
     "left": "Left",
     "wallThickness": "Wall thickness",
     "width": "Width",
-    "disableEditing": "Disable editing"
+    "disableEditing": "Disable editing",
+    "deleteObject": "Delete object"
   },
   "menu": {
     "add": "Add",

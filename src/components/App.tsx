@@ -147,9 +147,9 @@ const App = (): JSX.Element => {
     handleLineGuidesUpdateOnResize(node, anchorPos, dispatch)
   );
 
-  useEffect(() => {
-    dispatch(setAllShapes(initShapes()));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(setAllShapes(initShapes()));
+  // }, [dispatch]);
 
   if (windowWidth < 700) {
     return <SmallScreenAlert />;

@@ -2,12 +2,13 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 
+import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import { type RectangleHouseConfig } from '../Shapes/RectangleHouse';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
-import { updateShape } from '../../redux/slices/canvasSlice';
+import { updateShape, deleteRectangleHouse } from '../../redux/slices/canvasSlice';
 
 const validationSchema = Yup.object({
   exteriorWidth: Yup.number().required().positive(),
@@ -77,7 +78,15 @@ const RectangleHouseForm = ({ house }: RectangleHouseFormProps) => {
           label={t('forms.disableEditing')}
           checked={!house.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
+          mb={5}
         />
+        <BlackButton
+          width="100%"
+          disabled={!house.draggable}
+          onClick={() => dispatch(deleteRectangleHouse({ id: house.id }))}
+        >
+          {t('forms.deleteObject')}
+        </BlackButton>
       </Form>
     </Formik>
   );

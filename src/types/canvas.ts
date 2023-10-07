@@ -27,14 +27,26 @@ export const isWindow = (shape: CustomShapeConfig): shape is WindowConfig => {
   return (shape as WindowConfig).windowWidth !== undefined;
 };
 
-export type CanvasOperation = 'update' | 'add' | 'delete';
+export type CanvasUpdate =
+  | {
+      operation: 'update';
+      previous: CustomShapeConfig;
+      current: CustomShapeConfig;
 
-export interface CanvasUpdate {
-  operation: CanvasOperation;
-  previous: CustomShapeConfig;
-  new: CustomShapeConfig;
-  index: number;
-}
+      // `shapes[index]` is the shape object that was updated by this canvas operation,
+      // where `shapes` has type `CanvasState['shapes']`.
+      index: number;
+    }
+  | {
+    operation: 'add';
+    current: CustomShapeConfig;
+    index: number;  // The shape at this index was added by this canvas operation.
+  }
+  | {
+    operation: 'delete';
+    previous: CustomShapeConfig;
+    index: number;  // The shape at this index was deleted by this canvas operation.
+  };
 
 export interface CanvasState {
   shapes: CustomShapeConfig[];
