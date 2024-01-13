@@ -95,8 +95,8 @@ export const canvasSlice = createSlice({
     addExteriorDoor: (state) => {
       const door: DoorConfig = {
         id: uuidv4(),
-        x: 100,
-        y: 100,
+        x: 75,
+        y: 75,
         rotation: 0,
         doorWidth: cmToPixels(80),
         kind: 'exterior',
@@ -116,8 +116,8 @@ export const canvasSlice = createSlice({
     addInteriorDoor: (state) => {
       const door: DoorConfig = {
         id: uuidv4(),
-        x: 100,
-        y: 100,
+        x: 75,
+        y: 75,
         rotation: 0,
         doorWidth: cmToPixels(80),
         kind: 'interior',
@@ -137,8 +137,8 @@ export const canvasSlice = createSlice({
     addWall: (state) => {
       const wall: WallConfig = {
         id: uuidv4(),
-        x: 100,
-        y: 100,
+        x: 75,
+        y: 75,
         rotation: 0,
         width: cmToPixels(300),
         wallThickness: cmToPixels(12),
@@ -156,8 +156,8 @@ export const canvasSlice = createSlice({
     addWindow: (state) => {
       const w: WindowConfig = {
         id: uuidv4(),
-        x: 100,
-        y: 100,
+        x: 75,
+        y: 75,
         rotation: 0,
         windowWidth: cmToPixels(200),
         wallThickness: cmToPixels(30),
