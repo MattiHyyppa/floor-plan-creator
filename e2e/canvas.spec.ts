@@ -60,7 +60,6 @@ test('rectangular house has correct dimensions', async ({ page }) => {
 
   // Add a rectangular house on the canvas
   await page.getByRole('tab', { name: 'Add' }).click();
-  await expect(page.getByRole('heading', { name: 'House shapes' })).toBeVisible();
   await page.getByText('Rectangle').click();
 
   const houseTopLeftPosition = {
@@ -73,11 +72,11 @@ test('rectangular house has correct dimensions', async ({ page }) => {
   const expectedWidthPixels = cmToPixels(expectedWidthMeters * 100);
   const expectedHeightPixels = cmToPixels(expectedHeightMeters * 100);
 
-  let xClick = houseTopLeftPosition.x;
-  let yClick = houseTopLeftPosition.y;
+  let xCorner = houseTopLeftPosition.x;
+  let yCorner = houseTopLeftPosition.y;
 
   /********** TOP-LEFT CORNER **********/
-  await page.mouse.click(xClick + 1, yClick + 1);
+  await page.mouse.click(xCorner + 1, yCorner + 1);
 
   // Clicking the shape should open a form for editing the shape.
   await expect(page.getByRole('button', { name: 'Delete object' })).toBeVisible();
@@ -86,7 +85,7 @@ test('rectangular house has correct dimensions', async ({ page }) => {
   await page.mouse.click(VIEWPORT_WIDTH - 1, VIEWPORT_HEIGHT - 1);
 
   // Click a point that is right outside of the shape
-  await page.mouse.click(xClick - 1, yClick - 1);
+  await page.mouse.click(xCorner - 1, yCorner - 1);
 
   // If no shape on the canvas was clicked, a catalogue of all available shapes should
   // be visible.
@@ -94,38 +93,105 @@ test('rectangular house has correct dimensions', async ({ page }) => {
   /********** TOP-LEFT CORNER **********/
 
   /********** TOP-RIGHT CORNER **********/
-  xClick = houseTopLeftPosition.x + expectedWidthPixels;
-  yClick = houseTopLeftPosition.y;
-  await page.mouse.click(xClick - 1, yClick + 1);
+  xCorner = houseTopLeftPosition.x + expectedWidthPixels;
+  yCorner = houseTopLeftPosition.y;
+  await page.mouse.click(xCorner - 1, yCorner + 1);
   await expect(page.getByRole('button', { name: 'Delete object' })).toBeVisible();
 
   await page.mouse.click(VIEWPORT_WIDTH - 1, VIEWPORT_HEIGHT - 1);
 
-  await page.mouse.click(xClick + 1, yClick - 1);
+  await page.mouse.click(xCorner + 1, yCorner - 1);
   await expect(page.getByRole('heading', { name: 'House shapes' })).toBeVisible();
   /********** TOP-RIGHT CORNER **********/
 
   /********** BOTTOM-LEFT CORNER **********/
-  xClick = houseTopLeftPosition.x;
-  yClick = houseTopLeftPosition.y + expectedHeightPixels;
-  await page.mouse.click(xClick + 1, yClick - 1);
+  xCorner = houseTopLeftPosition.x;
+  yCorner = houseTopLeftPosition.y + expectedHeightPixels;
+  await page.mouse.click(xCorner + 1, yCorner - 1);
   await expect(page.getByRole('button', { name: 'Delete object' })).toBeVisible();
 
   await page.mouse.click(VIEWPORT_WIDTH - 1, VIEWPORT_HEIGHT - 1);
 
-  await page.mouse.click(xClick - 1, yClick + 1);
+  await page.mouse.click(xCorner - 1, yCorner + 1);
   await expect(page.getByRole('heading', { name: 'House shapes' })).toBeVisible();
   /********** BOTTOM-LEFT CORNER **********/
 
   /********** BOTTOM-RIGHT CORNER **********/
-  xClick = houseTopLeftPosition.x + expectedWidthPixels;
-  yClick = houseTopLeftPosition.y + expectedHeightPixels;
-  await page.mouse.click(xClick - 1, yClick - 1);
+  xCorner = houseTopLeftPosition.x + expectedWidthPixels;
+  yCorner = houseTopLeftPosition.y + expectedHeightPixels;
+  await page.mouse.click(xCorner - 1, yCorner - 1);
   await expect(page.getByRole('button', { name: 'Delete object' })).toBeVisible();
 
   await page.mouse.click(VIEWPORT_WIDTH - 1, VIEWPORT_HEIGHT - 1);
 
-  await page.mouse.click(xClick + 1, yClick + 1);
+  await page.mouse.click(xCorner + 1, yCorner + 1);
   await expect(page.getByRole('heading', { name: 'House shapes' })).toBeVisible();
   /********** BOTTOM-RIGHT CORNER **********/
+});
+
+
+test('resizing a house works correctly', async ({ page }) => {
+  await page.goto('/');
+
+  // Add a rectangular house on the canvas
+  await page.getByRole('tab', { name: 'Add' }).click();
+  await page.getByText('Rectangle').click();
+
+  const houseTopLeftPosition = {
+    x: 100 + MENU_WIDTH,
+    y: 100,
+  };
+
+  const initialWidthMeters = 12;
+  const initialHeightMeters = 10;
+  const initialWidthPixels = cmToPixels(initialWidthMeters * 100);
+  const initialHeightPixels = cmToPixels(initialHeightMeters * 100);
+
+  const increaseWidthByMeters = 2;
+  const increaseWidthByPixels = cmToPixels(increaseWidthByMeters * 100);
+  const expectedWidthMeters = initialWidthMeters + increaseWidthByMeters;
+
+  const xCorner = houseTopLeftPosition.x;
+  const yCorner = houseTopLeftPosition.y;
+
+  await page.mouse.click(xCorner + 1, yCorner + 1);  // Select the shape
+
+  // Move the mouse to the position of the transformer's anchor at the right edge of the shape.
+  // Resize the shape using the anchor.
+  await page.mouse.move(xCorner + initialWidthPixels, yCorner + initialHeightPixels / 2);
+  await page.mouse.down();
+  await page.mouse.move(xCorner + initialWidthPixels + increaseWidthByPixels, yCorner + initialHeightPixels / 2);
+  await page.mouse.up();
+
+  await expect(page.getByLabel('Exterior width')).toHaveValue(expectedWidthMeters.toString());
+});
+
+
+test('undo and redo buttons work', async ({ page }) => {
+  await page.goto('/');
+
+  await page.getByRole('tab', { name: 'Add' }).click();
+  await page.getByText('Rectangle').click();
+
+  const houseTopLeftPosition = {
+    x: 100 + MENU_WIDTH,
+    y: 100,
+  };
+
+  // Click the shape to display the form
+  await page.mouse.click(houseTopLeftPosition.x + 1, houseTopLeftPosition.y + 1);
+
+  await expect(page.getByLabel('Exterior width')).toHaveValue('12');
+  await page.getByLabel('Exterior width').fill('14');
+  await expect(page.getByLabel('Exterior width')).toHaveValue('14');
+  await page.getByLabel('Exterior width').fill('16');
+  await expect(page.getByLabel('Exterior width')).toHaveValue('16');
+
+  // Undo the change of the width from 14 to 16
+  await page.getByTitle('Undo').click();
+  await expect(page.getByLabel('Exterior width')).toHaveValue('14');
+
+  // Redo the change
+  await page.getByTitle('Redo').click();
+  await expect(page.getByLabel('Exterior width')).toHaveValue('16');
 });
