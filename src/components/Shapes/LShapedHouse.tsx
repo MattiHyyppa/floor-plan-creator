@@ -34,7 +34,7 @@ import { cmToPixels } from '../../utils';
   a 90 deg rotation in either direction could be interpreted such that at least exteriorWidth
   and exteriorHeight would be swapped. However, the dimensions as specified in the picture
   apply for the case when rotation is zero and the names of the dimensions rotate with the shape.
-  Therefore, we don't have to worry about swapping any dimensions when rotating.
+  Therefore, we don't have to worry about swapping any names when rotating.
 
   NOTE! All the the custom shapes have a stroke of width `theme.strokeWidth` as determined
   in the project-dir/src/utils/shapeTheme.ts file. Konva handles drawing the stroke such that

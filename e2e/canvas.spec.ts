@@ -1,12 +1,12 @@
 /**
- * Some end-to-end tests for checking that shapes can be added on the canvas.
- * Interacting with the contents of a canvas is a bit more difficult than with
+ * Some end-to-end tests for checking that shapes can be added and updated on the
+ * canvas. Interacting with the contents of a canvas is a bit more difficult than with
  * regular DOM elements. These tests rely on the assumption that the position of
  * the shapes drawn on the canvas are known which enables using mouse click events
  * at those known positions.
  *
  * The file `src/redux/slices/canvasSlice.ts` contains a number of action creators
- * for adding shapes on the canvas and the initial top left position for all shapes
+ * for adding shapes on the canvas and the initial top left position for a house
  * is (x, y) = (100, 100). Notice that there is a menu component located on the
  * left-hand side of the canvas and the width of the menu needs to be taken into
  * consideration when determining which position on the screen should be clicked.
