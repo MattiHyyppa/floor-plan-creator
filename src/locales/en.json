@@ -25,7 +25,14 @@
   },
   "menu": {
     "add": "Add",
-    "edit": "Edit"
+    "edit": "Edit",
+    "file": "File",
+    "fileTab": {
+      "openProject": "Open project",
+      "openProjectTitle": "Open an existing project from a JSON file",
+      "exportProject": "Export project",
+      "exportProjectTitle": "Export the project into a JSON file"
+    }
   },
   "stage": {
     "buttons": {
