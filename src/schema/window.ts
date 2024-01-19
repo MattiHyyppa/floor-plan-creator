@@ -8,6 +8,7 @@ import {
 const windowSchema = object({
   // Required
   id: string().required(),
+  shape: string<'window'>().oneOf(['window']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

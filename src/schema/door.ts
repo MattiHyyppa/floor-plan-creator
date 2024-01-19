@@ -15,6 +15,7 @@ type OpeningDirection = typeof openingDirections[number];
 const doorSchema = object({
   // Required
   id: string().required(),
+  shape: string<'door'>().oneOf(['door']).required(),
   x: number().required(),
   y: number().required(),
   doorWidth: number().required(),

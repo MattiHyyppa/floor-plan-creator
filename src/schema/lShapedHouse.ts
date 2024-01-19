@@ -8,6 +8,7 @@ import {
 const lShapedHouseSchema = object({
   // Required
   id: string().required(),
+  shape: string<'lShapedHouse'>().oneOf(['lShapedHouse']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

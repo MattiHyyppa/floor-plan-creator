@@ -55,6 +55,7 @@ export const canvasSlice = createSlice({
     addRectangleHouse: (state) => {
       const house: RectangleHouseConfig = {
         id: uuidv4(),
+        shape: 'rectangleHouse',
         x: 100,
         y: 100,
         rotation: 0,
@@ -75,6 +76,7 @@ export const canvasSlice = createSlice({
     addLShapedHouse: (state) => {
       const house: LShapedHouseConfig = {
         id: uuidv4(),
+        shape: 'lShapedHouse',
         x: 100,
         y: 100,
         rotation: 0,
@@ -97,6 +99,7 @@ export const canvasSlice = createSlice({
     addExteriorDoor: (state) => {
       const door: DoorConfig = {
         id: uuidv4(),
+        shape: 'door',
         x: 75,
         y: 75,
         rotation: 0,
@@ -118,6 +121,7 @@ export const canvasSlice = createSlice({
     addInteriorDoor: (state) => {
       const door: DoorConfig = {
         id: uuidv4(),
+        shape: 'door',
         x: 75,
         y: 75,
         rotation: 0,
@@ -139,6 +143,7 @@ export const canvasSlice = createSlice({
     addWall: (state) => {
       const wall: WallConfig = {
         id: uuidv4(),
+        shape: 'wall',
         x: 75,
         y: 75,
         rotation: 0,
@@ -158,6 +163,7 @@ export const canvasSlice = createSlice({
     addWindow: (state) => {
       const w: WindowConfig = {
         id: uuidv4(),
+        shape: 'window',
         x: 75,
         y: 75,
         rotation: 0,
@@ -191,7 +197,7 @@ export const canvasSlice = createSlice({
       });
     },
 
-    updateShape: (state, action: PayloadAction<{ id: string, newAttrs: Partial<CustomShapeConfig> }>) => {
+    updateShape: (state, action: PayloadAction<{ id: string, newAttrs: Partial<Omit<CustomShapeConfig, 'shape'>> }>) => {
       const index = state.shapes.findIndex((shape) => shape.id === action.payload.id);
       if (index === -1) {
         return;

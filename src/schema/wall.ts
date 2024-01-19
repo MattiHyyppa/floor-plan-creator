@@ -8,6 +8,7 @@ import {
 const wallSchema = object({
   // Required
   id: string().required(),
+  shape: string<'wall'>().oneOf(['wall']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),
