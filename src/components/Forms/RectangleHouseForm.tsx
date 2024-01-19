@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
-import { type RectangleHouseConfig } from '../Shapes/RectangleHouse';
+import type { RectangleHouseConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';

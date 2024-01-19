@@ -1,8 +1,10 @@
-import { type DoorConfig } from '../components/Shapes/Door';
-import { type RectangleHouseConfig } from '../components/Shapes/RectangleHouse';
-import { type LShapedHouseConfig } from '../components/Shapes/LShapedHouse';
-import { type WallConfig } from '../components/Shapes/Wall';
-import { type WindowConfig } from '../components/Shapes/Window';
+import type {
+  DoorConfig,
+  RectangleHouseConfig,
+  LShapedHouseConfig,
+  WallConfig,
+  WindowConfig,
+} from './shapes';
 
 export type CustomShapeConfig = DoorConfig | RectangleHouseConfig | LShapedHouseConfig | WallConfig | WindowConfig;
 

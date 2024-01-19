@@ -3,19 +3,10 @@ import Konva from 'konva';
 import { Rect, Transformer } from 'react-konva';
 import { type Vector2d } from 'konva/lib/types';
 
+import type { WallConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setHorizontalLineGuide, setVerticalLineGuide } from '../../redux/slices/lineGuidesSlice';
-
-export interface WallConfig {
-  id: string;
-  x: number;
-  y: number;
-  rotation: number;
-  draggable?: boolean;
-  width: number;
-  wallThickness: number;
-}
 
 export interface WallProps {
   wall: WallConfig;

@@ -4,24 +4,11 @@ import { Shape, Transformer, Group, Rect } from 'react-konva';
 
 import { degToRadians, almostEqual, cmToPixels, } from '../../utils';
 import theme from '../../utils/shapeTheme';
-import { useAppSelector } from '../../hooks';
-import type { Box } from '../../types';
-
-export interface DoorConfig {
-  id: string;
-  x: number;
-  y: number;
-  doorWidth: number;
-  rotation: number;
-  wallThickness: number;
-  kind: 'interior' | 'exterior';
-  openingDirection: 'right' | 'left';
-  isSelected?: boolean;
-  draggable?: boolean;
-}
+import type { DoorConfig, Box } from '../../types';
 
 interface DoorProps {
   door: DoorConfig;
+  isSelected?: boolean;
 
   onChange?: (newAttrs: DoorConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
@@ -47,10 +34,7 @@ const initialTransformerBox: InitialTransformerBoxFunc = (x, y, rotation, wallTh
   };
 };
 
-const Door = ({ door, onChange, onSelect }: DoorProps): JSX.Element => {
-  const selectedId = useAppSelector((state) => state.selectedId.value);
-  const isSelected = selectedId === door.id;
-
+const Door = ({ door, onChange, onSelect, isSelected }: DoorProps): JSX.Element => {
   const { doorWidth, wallThickness, kind, openingDirection } = door;
   const additionalHeight = kind === 'interior' ? wallThickness : wallThickness / 2;
 

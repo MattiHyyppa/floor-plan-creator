@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Shape, Transformer, Group } from 'react-konva';
 
-import { RectangleHouseConfig } from './RectangleHouse';
+import type { LShapedHouseConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
 
@@ -42,10 +42,6 @@ import { cmToPixels } from '../../utils';
   and y params are both set to 100 and `theme.strokeWidth === 1`, the top-left corner is actually
   drawn at (99.5, 99.5).
 */
-export interface LShapedHouseConfig extends RectangleHouseConfig {
-  firstWingWidth: number;
-  secondWingWidth: number;
-}
 
 export interface LShapedHouseProps {
   house: LShapedHouseConfig;

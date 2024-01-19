@@ -3,11 +3,13 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import { v4 as uuidv4 } from 'uuid';
 
 import type { CustomShapeConfig, CanvasState, CanvasUpdate } from '../../types';
-import type { RectangleHouseConfig } from '../../components/Shapes/RectangleHouse';
-import type { LShapedHouseConfig } from '../../components/Shapes/LShapedHouse';
-import type { WallConfig } from '../../components/Shapes/Wall';
-import type { DoorConfig } from '../../components/Shapes/Door';
-import type { WindowConfig } from '../../components/Shapes/Window';
+import type {
+  RectangleHouseConfig,
+  LShapedHouseConfig,
+  WallConfig,
+  DoorConfig,
+  WindowConfig,
+} from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
 // How many canvas update operations can be stored before new entries start replacing the

@@ -2,19 +2,9 @@ import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Rect, Transformer, Group } from 'react-konva';
 
+import type { RectangleHouseConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
-
-export interface RectangleHouseConfig {
-  id: string;
-  x: number;
-  y: number;
-  rotation: number;
-  draggable?: boolean;
-  exteriorWidth: number;
-  exteriorHeight: number;
-  wallThickness: number;
-}
 
 export interface RectangleHouseProps {
   house: RectangleHouseConfig;

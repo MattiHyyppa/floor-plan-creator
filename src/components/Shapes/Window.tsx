@@ -2,17 +2,8 @@ import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Shape, Transformer } from 'react-konva';
 
+import type { WindowConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
-
-export interface WindowConfig {
-  id: string;
-  x: number;
-  y: number;
-  rotation: number;
-  draggable?: boolean;
-  windowWidth: number;
-  wallThickness: number;
-}
 
 export interface WindowProps {
   window: WindowConfig;
