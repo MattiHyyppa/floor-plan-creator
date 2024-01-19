@@ -31,7 +31,7 @@
       "openProject": "Open project",
       "openProjectTitle": "Open an existing project from a JSON file",
       "exportProject": "Export project",
-      "exportProjectTitle": "Export the project into a JSON file"
+      "exportProjectTitle": "Export the current project into a JSON file"
     }
   },
   "stage": {
