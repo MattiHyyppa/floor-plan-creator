@@ -12,9 +12,9 @@ const rectangleHouseSchema = object({
   x: number().required(),
   y: number().required(),
   rotation: number().required(),
-  exteriorWidth: number().required(),
-  exteriorHeight: number().required(),
-  wallThickness: number().required(),
+  exteriorWidth: number().positive().required(),
+  exteriorHeight: number().positive().required(),
+  wallThickness: number().positive().required(),
 
   // Optional
   draggable: boolean(),

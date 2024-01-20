@@ -12,8 +12,8 @@ const wallSchema = object({
   x: number().required(),
   y: number().required(),
   rotation: number().required(),
-  width: number().required(),
-  wallThickness: number().required(),
+  width: number().positive().required(),
+  wallThickness: number().positive().required(),
 
   // Optional
   draggable: boolean(),

@@ -12,8 +12,8 @@ const windowSchema = object({
   x: number().required(),
   y: number().required(),
   rotation: number().required(),
-  windowWidth: number().required(),
-  wallThickness: number().required(),
+  windowWidth: number().positive().required(),
+  wallThickness: number().positive().required(),
 
   // Optional
   draggable: boolean(),

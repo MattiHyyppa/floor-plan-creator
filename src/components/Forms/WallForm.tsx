@@ -9,10 +9,9 @@ import type { WallConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
+import wallSchema from '../../schema/wall';
 
-const validationSchema = Yup.object({
-  width: Yup.number().required().positive(),
-  wallThickness: Yup.number().required().positive(),
+const validationSchema = wallSchema.pick(['width', 'wallThickness']).shape({
   disabled: Yup.boolean().required(),
 });
 

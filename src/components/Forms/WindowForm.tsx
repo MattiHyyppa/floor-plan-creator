@@ -9,10 +9,9 @@ import type { WindowConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
+import windowSchema from '../../schema/window';
 
-const validationSchema = Yup.object({
-  windowWidth: Yup.number().required().positive(),
-  wallThickness: Yup.number().required().positive(),
+const validationSchema = windowSchema.pick(['windowWidth', 'wallThickness']).shape({
   disabled: Yup.boolean().required(),
 });
 

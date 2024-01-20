@@ -1,3 +1,10 @@
+import {
+  RadioGroup,
+  Stack,
+  Radio,
+  FormControl,
+  FormLabel,
+} from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
@@ -9,12 +16,9 @@ import type { DoorConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
+import doorSchema, { isDoorKind, isOpeningDirection } from '../../schema/door';
 
-const validationSchema = Yup.object({
-  doorWidth: Yup.number().required().positive(),
-  isExteriorDoor: Yup.boolean().required(),
-  opensRight: Yup.boolean().required(),
-  wallThickness: Yup.number().required().positive(),
+const validationSchema = doorSchema.pick(['doorWidth', 'kind', 'openingDirection', 'wallThickness']).shape({
   disabled: Yup.boolean().required(),
 });
 
@@ -29,8 +33,8 @@ const DoorForm = ({ door }: DoorFormProps) => {
 
   const initialValues = {
     doorWidth: round(pixelsToMeters(door.doorWidth), decimals),
-    isExteriorDoor: door.kind === 'exterior',
-    opensRight: door.openingDirection === 'right',
+    kind: door.kind,
+    openingDirection: door.openingDirection,
     wallThickness: round(pixelsToMeters(door.wallThickness), decimals),
     disabled: !door.draggable,
   };
@@ -41,10 +45,6 @@ const DoorForm = ({ door }: DoorFormProps) => {
 
   const commonNumberFormProps = {
     decimals,
-    disabled: !door.draggable,
-  };
-
-  const commonSwitchFormProps = {
     disabled: !door.draggable,
   };
 
@@ -69,34 +69,46 @@ const DoorForm = ({ door }: DoorFormProps) => {
           mb={3}
           {...commonNumberFormProps}
         />
-        <SwitchFormControl
-          id={`isExteriorDoor-${door.id}`}
-          name="isExteriorDoor"
-          label={t('forms.doorType')}
-          option1={t('forms.interior') || undefined}
-          option2={t('forms.exterior') || undefined}
-          checked={door.kind === 'exterior'}
-          updateRedux={(value) => {
-            const doorType: DoorConfig['kind'] = value ? 'exterior': 'interior';
-            updateRedux({ kind: doorType });
-          }}
-          mb={3}
-          {...commonSwitchFormProps}
-        />
-        <SwitchFormControl
-          id={`opensRight-${door.id}`}
-          name="opensRight"
-          label={t('forms.doorOpeningDirection')}
-          option1={t('forms.left') || undefined}
-          option2={t('forms.right') || undefined}
-          checked={door.openingDirection === 'right'}
-          updateRedux={(value) => {
-            const direction: DoorConfig['openingDirection'] = value ? 'right': 'left';
-            updateRedux({ openingDirection: direction });
-          }}
-          mb={3}
-          {...commonSwitchFormProps}
-        />
+        <FormControl>
+          <FormLabel htmlFor="doorKind" fontSize="sm" mb={1}>{t('forms.doorType')}</FormLabel>
+          <RadioGroup
+            id="doorKind"
+            name="kind"
+            value={door.kind}
+            onChange={value => isDoorKind(value) && updateRedux({ kind: value })}
+            isDisabled={!door.draggable}
+            mb={3}
+          >
+            <Stack direction="column">
+              <Radio value="interior" size="sm">
+                {t('forms.interior')}
+              </Radio>
+              <Radio value="exterior" size="sm">
+                {t('forms.exterior')}
+              </Radio>
+            </Stack>
+          </RadioGroup>
+        </FormControl>
+        <FormControl>
+          <FormLabel htmlFor="openingDirection" fontSize="sm" mb={1}>{t('forms.doorOpeningDirection')}</FormLabel>
+          <RadioGroup
+            id="openingDirection"
+            name="openingDirection"
+            value={door.openingDirection}
+            onChange={value => isOpeningDirection(value) && updateRedux({ openingDirection: value })}
+            isDisabled={!door.draggable}
+            mb={3}
+          >
+            <Stack direction="column">
+              <Radio value="left" size="sm">
+                {t('forms.left')}
+              </Radio>
+              <Radio value="right" size="sm">
+                {t('forms.right')}
+              </Radio>
+            </Stack>
+          </RadioGroup>
+        </FormControl>
         <SwitchFormControl
           id={`disabled-${door.id}`}
           name="disabled"

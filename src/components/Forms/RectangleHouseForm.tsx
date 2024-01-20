@@ -9,11 +9,9 @@ import type { RectangleHouseConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
+import rectangleHouseSchema from '../../schema/rectangleHouse';
 
-const validationSchema = Yup.object({
-  exteriorWidth: Yup.number().required().positive(),
-  exteriorHeight: Yup.number().required().positive(),
-  wallThickness: Yup.number().required().positive(),
+const validationSchema = rectangleHouseSchema.pick(['exteriorWidth', 'exteriorHeight', 'wallThickness']).shape({
   disabled: Yup.boolean().required(),
 });
 

@@ -9,16 +9,17 @@ import type { LShapedHouseConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
+import lShapedHouseSchema from '../../schema/lShapedHouse';
 
-const validationSchema = Yup.object({
-  exteriorWidth: Yup.number().required().positive(),
-  exteriorHeight: Yup.number().required().positive(),
-  wallThickness: Yup.number().required().positive(),
-  firstWingWidth: Yup.number().required().positive(),
-  secondWingWidth: Yup.number().required().positive(),
+const validationSchema = lShapedHouseSchema.pick([
+  'exteriorWidth',
+  'exteriorHeight',
+  'wallThickness',
+  'firstWingWidth',
+  'secondWingWidth'
+]).shape({
   disabled: Yup.boolean().required(),
 });
-
 
 interface LShapedHouseFormProps {
   house: LShapedHouseConfig;
