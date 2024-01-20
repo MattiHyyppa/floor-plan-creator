@@ -9,24 +9,23 @@ import type {
 export type CustomShapeConfig = DoorConfig | RectangleHouseConfig | LShapedHouseConfig | WallConfig | WindowConfig;
 
 export const isDoor = (shape: CustomShapeConfig): shape is DoorConfig => {
-  return (shape as DoorConfig).doorWidth !== undefined;
+  return (shape as DoorConfig).shape === 'door';
 };
 
 export const isRectangleHouse = (shape: CustomShapeConfig): shape is RectangleHouseConfig => {
-  return (shape as RectangleHouseConfig).exteriorWidth !== undefined && !isLShapedHouse(shape);
+  return (shape as RectangleHouseConfig).shape === 'rectangleHouse';
 };
 
 export const isLShapedHouse = (shape: CustomShapeConfig): shape is LShapedHouseConfig => {
-  return (shape as LShapedHouseConfig).firstWingWidth !== undefined;
+  return (shape as LShapedHouseConfig).shape === 'lShapedHouse';
 };
 
 export const isWall = (shape: CustomShapeConfig): shape is WallConfig => {
-  return (shape as WallConfig).wallThickness !== undefined &&
-    !('exteriorWidth' in shape) && !('doorWidth' in shape) && !('windowWidth' in shape);
+  return (shape as WallConfig).shape === 'wall';
 };
 
 export const isWindow = (shape: CustomShapeConfig): shape is WindowConfig => {
-  return (shape as WindowConfig).windowWidth !== undefined;
+  return (shape as WindowConfig).shape === 'window';
 };
 
 export type CanvasUpdate =
