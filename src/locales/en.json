@@ -30,6 +30,7 @@
     "fileTab": {
       "openProject": "Open project",
       "openProjectTitle": "Open an existing project from a JSON file",
+      "openingProjectFailedMessage": "Opening a project from the selected file failed. The file contents were not correctly formatted.",
       "exportProject": "Export project",
       "exportProjectTitle": "Export the current project into a JSON file"
     }

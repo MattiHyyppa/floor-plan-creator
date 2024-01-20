@@ -1,21 +1,39 @@
-import { Box } from '@chakra-ui/react';
+import { Box, useToast } from '@chakra-ui/react';
 import { useTranslation } from 'react-i18next';
 
 import FileUpload from './FileUpload';
 import DownloadButton from './DownloadButton';
-import { useAppSelector } from '../hooks';
+import { useAppSelector, useAppDispatch } from '../hooks';
+import { loadShapesFromFile } from '../utils/import';
 
 const FileOptions = () => {
-  const { t } = useTranslation();
   const allShapes = useAppSelector((state) => state.canvas.shapes);
   const fileContent = JSON.stringify(allShapes, null, '  ');
   const filename = 'floor-plan-creator.json';
+
+  const { t } = useTranslation();
+  const dispatch = useAppDispatch();
+  const toast = useToast();
+
+  const loadFile = async (fileContent: string) => {
+    const result = await loadShapesFromFile(fileContent, dispatch);
+    if (result.status === 'error') {
+      toast({
+        description: t('menu.fileTab.openingProjectFailedMessage'),
+        status: 'error',
+        position: 'top',
+        variant: 'subtle',
+        duration: 7000,
+        isClosable: true,
+      });
+    }
+  };
 
   return (
     <Box>
       <FileUpload
         acceptedFileTypes="json"
-        loadFile={(fileContent) => console.log(fileContent)}
+        loadFile={loadFile}
         mb={4}
       />
       <DownloadButton
