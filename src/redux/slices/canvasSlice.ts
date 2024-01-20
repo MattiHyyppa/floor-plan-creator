@@ -50,6 +50,12 @@ export const canvasSlice = createSlice({
 
     setAllShapes: (state, action: PayloadAction<CustomShapeConfig[]>) => {
       state.shapes = action.payload;
+
+      /* Reset the history of previous updates. This is necessary because the history is being updated by keeping
+      track of the changes made to one object at a time. For now, the history cannot process changes that update
+      multiple shape objects at a time. */
+      state.previousUpdates = initialState.previousUpdates;
+      state.previousUpdatesIndex =initialState.previousUpdatesIndex;
     },
 
     addRectangleHouse: (state) => {
