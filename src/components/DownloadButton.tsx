@@ -14,20 +14,17 @@ const DownloadButton = ({ fileContent, filename, ...props }: DownloadButtonProps
   const file = new Blob([fileContent], { type: 'text/plain' });
 
   return (
-    <BlackButton
-      width="100%"
-      {...props}
+    <Link
+      download={filename}
+      target="_blank"
+      rel="noreferrer"
+      href={URL.createObjectURL(file)}
+      style={{ textDecoration: 'none' }}
     >
-      <Link
-        download={filename}
-        target="_blank"
-        rel="noreferrer"
-        href={URL.createObjectURL(file)}
-        style={{ textDecoration: 'none' }}
-      >
+      <BlackButton w="100%" {...props}>
         {t('menu.fileTab.exportProject')}
-      </Link>
-    </BlackButton>
+      </BlackButton>
+    </Link>
   );
 };
 
