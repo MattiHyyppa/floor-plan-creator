@@ -9,6 +9,7 @@ import LShapedHouse from './Shapes/LShapedHouse';
 import Wall from './Shapes/Wall';
 import SnappingStage from './SnappingStage';
 import Window from './Shapes/Window';
+import BoxShape from './Shapes/Box';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import {
@@ -17,6 +18,7 @@ import {
   isLShapedHouse,
   isWall,
   isWindow,
+  isBox,
 } from '../types';
 import type { CustomShapeConfig } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
@@ -111,6 +113,15 @@ const App = (): JSX.Element => {
               onSelect={() => selectShape(shape)}
               onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
               window={shape}
+            />
+          ))}
+          {allShapes.filter(isBox).map(shape => (
+            <BoxShape
+              key={shape.id}
+              isSelected={shape.id === selectedId}
+              onSelect={() => selectShape(shape)}
+              onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
+              box={shape}
             />
           ))}
         </SnappingStage>

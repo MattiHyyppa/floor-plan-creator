@@ -9,6 +9,7 @@ import type {
   WallConfig,
   DoorConfig,
   WindowConfig,
+  BoxConfig,
 } from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
@@ -186,6 +187,26 @@ export const canvasSlice = createSlice({
       });
     },
 
+    addBox: (state) => {
+      const box: BoxConfig = {
+        id: uuidv4(),
+        shape: 'box',
+        x: 75,
+        y: 75,
+        rotation: 0,
+        width: cmToPixels(100),
+        height: cmToPixels(60),
+        draggable: true,
+      };
+
+      state.shapes.push(box);
+      addToHistory(state, {
+        operation: 'add',
+        current: box,
+        index: state.shapes.length - 1,
+      });
+    },
+
     deleteShape: (state, action: PayloadAction<{ id: string }>) => {
       const indexToDelete = state.shapes.findIndex(shape => shape.id === action.payload.id);
 
@@ -301,6 +322,7 @@ export const {
   addExteriorDoor,
   addWall,
   addWindow,
+  addBox,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

@@ -13,6 +13,7 @@ import LShapedHouseForm from './LShapedHouseForm';
 import DoorForm from './DoorForm';
 import WallForm from './WallForm';
 import WindowForm from './WindowForm';
+import BoxForm from './BoxForm';
 import { useAppSelector } from '../../hooks';
 import {
   isRectangleHouse,
@@ -20,6 +21,7 @@ import {
   isDoor,
   isWall,
   isWindow,
+  isBox,
 } from '../../types';
 
 const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
@@ -86,6 +88,14 @@ const EditShapesForm = () => {
     return (
       <FormWithAlert>
         <WindowForm window={shapeToBeEdited} />
+      </FormWithAlert>
+    );
+  }
+
+  if (isBox(shapeToBeEdited)) {
+    return (
+      <FormWithAlert>
+        <BoxForm box={shapeToBeEdited} />
       </FormWithAlert>
     );
   }

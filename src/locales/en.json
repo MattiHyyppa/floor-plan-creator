@@ -20,6 +20,7 @@
     "left": "Left",
     "wallThickness": "Wall thickness",
     "width": "Width",
+    "height": "Height",
     "disableEditing": "Disable editing",
     "deleteObject": "Delete object"
   },
@@ -51,6 +52,7 @@
     "window": "Window",
     "wall": "Wall",
     "exteriorDoor": "Exterior door",
-    "interiorDoor": "Interior door"
+    "interiorDoor": "Interior door",
+    "box": "Box"
   }
 }
