@@ -5,33 +5,32 @@ import { useTranslation } from 'react-i18next';
 import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
-import type { RectangleHouseConfig } from '../../types';
+import type { ColdApplianceConfig } from '../../types';
 import { pixelsToMeters, round } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
-import rectangleHouseSchema from '../../schema/rectangleHouse';
+import coldApplianceSchema from '../../schema/coldAppliance';
 
-const validationSchema = rectangleHouseSchema.pick(['exteriorWidth', 'exteriorHeight', 'wallThickness']).shape({
+const validationSchema = coldApplianceSchema.pick(['width', 'height']).shape({
   disabled: Yup.boolean().required(),
 });
 
-interface RectangleHouseFormProps {
-  shape: RectangleHouseConfig;
+interface ColdApplianceFormProps {
+  shape: ColdApplianceConfig;
 }
 
-const RectangleHouseForm = ({ shape }: RectangleHouseFormProps) => {
+const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
   const initialValues = {
-    exteriorWidth: round(pixelsToMeters(shape.exteriorWidth), decimals),
-    exteriorHeight: round(pixelsToMeters(shape.exteriorHeight), decimals),
-    wallThickness: round(pixelsToMeters(shape.wallThickness), decimals),
+    width: round(pixelsToMeters(shape.width), decimals),
+    height: round(pixelsToMeters(shape.height), decimals),
     disabled: !shape.draggable,
   };
 
-  const updateRedux = (newAttrs: Partial<RectangleHouseConfig>) => {
+  const updateRedux = (newAttrs: Partial<ColdApplianceConfig>) => {
     dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
@@ -44,29 +43,20 @@ const RectangleHouseForm = ({ shape }: RectangleHouseFormProps) => {
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={() => void(0)}>
       <Form>
         <NumberFormControl
-          id="rectangleHouseWidth"
-          name="exteriorWidth"
-          label={t('forms.exteriorWidth')}
-          transformedValue={pixelsToMeters(shape.exteriorWidth)}
-          updateRedux={(value) => updateRedux({ exteriorWidth: value })}
+          id="coldApplianceWidth"
+          name="width"
+          label={t('forms.width')}
+          transformedValue={pixelsToMeters(shape.width)}
+          updateRedux={(value) => updateRedux({ width: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id="rectangleHouseHeight"
-          name="exteriorHeight"
-          label={t('forms.exteriorHeight')}
-          transformedValue={pixelsToMeters(shape.exteriorHeight)}
-          updateRedux={(value) => updateRedux({ exteriorHeight: value })}
-          mb={3}
-          {...commonNumberFormProps}
-        />
-        <NumberFormControl
-          id="rectangleHouseWallThickness"
-          name="wallThickness"
-          label={t('forms.exteriorWallThickness')}
-          transformedValue={pixelsToMeters(shape.wallThickness)}
-          updateRedux={(value) => updateRedux({ wallThickness: value })}
+          id="coldApplianceHeight"
+          name="height"
+          label={t('forms.height')}
+          transformedValue={pixelsToMeters(shape.height)}
+          updateRedux={(value) => updateRedux({ height: value })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -90,4 +80,4 @@ const RectangleHouseForm = ({ shape }: RectangleHouseFormProps) => {
   );
 };
 
-export default RectangleHouseForm;
+export default ColdApplianceForm;

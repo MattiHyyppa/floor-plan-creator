@@ -3,6 +3,9 @@ import rectangleHouseSchema from '../schema/rectangleHouse';
 import lShapedHouseSchema from '../schema/lShapedHouse';
 import wallSchema from '../schema/wall';
 import windowSchema from '../schema/window';
+import boxSchema from '../schema/box';
+import coldApplianceSchema from '../schema/coldAppliance';
+
 import { setAllShapes } from '../redux/slices/canvasSlice';
 import type { CustomShapeConfig } from '../types';
 import type { AppDispatch } from '../redux';
@@ -14,6 +17,8 @@ const shapeToSchema = {
   lShapedHouse: lShapedHouseSchema,
   wall: wallSchema,
   window: windowSchema,
+  box: boxSchema,
+  coldAppliance: coldApplianceSchema,
 };
 
 
@@ -29,7 +34,7 @@ export const loadShapesFromFile = async (fileContent: string, dispatch: AppDispa
 
 export const validateShapesJSON = async (data: unknown): Promise<CustomShapeConfig[] | null> => {
   if (!Array.isArray(data)) {
-    console.log('An error occurred when validating shapes from a JSON file');
+    console.log('The JSON data is not an array');
     return null;
   }
 
@@ -37,13 +42,13 @@ export const validateShapesJSON = async (data: unknown): Promise<CustomShapeConf
 
   for (const shape of data) {
     if ((typeof shape !== 'object') || !('shape' in shape) || (typeof shape['shape'] !== 'string')) {
-      console.log('An error occurred when validating shapes from a JSON file');
+      console.log('The shape', shape, 'is not formatted correctly');
       return null;
     }
 
     const shapeName = shape['shape'];
     if (!(shapeName in shapeToSchema)) {
-      console.log('An error occurred when validating shapes from a JSON file');
+      console.log('Validation schema could not be found for shape', shape);
       return null;
     }
 
@@ -54,7 +59,7 @@ export const validateShapesJSON = async (data: unknown): Promise<CustomShapeConf
       const validatedShape = await schema.validate(shape, { stripUnknown: true });
       validatedData.push(validatedShape);
     } catch (error) {
-      console.log('An error occurred when validating shapes from a JSON file');
+      console.log('Validation error occurred when trying to validate shape', shape);
       console.log(error);
       return null;
     }
@@ -65,7 +70,7 @@ export const validateShapesJSON = async (data: unknown): Promise<CustomShapeConf
   const idSet = new Set(idArray);
 
   if (idSet.size < idArray.length) {
-    console.log('An error occurred when validating shapes from a JSON file');
+    console.log('The IDs of the shapes were not unique');
     return null;
   }
 

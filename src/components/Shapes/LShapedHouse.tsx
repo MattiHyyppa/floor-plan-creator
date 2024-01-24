@@ -44,7 +44,7 @@ import { cmToPixels } from '../../utils';
 */
 
 export interface LShapedHouseProps {
-  house: LShapedHouseConfig;
+  shape: LShapedHouseConfig;
   isSelected?: boolean;
 
   onChange?: (newAttrs: LShapedHouseConfig) => void;
@@ -60,28 +60,28 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
-  const { isSelected, onSelect, onChange, house } = props;
+  const { isSelected, onSelect, onChange, shape } = props;
 
   useEffect(() => {
-    if (isSelected && house.draggable && transformerRef.current && groupRef.current) {
+    if (isSelected && shape.draggable && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected, house.draggable]);
+  }, [isSelected, shape.draggable]);
 
   return (
     <>
       <Group
         ref={groupRef}
         name="object"
-        {...house}
-        width={house.exteriorWidth}
-        height={house.exteriorHeight}
+        {...shape}
+        width={shape.exteriorWidth}
+        height={shape.exteriorHeight}
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
-            ...house,
+            ...shape,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
@@ -100,57 +100,57 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
           node.scaleY(1);
 
           onChange && onChange({
-            ...house,
+            ...shape,
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
-            exteriorWidth: house.exteriorWidth * scaleX,
-            exteriorHeight: house.exteriorHeight * scaleY,
-            firstWingWidth: house.firstWingWidth * scaleY,
-            secondWingWidth: house.secondWingWidth * scaleX,
+            exteriorWidth: shape.exteriorWidth * scaleX,
+            exteriorHeight: shape.exteriorHeight * scaleY,
+            firstWingWidth: shape.firstWingWidth * scaleY,
+            secondWingWidth: shape.secondWingWidth * scaleX,
           });
         }}
       >
         <Shape
           x={0}
           y={0}
-          width={house.exteriorWidth}
-          height={house.exteriorHeight}
+          width={shape.exteriorWidth}
+          height={shape.exteriorHeight}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
           fill={theme.wallColor}
           onClick={onSelect}
           onTap={onSelect}
-          sceneFunc={(context, shape) => {
+          sceneFunc={(context, canvasShape) => {
             context.beginPath();
             context.moveTo(0, 0);
-            context.lineTo(0, house.exteriorHeight);
-            context.lineTo(house.exteriorWidth, house.exteriorHeight);
-            context.lineTo(house.exteriorWidth, house.exteriorHeight - house.firstWingWidth);
-            context.lineTo(house.secondWingWidth, house.exteriorHeight - house.firstWingWidth);
-            context.lineTo(house.secondWingWidth, 0);
+            context.lineTo(0, shape.exteriorHeight);
+            context.lineTo(shape.exteriorWidth, shape.exteriorHeight);
+            context.lineTo(shape.exteriorWidth, shape.exteriorHeight - shape.firstWingWidth);
+            context.lineTo(shape.secondWingWidth, shape.exteriorHeight - shape.firstWingWidth);
+            context.lineTo(shape.secondWingWidth, 0);
             context.closePath();
-            context.fillStrokeShape(shape);
+            context.fillStrokeShape(canvasShape);
           }}
         />
         <Shape
           x={0}
           y={0}
-          width={house.exteriorWidth}
-          height={house.exteriorHeight}
+          width={shape.exteriorWidth}
+          height={shape.exteriorHeight}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
           fill={theme.floorColor}
           onClick={onSelect}
           onTap={onSelect}
-          sceneFunc={(context, shape) => {
+          sceneFunc={(context, canvasShape) => {
             const {
               exteriorWidth,
               exteriorHeight,
               wallThickness,
               firstWingWidth,
               secondWingWidth,
-            } = house;
+            } = shape;
 
             context.beginPath();
             context.moveTo(wallThickness, wallThickness);
@@ -160,13 +160,13 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
             context.lineTo(secondWingWidth - wallThickness, exteriorHeight - firstWingWidth + wallThickness);
             context.lineTo(secondWingWidth - wallThickness, wallThickness);
             context.closePath();
-            context.fillStrokeShape(shape);
+            context.fillStrokeShape(canvasShape);
           }}
         />
       </Group>
-      {isSelected && house.draggable && (
+      {isSelected && shape.draggable && (
         <Transformer
-          id={`${house.id}-transformer`}
+          id={`${shape.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

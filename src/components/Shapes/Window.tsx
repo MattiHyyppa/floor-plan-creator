@@ -6,7 +6,7 @@ import type { WindowConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
 
 export interface WindowProps {
-  window: WindowConfig;
+  shape: WindowConfig;
   isSelected?: boolean;
 
   onChange?: (newAttrs: WindowConfig) => void;
@@ -14,28 +14,28 @@ export interface WindowProps {
 }
 
 const Window = (props: WindowProps): JSX.Element => {
-  const { window: w, isSelected, onChange, onSelect } = props;
+  const { shape, isSelected, onChange, onSelect } = props;
 
   const shapeRef = useRef<Konva.Shape>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
   useEffect(() => {
-    if (isSelected && w.draggable && transformerRef.current && shapeRef.current) {
+    if (isSelected && shape.draggable && transformerRef.current && shapeRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([shapeRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected, w.draggable]);
+  }, [isSelected, shape.draggable]);
 
-  const width = w.windowWidth;
-  const height = w.wallThickness;
+  const width = shape.windowWidth;
+  const height = shape.wallThickness;
 
   return (
     <>
       <Shape
         ref={shapeRef}
         name="object"
-        {...w}
+        {...shape}
         width={width}
         height={height}
         onClick={onSelect}
@@ -46,7 +46,7 @@ const Window = (props: WindowProps): JSX.Element => {
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
-            ...w,
+            ...shape,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
@@ -65,7 +65,7 @@ const Window = (props: WindowProps): JSX.Element => {
           node.scaleY(1);
 
           onChange && onChange({
-            ...w,
+            ...shape,
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
@@ -73,7 +73,7 @@ const Window = (props: WindowProps): JSX.Element => {
             wallThickness: node.height() * scaleY,
           });
         }}
-        sceneFunc={(context, shape) => {
+        sceneFunc={(context, canvasShape) => {
           context.beginPath();
           context.moveTo(0, 0);
           context.lineTo(width, 0);
@@ -83,12 +83,12 @@ const Window = (props: WindowProps): JSX.Element => {
           context.moveTo(0, height / 2);
           context.lineTo(width, height / 2);
           context.closePath();
-          context.fillStrokeShape(shape);
+          context.fillStrokeShape(canvasShape);
         }}
       />
-      {isSelected && w.draggable && (
+      {isSelected && shape.draggable && (
         <Transformer
-          id={`${w.id}-transformer`}
+          id={`${shape.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

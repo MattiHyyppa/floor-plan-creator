@@ -7,7 +7,7 @@ import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
 
 export interface RectangleHouseProps {
-  house: RectangleHouseConfig;
+  shape: RectangleHouseConfig;
   isSelected?: boolean;
 
   onChange?: (newAttrs: RectangleHouseConfig) => void;
@@ -21,28 +21,28 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
-  const { isSelected, onSelect, onChange, house } = props;
+  const { isSelected, onSelect, onChange, shape } = props;
 
   useEffect(() => {
-    if (isSelected && house.draggable && transformerRef.current && groupRef.current) {
+    if (isSelected && shape.draggable && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected, house.draggable]);
+  }, [isSelected, shape.draggable]);
 
   return (
     <>
       <Group
         ref={groupRef}
         name="object"
-        {...house}
-        width={house.exteriorWidth}
-        height={house.exteriorHeight}
+        {...shape}
+        width={shape.exteriorWidth}
+        height={shape.exteriorHeight}
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
-            ...house,
+            ...shape,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
@@ -61,20 +61,20 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
           node.scaleY(1);
 
           onChange && onChange({
-            ...house,
+            ...shape,
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
-            exteriorWidth: house.exteriorWidth * scaleX,
-            exteriorHeight: house.exteriorHeight * scaleY,
+            exteriorWidth: shape.exteriorWidth * scaleX,
+            exteriorHeight: shape.exteriorHeight * scaleY,
           });
         }}
       >
         <Rect
           x={0}
           y={0}
-          width={house.exteriorWidth}
-          height={house.exteriorHeight}
+          width={shape.exteriorWidth}
+          height={shape.exteriorHeight}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
           fill={theme.wallColor}
@@ -82,10 +82,10 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
           onTap={onSelect}
         />
         <Rect
-          x={house.wallThickness}
-          y={house.wallThickness}
-          width={house.exteriorWidth - 2 * house.wallThickness}
-          height={house.exteriorHeight - 2 * house.wallThickness}
+          x={shape.wallThickness}
+          y={shape.wallThickness}
+          width={shape.exteriorWidth - 2 * shape.wallThickness}
+          height={shape.exteriorHeight - 2 * shape.wallThickness}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
           fill={theme.floorColor}
@@ -93,9 +93,9 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
           onTap={onSelect}
         />
       </Group>
-      {isSelected && house.draggable && (
+      {isSelected && shape.draggable && (
         <Transformer
-          id={`${house.id}-transformer`}
+          id={`${shape.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

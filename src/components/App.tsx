@@ -1,31 +1,76 @@
-import Konva from 'konva';
-import { type Vector2d } from 'konva/lib/types';
 import { Box } from '@chakra-ui/react';
 
 import FullScreen from './FullScreen';
 import Door from './Shapes/Door';
 import RectangleHouse from './Shapes/RectangleHouse';
 import LShapedHouse from './Shapes/LShapedHouse';
-import Wall from './Shapes/Wall';
+import Wall, { type WallProps } from './Shapes/Wall';
 import SnappingStage from './SnappingStage';
 import Window from './Shapes/Window';
 import BoxShape from './Shapes/Box';
+import ColdAppliance from './Shapes/ColdAppliance';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
-import {
-  isDoor,
-  isRectangleHouse,
-  isLShapedHouse,
-  isWall,
-  isWindow,
-  isBox,
+import type {
+  CustomShapeConfig,
+  RectangleHouseConfig,
+  LShapedHouseConfig,
+  DoorConfig,
+  WallConfig,
+  WindowConfig,
+  BoxConfig,
+  ColdApplianceConfig,
 } from '../types';
-import type { CustomShapeConfig } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
 import { setActiveTab } from '../redux/slices/menuSlice';
 import SmallScreenAlert from './SmallScreenAlert';
 import Menu from './Menu';
+import type { AppDispatch } from '../redux';
+
+
+const mapShapeToComponent = (
+  shape: CustomShapeConfig,
+  selectedId: string | null,
+  selectShape: (shape: CustomShapeConfig) => void,
+  dispatch: AppDispatch,
+) => {
+
+  // Props that are common for all shape components
+  const getProps = <T extends CustomShapeConfig,>(s: T) => {
+    return {
+      isSelected: s.id === selectedId,
+      onSelect: () => selectShape(s),
+      onChange: (newAttrs: T) => dispatch(updateShape({ id: s.id, newAttrs })),
+      shape: s,
+      key: s.id,
+    };
+  };
+
+  // Wall component requires also additional props
+  const getWallProps = (s: WallConfig): WallProps => {
+    const commonProps = getProps(s);
+    return {
+      ...commonProps,
+      handleLineGuidesOnResize: (node, anchorPos) => handleLineGuidesUpdateOnResize(node, anchorPos, dispatch),
+    };
+  };
+
+  // An object with different shape names as keys. Each value is a function that returns the
+  // shape component corresponding to the correct shape name.
+  const options = {
+    rectangleHouse: () => <RectangleHouse {...getProps(shape as RectangleHouseConfig)} />,
+    lShapedHouse: () => <LShapedHouse {...getProps(shape as LShapedHouseConfig)} />,
+    door: () => <Door {...getProps(shape as DoorConfig)} />,
+    wall: () => <Wall {...getWallProps(shape as WallConfig)} />,
+    window: () => <Window {...getProps(shape as WindowConfig)} />,
+    box: () => <BoxShape {...getProps(shape as BoxConfig)} />,
+    coldAppliance: () => <ColdAppliance {...getProps(shape as ColdApplianceConfig)} />,
+  };
+
+  return options[shape.shape];
+};
+
 
 const App = (): JSX.Element => {
   const allShapes = useAppSelector((state) => state.canvas.shapes);
@@ -35,10 +80,6 @@ const App = (): JSX.Element => {
 
   const { width: windowWidth } = useWindowSize();
   const menuWidth = Math.min(windowWidth * 0.28, 260);
-
-  const handleLineGuidesOnResize = (node: Konva.Node, anchorPos: Vector2d) => (
-    handleLineGuidesUpdateOnResize(node, anchorPos, dispatch)
-  );
 
   const selectShape = (shape: CustomShapeConfig) => {
     dispatch(setSelectedShape(shape));
@@ -69,61 +110,10 @@ const App = (): JSX.Element => {
           allShapes={allShapes}
           menuWidth={menuWidth}
         >
-          {allShapes.filter(isRectangleHouse).map((house) => (
-            <RectangleHouse
-              key={house.id}
-              isSelected={house.id === selectedId}
-              onSelect={() => selectShape(house)}
-              onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
-              house={house}
-            />
-          ))}
-          {allShapes.filter(isLShapedHouse).map((house) => (
-            <LShapedHouse
-              key={house.id}
-              isSelected={house.id === selectedId}
-              onSelect={() => selectShape(house)}
-              onChange={(newAttrs) => dispatch(updateShape({ id: house.id, newAttrs }))}
-              house={house}
-            />
-          ))}
-          {allShapes.filter(isWall).map((wall) => (
-            <Wall
-              key={wall.id}
-              isSelected={wall.id === selectedId}
-              onSelect={() => selectShape(wall)}
-              onChange={(newAttrs) => dispatch(updateShape({ id: wall.id, newAttrs }))}
-              handleLineGuidesOnResize={handleLineGuidesOnResize}
-              wall={wall}
-            />
-          ))}
-          {allShapes.filter(isDoor).map((door) => (
-            <Door
-              key={door.id}
-              isSelected={door.id === selectedId}
-              onSelect={() => selectShape(door)}
-              onChange={(newAttrs) => dispatch(updateShape({ id: door.id, newAttrs }))}
-              door={door}
-            />
-          ))}
-          {allShapes.filter(isWindow).map(shape => (
-            <Window
-              key={shape.id}
-              isSelected={shape.id === selectedId}
-              onSelect={() => selectShape(shape)}
-              onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
-              window={shape}
-            />
-          ))}
-          {allShapes.filter(isBox).map(shape => (
-            <BoxShape
-              key={shape.id}
-              isSelected={shape.id === selectedId}
-              onSelect={() => selectShape(shape)}
-              onChange={(newAttrs) => dispatch(updateShape({ id: shape.id, newAttrs }))}
-              box={shape}
-            />
-          ))}
+          {allShapes.map(shape => {
+            const getShapeComponent = mapShapeToComponent(shape, selectedId, selectShape, dispatch);
+            return getShapeComponent();
+          })}
         </SnappingStage>
       </div>
     </>

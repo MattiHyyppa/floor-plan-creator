@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../hooks';
 import { setHorizontalLineGuide, setVerticalLineGuide } from '../../redux/slices/lineGuidesSlice';
 
 export interface WallProps {
-  wall: WallConfig;
+  shape: WallConfig;
   isSelected?: boolean;
 
   onChange?: (newAttrs: WallConfig) => void;
@@ -26,7 +26,7 @@ const Wall = (props: WallProps): JSX.Element => {
 
   const dispatch = useAppDispatch();
 
-  const { isSelected, onSelect, onChange, wall, handleLineGuidesOnResize } = props;
+  const { isSelected, onSelect, onChange, shape, handleLineGuidesOnResize } = props;
 
   const removeLineGuides = (): void => {
     horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
@@ -34,20 +34,20 @@ const Wall = (props: WallProps): JSX.Element => {
   };
 
   useEffect(() => {
-    if (isSelected && wall.draggable && transformerRef.current && shapeRef.current) {
+    if (isSelected && shape.draggable && transformerRef.current && shapeRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([shapeRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected, wall.draggable]);
+  }, [isSelected, shape.draggable]);
 
   return (
     <>
       <Rect
         ref={shapeRef}
         name="object"
-        {...wall}
-        height={wall.wallThickness}
+        {...shape}
+        height={shape.wallThickness}
         stroke={theme.strokeColor}
         strokeWidth={theme.strokeWidth}
         fill={theme.wallColor}
@@ -56,7 +56,7 @@ const Wall = (props: WallProps): JSX.Element => {
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
-            ...wall,
+            ...shape,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
@@ -75,7 +75,7 @@ const Wall = (props: WallProps): JSX.Element => {
           node.scaleY(1);
 
           onChange && onChange({
-            ...wall,
+            ...shape,
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
@@ -86,9 +86,9 @@ const Wall = (props: WallProps): JSX.Element => {
           removeLineGuides();
         }}
       />
-      {isSelected && wall.draggable && (
+      {isSelected && shape.draggable && (
         <Transformer
-          id={`${wall.id}-transformer`}
+          id={`${shape.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

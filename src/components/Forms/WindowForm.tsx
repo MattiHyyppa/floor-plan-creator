@@ -16,62 +16,62 @@ const validationSchema = windowSchema.pick(['windowWidth', 'wallThickness']).sha
 });
 
 interface WindowFormProps {
-  window: WindowConfig;
+  shape: WindowConfig;
 }
 
-const WindowForm = ({ window: w }: WindowFormProps) => {
+const WindowForm = ({ shape }: WindowFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
   const initialValues = {
-    windowWidth: round(pixelsToMeters(w.windowWidth), decimals),
-    wallThickness: round(pixelsToMeters(w.wallThickness), decimals),
-    disabled: !w.draggable,
+    windowWidth: round(pixelsToMeters(shape.windowWidth), decimals),
+    wallThickness: round(pixelsToMeters(shape.wallThickness), decimals),
+    disabled: !shape.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<WindowConfig>) => {
-    dispatch(updateShape({ id: w.id, newAttrs }));
+    dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
   const commonNumberFormProps = {
     decimals,
-    disabled: !w.draggable,
+    disabled: !shape.draggable,
   };
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={() => void(0) }>
       <Form>
         <NumberFormControl
-          id={`windowWidth-${w.id}`}
+          id={`windowWidth-${shape.id}`}
           name="windowWidth"
           label={t('forms.width')}
-          transformedValue={pixelsToMeters(w.windowWidth)}
+          transformedValue={pixelsToMeters(shape.windowWidth)}
           updateRedux={(value) => updateRedux({ windowWidth: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id={`wallThickness-${w.id}`}
+          id={`wallThickness-${shape.id}`}
           name="wallThickness"
           label={t('forms.wallThickness')}
-          transformedValue={pixelsToMeters(w.wallThickness)}
+          transformedValue={pixelsToMeters(shape.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <SwitchFormControl
-          id={`disabled-${w.id}`}
+          id={`disabled-${shape.id}`}
           name="disabled"
           label={t('forms.disableEditing')}
-          checked={!w.draggable}
+          checked={!shape.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
           mb={5}
         />
         <BlackButton
           width="100%"
-          disabled={!w.draggable}
-          onClick={() => dispatch(deleteShape({ id: w.id }))}
+          disabled={!shape.draggable}
+          onClick={() => dispatch(deleteShape({ id: shape.id }))}
         >
           {t('forms.deleteObject')}
         </BlackButton>

@@ -53,6 +53,7 @@
     "wall": "Wall",
     "exteriorDoor": "Exterior door",
     "interiorDoor": "Interior door",
-    "box": "Box"
+    "box": "Box",
+    "coldAppliance": "Cold appliance"
   }
 }

@@ -23,48 +23,48 @@ const validationSchema = doorSchema.pick(['doorWidth', 'kind', 'openingDirection
 });
 
 interface DoorFormProps {
-  door: DoorConfig;
+  shape: DoorConfig;
 }
 
-const DoorForm = ({ door }: DoorFormProps) => {
+const DoorForm = ({ shape }: DoorFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
   const initialValues = {
-    doorWidth: round(pixelsToMeters(door.doorWidth), decimals),
-    kind: door.kind,
-    openingDirection: door.openingDirection,
-    wallThickness: round(pixelsToMeters(door.wallThickness), decimals),
-    disabled: !door.draggable,
+    doorWidth: round(pixelsToMeters(shape.doorWidth), decimals),
+    kind: shape.kind,
+    openingDirection: shape.openingDirection,
+    wallThickness: round(pixelsToMeters(shape.wallThickness), decimals),
+    disabled: !shape.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<DoorConfig>) => {
-    dispatch(updateShape({ id: door.id, newAttrs }));
+    dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
   const commonNumberFormProps = {
     decimals,
-    disabled: !door.draggable,
+    disabled: !shape.draggable,
   };
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={() => void(0) }>
       <Form>
         <NumberFormControl
-          id={`doorWidth-${door.id}`}
+          id={`doorWidth-${shape.id}`}
           name="doorWidth"
           label={t('forms.doorWidth')}
-          transformedValue={pixelsToMeters(door.doorWidth)}
+          transformedValue={pixelsToMeters(shape.doorWidth)}
           updateRedux={(value) => updateRedux({ doorWidth: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id={`wallThickness-${door.id}`}
+          id={`wallThickness-${shape.id}`}
           name="wallThickness"
           label={t('forms.wallThickness')}
-          transformedValue={pixelsToMeters(door.wallThickness)}
+          transformedValue={pixelsToMeters(shape.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
           mb={3}
           {...commonNumberFormProps}
@@ -74,9 +74,9 @@ const DoorForm = ({ door }: DoorFormProps) => {
           <RadioGroup
             id="doorKind"
             name="kind"
-            value={door.kind}
+            value={shape.kind}
             onChange={value => isDoorKind(value) && updateRedux({ kind: value })}
-            isDisabled={!door.draggable}
+            isDisabled={!shape.draggable}
             mb={3}
           >
             <Stack direction="column">
@@ -94,9 +94,9 @@ const DoorForm = ({ door }: DoorFormProps) => {
           <RadioGroup
             id="openingDirection"
             name="openingDirection"
-            value={door.openingDirection}
+            value={shape.openingDirection}
             onChange={value => isOpeningDirection(value) && updateRedux({ openingDirection: value })}
-            isDisabled={!door.draggable}
+            isDisabled={!shape.draggable}
             mb={3}
           >
             <Stack direction="column">
@@ -110,17 +110,17 @@ const DoorForm = ({ door }: DoorFormProps) => {
           </RadioGroup>
         </FormControl>
         <SwitchFormControl
-          id={`disabled-${door.id}`}
+          id={`disabled-${shape.id}`}
           name="disabled"
           label={t('forms.disableEditing')}
-          checked={!door.draggable}
+          checked={!shape.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
           mb={5}
         />
         <BlackButton
           width="100%"
-          disabled={!door.draggable}
-          onClick={() => dispatch(deleteShape({ id: door.id }))}
+          disabled={!shape.draggable}
+          onClick={() => dispatch(deleteShape({ id: shape.id }))}
         >
           {t('forms.deleteObject')}
         </BlackButton>

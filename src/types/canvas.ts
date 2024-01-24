@@ -4,7 +4,8 @@ import type {
   LShapedHouseConfig,
   WallConfig,
   WindowConfig,
-  BoxConfig
+  BoxConfig,
+  ColdApplianceConfig,
 } from './shapes';
 
 export type CustomShapeConfig =
@@ -13,7 +14,8 @@ export type CustomShapeConfig =
   | LShapedHouseConfig
   | WallConfig
   | WindowConfig
-  | BoxConfig;
+  | BoxConfig
+  | ColdApplianceConfig;
 
 export const isDoor = (shape: CustomShapeConfig): shape is DoorConfig => {
   return (shape as DoorConfig).shape === 'door';
@@ -37,6 +39,10 @@ export const isWindow = (shape: CustomShapeConfig): shape is WindowConfig => {
 
 export const isBox = (shape: CustomShapeConfig): shape is BoxConfig => {
   return (shape as BoxConfig).shape === 'box';
+};
+
+export const isColdAppliance = (shape: CustomShapeConfig): shape is ColdApplianceConfig => {
+  return (shape as ColdApplianceConfig).shape === 'coldAppliance';
 };
 
 export type CanvasUpdate =

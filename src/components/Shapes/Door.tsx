@@ -7,7 +7,7 @@ import theme from '../../utils/shapeTheme';
 import type { DoorConfig, Box } from '../../types';
 
 interface DoorProps {
-  door: DoorConfig;
+  shape: DoorConfig;
   isSelected?: boolean;
 
   onChange?: (newAttrs: DoorConfig) => void;
@@ -34,36 +34,36 @@ const initialTransformerBox: InitialTransformerBoxFunc = (x, y, rotation, wallTh
   };
 };
 
-const Door = ({ door, onChange, onSelect, isSelected }: DoorProps): JSX.Element => {
-  const { doorWidth, wallThickness, kind, openingDirection } = door;
+const Door = ({ shape, onChange, onSelect, isSelected }: DoorProps): JSX.Element => {
+  const { doorWidth, wallThickness, kind, openingDirection } = shape;
   const additionalHeight = kind === 'interior' ? wallThickness : wallThickness / 2;
 
   const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
   const previousTransformerBoxRef = useRef<Box>(
-    initialTransformerBox(door.x, door.y, door.rotation, wallThickness, kind)
+    initialTransformerBox(shape.x, shape.y, shape.rotation, wallThickness, kind)
   );
 
   useEffect(() => {
-    if (isSelected && door.draggable && transformerRef.current && groupRef.current) {
+    if (isSelected && shape.draggable && transformerRef.current && groupRef.current) {
       // We need to attach the transformer manually
       transformerRef.current.nodes([groupRef.current]);
       transformerRef.current.getLayer()?.batchDraw();
     }
-  }, [isSelected, door.draggable]);
+  }, [isSelected, shape.draggable]);
 
   return (
     <>
       <Group
         ref={groupRef}
         name="object"
-        {...door}
+        {...shape}
         width={doorWidth}
         height={doorWidth + additionalHeight}
         onDragEnd={(e) => {
           onChange && onChange({
             // previous state
-            ...door,
+            ...shape,
             // transformed state
             x: e.target.x(),
             y: e.target.y(),
@@ -81,7 +81,7 @@ const Door = ({ door, onChange, onSelect, isSelected }: DoorProps): JSX.Element 
           node.scaleY(1);
 
           onChange && onChange({
-            ...door,
+            ...shape,
             x: node.x(),
             y: node.y(),
             rotation: node.rotation(),
@@ -107,7 +107,7 @@ const Door = ({ door, onChange, onSelect, isSelected }: DoorProps): JSX.Element 
           onTap={onSelect}
           width={doorWidth}
           height={doorWidth}
-          sceneFunc={(context, shape) => {
+          sceneFunc={(context, canvasShape) => {
             context.beginPath();
             context.moveTo(0, 0);
             if (openingDirection === 'right') {
@@ -119,16 +119,16 @@ const Door = ({ door, onChange, onSelect, isSelected }: DoorProps): JSX.Element 
               context.lineTo(doorWidth, 0);
             }
             context.closePath();
-            context.fillStrokeShape(shape);
+            context.fillStrokeShape(canvasShape);
           }}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
         />
       </Group>
 
-      {isSelected && door.draggable && (
+      {isSelected && shape.draggable && (
         <Transformer
-          id={`${door.id}-transformer`}
+          id={`${shape.id}-transformer`}
           ref={transformerRef}
           ignoreStroke={true}
           rotationSnaps={[0, 90, 180, 270]}

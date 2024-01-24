@@ -16,62 +16,62 @@ const validationSchema = wallSchema.pick(['width', 'wallThickness']).shape({
 });
 
 interface WallFormProps {
-  wall: WallConfig;
+  shape: WallConfig;
 }
 
-const WallForm = ({ wall }: WallFormProps) => {
+const WallForm = ({ shape }: WallFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
   const initialValues = {
-    width: round(pixelsToMeters(wall.width), decimals),
-    wallThickness: round(pixelsToMeters(wall.wallThickness), decimals),
-    disabled: !wall.draggable,
+    width: round(pixelsToMeters(shape.width), decimals),
+    wallThickness: round(pixelsToMeters(shape.wallThickness), decimals),
+    disabled: !shape.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<WallConfig>) => {
-    dispatch(updateShape({ id: wall.id, newAttrs }));
+    dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
   const commonNumberFormProps = {
     decimals,
-    disabled: !wall.draggable,
+    disabled: !shape.draggable,
   };
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={() => void(0) }>
       <Form>
         <NumberFormControl
-          id={`width-${wall.id}`}
+          id={`width-${shape.id}`}
           name="width"
           label={t('forms.width')}
-          transformedValue={pixelsToMeters(wall.width)}
+          transformedValue={pixelsToMeters(shape.width)}
           updateRedux={(value) => updateRedux({ width: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id={`wallThickness-${wall.id}`}
+          id={`wallThickness-${shape.id}`}
           name="wallThickness"
           label={t('forms.wallThickness')}
-          transformedValue={pixelsToMeters(wall.wallThickness)}
+          transformedValue={pixelsToMeters(shape.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <SwitchFormControl
-          id={`disabled-${wall.id}`}
+          id={`disabled-${shape.id}`}
           name="disabled"
           label={t('forms.disableEditing')}
-          checked={!wall.draggable}
+          checked={!shape.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
           mb={5}
         />
         <BlackButton
           width="100%"
-          disabled={!wall.draggable}
-          onClick={() => dispatch(deleteShape({ id: wall.id }))}
+          disabled={!shape.draggable}
+          onClick={() => dispatch(deleteShape({ id: shape.id }))}
         >
           {t('forms.deleteObject')}
         </BlackButton>

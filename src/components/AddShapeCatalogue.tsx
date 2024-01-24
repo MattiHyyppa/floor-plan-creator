@@ -16,6 +16,7 @@ import {
   addWall,
   addWindow,
   addBox,
+  addColdAppliance,
 } from '../redux/slices/canvasSlice';
 import ImageWithText from './ImageWithText';
 import type { ImageWithTextProps } from './ImageWithText';
@@ -76,6 +77,12 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
       width: '60px',
       src: boxImage,
       addShape: () => dispatch(addBox()),
+    },
+    {
+      text: t('shapes.coldAppliance'),
+      width: '60px',
+      src: boxImage,
+      addShape: () => dispatch(addColdAppliance()),
     },
   ];
 };

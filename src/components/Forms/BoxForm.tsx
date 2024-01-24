@@ -16,27 +16,27 @@ const validationSchema = boxSchema.pick(['width', 'height']).shape({
 });
 
 interface BoxFormProps {
-  box: BoxConfig;
+  shape: BoxConfig;
 }
 
-const BoxForm = ({ box }: BoxFormProps) => {
+const BoxForm = ({ shape }: BoxFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
   const initialValues = {
-    width: round(pixelsToMeters(box.width), decimals),
-    height: round(pixelsToMeters(box.height), decimals),
-    disabled: !box.draggable,
+    width: round(pixelsToMeters(shape.width), decimals),
+    height: round(pixelsToMeters(shape.height), decimals),
+    disabled: !shape.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<BoxConfig>) => {
-    dispatch(updateShape({ id: box.id, newAttrs }));
+    dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
   const commonNumberFormProps = {
     decimals,
-    disabled: !box.draggable,
+    disabled: !shape.draggable,
   };
 
   return (
@@ -46,7 +46,7 @@ const BoxForm = ({ box }: BoxFormProps) => {
           id="boxWidth"
           name="width"
           label={t('forms.width')}
-          transformedValue={pixelsToMeters(box.width)}
+          transformedValue={pixelsToMeters(shape.width)}
           updateRedux={(value) => updateRedux({ width: value })}
           mb={3}
           {...commonNumberFormProps}
@@ -55,23 +55,23 @@ const BoxForm = ({ box }: BoxFormProps) => {
           id="boxHeight"
           name="height"
           label={t('forms.height')}
-          transformedValue={pixelsToMeters(box.height)}
+          transformedValue={pixelsToMeters(shape.height)}
           updateRedux={(value) => updateRedux({ height: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <SwitchFormControl
-          id={`disabled-${box.id}`}
+          id={`disabled-${shape.id}`}
           name="disabled"
           label={t('forms.disableEditing')}
-          checked={!box.draggable}
+          checked={!shape.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
           mb={5}
         />
         <BlackButton
           width="100%"
-          disabled={!box.draggable}
-          onClick={() => dispatch(deleteShape({ id: box.id }))}
+          disabled={!shape.draggable}
+          onClick={() => dispatch(deleteShape({ id: shape.id }))}
         >
           {t('forms.deleteObject')}
         </BlackButton>

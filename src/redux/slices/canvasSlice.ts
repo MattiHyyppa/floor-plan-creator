@@ -10,6 +10,7 @@ import type {
   DoorConfig,
   WindowConfig,
   BoxConfig,
+  ColdApplianceConfig,
 } from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
@@ -207,6 +208,26 @@ export const canvasSlice = createSlice({
       });
     },
 
+    addColdAppliance: (state) => {
+      const shape: ColdApplianceConfig = {
+        id: uuidv4(),
+        shape: 'coldAppliance',
+        x: 75,
+        y: 75,
+        rotation: 0,
+        width: cmToPixels(60),
+        height: cmToPixels(60),
+        draggable: true,
+      };
+
+      state.shapes.push(shape);
+      addToHistory(state, {
+        operation: 'add',
+        current: shape,
+        index: state.shapes.length - 1,
+      });
+    },
+
     deleteShape: (state, action: PayloadAction<{ id: string }>) => {
       const indexToDelete = state.shapes.findIndex(shape => shape.id === action.payload.id);
 
@@ -323,6 +344,7 @@ export const {
   addWall,
   addWindow,
   addBox,
+  addColdAppliance,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

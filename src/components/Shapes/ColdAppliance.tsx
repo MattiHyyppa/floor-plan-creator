@@ -2,22 +2,22 @@ import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Rect, Transformer, Group } from 'react-konva';
 
-import type { BoxConfig } from '../../types';
+import type { ColdApplianceConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
 import { cmToPixels } from '../../utils';
 
-export interface BoxProps {
-  shape: BoxConfig;
+export interface ColdApplianceProps {
+  shape: ColdApplianceConfig;
   isSelected?: boolean;
 
-  onChange?: (newAttrs: BoxConfig) => void;
+  onChange?: (newAttrs: ColdApplianceConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
 
-const defaultWidth = cmToPixels(100);
+const defaultWidth = cmToPixels(60);
 const defaultHeight = cmToPixels(60);
 
-const Box = (props: BoxProps): JSX.Element => {
+const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -95,10 +95,10 @@ const Box = (props: BoxProps): JSX.Element => {
   );
 };
 
-Box.defaultProps = {
+ColdAppliance.defaultProps = {
   width: defaultWidth,
   height: defaultHeight,
   isSelected: false,
 };
 
-export default Box;
+export default ColdAppliance;

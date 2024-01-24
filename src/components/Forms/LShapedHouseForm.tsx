@@ -22,30 +22,30 @@ const validationSchema = lShapedHouseSchema.pick([
 });
 
 interface LShapedHouseFormProps {
-  house: LShapedHouseConfig;
+  shape: LShapedHouseConfig;
 }
 
-const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
+const LShapedHouseForm = ({ shape }: LShapedHouseFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
 
   const initialValues = {
-    exteriorWidth: round(pixelsToMeters(house.exteriorWidth), decimals),
-    exteriorHeight: round(pixelsToMeters(house.exteriorHeight), decimals),
-    wallThickness: round(pixelsToMeters(house.wallThickness), decimals),
-    firstWingWidth: round(pixelsToMeters(house.firstWingWidth), decimals),
-    secondWingWidth: round(pixelsToMeters(house.secondWingWidth), decimals),
-    disabled: !house.draggable,
+    exteriorWidth: round(pixelsToMeters(shape.exteriorWidth), decimals),
+    exteriorHeight: round(pixelsToMeters(shape.exteriorHeight), decimals),
+    wallThickness: round(pixelsToMeters(shape.wallThickness), decimals),
+    firstWingWidth: round(pixelsToMeters(shape.firstWingWidth), decimals),
+    secondWingWidth: round(pixelsToMeters(shape.secondWingWidth), decimals),
+    disabled: !shape.draggable,
   };
 
   const updateRedux = (newAttrs: Partial<LShapedHouseConfig>) => {
-    dispatch(updateShape({ id: house.id, newAttrs }));
+    dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
   const commonNumberFormProps = {
     decimals,
-    disabled: !house.draggable,
+    disabled: !shape.draggable,
   };
 
   return (
@@ -55,7 +55,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           id="lShapedHouseWidth"
           name="exteriorWidth"
           label={t('forms.exteriorWidth')}
-          transformedValue={pixelsToMeters(house.exteriorWidth)}
+          transformedValue={pixelsToMeters(shape.exteriorWidth)}
           updateRedux={(value) => updateRedux({ exteriorWidth: value })}
           mb={3}
           {...commonNumberFormProps}
@@ -64,7 +64,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           id="lShapedHouseHeight"
           name="exteriorHeight"
           label={t('forms.exteriorHeight')}
-          transformedValue={pixelsToMeters(house.exteriorHeight)}
+          transformedValue={pixelsToMeters(shape.exteriorHeight)}
           updateRedux={(value) => updateRedux({ exteriorHeight: value })}
           mb={3}
           {...commonNumberFormProps}
@@ -73,7 +73,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           id="lShapedHouseWallThickness"
           name="wallThickness"
           label={t('forms.exteriorWallThickness')}
-          transformedValue={pixelsToMeters(house.wallThickness)}
+          transformedValue={pixelsToMeters(shape.wallThickness)}
           updateRedux={(value) => updateRedux({ wallThickness: value })}
           mb={3}
           {...commonNumberFormProps}
@@ -82,7 +82,7 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           id="lShapedHouseFirstWingWidth"
           name="firstWingWidth"
           label={t('forms.firstWingWidth')}
-          transformedValue={pixelsToMeters(house.firstWingWidth)}
+          transformedValue={pixelsToMeters(shape.firstWingWidth)}
           updateRedux={(value) => updateRedux({ firstWingWidth: value })}
           mb={3}
           {...commonNumberFormProps}
@@ -91,23 +91,23 @@ const LShapedHouseForm = ({ house }: LShapedHouseFormProps) => {
           id="lShapedHouseSecondWingWidth"
           name="secondWingWidth"
           label={t('forms.secondWingWidth')}
-          transformedValue={pixelsToMeters(house.secondWingWidth)}
+          transformedValue={pixelsToMeters(shape.secondWingWidth)}
           updateRedux={(value) => updateRedux({ secondWingWidth: value })}
           mb={3}
           {...commonNumberFormProps}
         />
         <SwitchFormControl
-          id={`disabled-${house.id}`}
+          id={`disabled-${shape.id}`}
           name="disabled"
           label={t('forms.disableEditing')}
-          checked={!house.draggable}
+          checked={!shape.draggable}
           updateRedux={(value) => updateRedux({ draggable: !value })}
           mb={5}
         />
         <BlackButton
           width="100%"
-          disabled={!house.draggable}
-          onClick={() => dispatch(deleteShape({ id: house.id }))}
+          disabled={!shape.draggable}
+          onClick={() => dispatch(deleteShape({ id: shape.id }))}
         >
           {t('forms.deleteObject')}
         </BlackButton>

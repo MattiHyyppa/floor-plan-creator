@@ -14,15 +14,32 @@ import DoorForm from './DoorForm';
 import WallForm from './WallForm';
 import WindowForm from './WindowForm';
 import BoxForm from './BoxForm';
+import ColdApplianceForm from './ColdApplianceForm';
 import { useAppSelector } from '../../hooks';
-import {
-  isRectangleHouse,
-  isLShapedHouse,
-  isDoor,
-  isWall,
-  isWindow,
-  isBox,
+import type {
+  CustomShapeConfig,
+  RectangleHouseConfig,
+  LShapedHouseConfig,
+  DoorConfig,
+  WallConfig,
+  WindowConfig,
+  BoxConfig,
+  ColdApplianceConfig,
 } from '../../types';
+
+const shapeToFormComponent = (shape: CustomShapeConfig) => {
+  const options = {
+    rectangleHouse: () => <RectangleHouseForm shape={shape as RectangleHouseConfig} />,
+    lShapedHouse: () => <LShapedHouseForm shape={shape as LShapedHouseConfig} />,
+    door: () => <DoorForm shape={shape as DoorConfig} />,
+    wall: () => <WallForm shape={shape as WallConfig} />,
+    window: () => <WindowForm shape={shape as WindowConfig} />,
+    box: () => <BoxForm shape={shape as BoxConfig} />,
+    coldAppliance: () => <ColdApplianceForm shape={shape as ColdApplianceConfig} />,
+  };
+
+  return options[shape.shape];
+};
 
 const FormWithAlert = ({ children }: { children: React.ReactNode }) => {
   const { t } = useTranslation();
@@ -52,55 +69,12 @@ const EditShapesForm = () => {
     return <Text px={[2, null, 3]} fontSize="sm">{t('forms.noShapeSelected')}</Text>;
   }
 
-  if (isRectangleHouse(shapeToBeEdited)) {
-    return (
-      <FormWithAlert>
-        <RectangleHouseForm house={shapeToBeEdited} />
-      </FormWithAlert>
-    );
-  }
-
-  if (isLShapedHouse(shapeToBeEdited)) {
-    return (
-      <FormWithAlert>
-        <LShapedHouseForm house={shapeToBeEdited} />
-      </FormWithAlert>
-    );
-  }
-
-  if (isDoor(shapeToBeEdited)) {
-    return (
-      <FormWithAlert>
-        <DoorForm door={shapeToBeEdited} />
-      </FormWithAlert>
-    );
-  }
-
-  if (isWall(shapeToBeEdited)) {
-    return (
-      <FormWithAlert>
-        <WallForm wall={shapeToBeEdited} />
-      </FormWithAlert>
-    );
-  }
-
-  if (isWindow(shapeToBeEdited)) {
-    return (
-      <FormWithAlert>
-        <WindowForm window={shapeToBeEdited} />
-      </FormWithAlert>
-    );
-  }
-
-  if (isBox(shapeToBeEdited)) {
-    return (
-      <FormWithAlert>
-        <BoxForm box={shapeToBeEdited} />
-      </FormWithAlert>
-    );
-  }
-
-  return <></>;
+  const getFormComponent = shapeToFormComponent(shapeToBeEdited);
+  return (
+    <FormWithAlert>
+      {getFormComponent()}
+    </FormWithAlert>
+  );
 };
 
 export default EditShapesForm;
