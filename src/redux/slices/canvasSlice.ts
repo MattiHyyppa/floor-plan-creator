@@ -11,6 +11,7 @@ import type {
   WindowConfig,
   BoxConfig,
   ColdApplianceConfig,
+  TextConfig,
 } from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
@@ -228,6 +229,26 @@ export const canvasSlice = createSlice({
       });
     },
 
+    addText: (state) => {
+      const shape: TextConfig = {
+        id: uuidv4(),
+        shape: 'text',
+        x: 75,
+        y: 75,
+        rotation: 0,
+        draggable: true,
+        fontSize: 14,
+        text: 'text',
+      };
+
+      state.shapes.push(shape);
+      addToHistory(state, {
+        operation: 'add',
+        current: shape,
+        index: state.shapes.length - 1,
+      });
+    },
+
     deleteShape: (state, action: PayloadAction<{ id: string }>) => {
       const indexToDelete = state.shapes.findIndex(shape => shape.id === action.payload.id);
 
@@ -345,6 +366,7 @@ export const {
   addWindow,
   addBox,
   addColdAppliance,
+  addText,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

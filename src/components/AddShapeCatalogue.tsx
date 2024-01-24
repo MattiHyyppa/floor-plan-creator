@@ -17,6 +17,7 @@ import {
   addWindow,
   addBox,
   addColdAppliance,
+  addText,
 } from '../redux/slices/canvasSlice';
 import ImageWithText from './ImageWithText';
 import type { ImageWithTextProps } from './ImageWithText';
@@ -29,6 +30,7 @@ import wallImage from '../assets/images/wall.png';
 import windowImage from '../assets/images/window.png';
 import boxImage from '../assets/images/box.png';
 import coldApplianceImage from '../assets/images/cold-appliance.png';
+import textImage from '../assets/images/text.png';
 
 const getHouseShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps[] => {
   return [
@@ -84,6 +86,13 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
       width: '60px',
       src: coldApplianceImage,
       addShape: () => dispatch(addColdAppliance()),
+    },
+    {
+      text: t('shapes.text'),
+      width: '70px',
+      src: textImage,
+      addShape: () => dispatch(addText()),
+      mb: 3,
     },
   ];
 };

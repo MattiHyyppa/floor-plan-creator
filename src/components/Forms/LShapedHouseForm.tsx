@@ -6,7 +6,7 @@ import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import type { LShapedHouseConfig } from '../../types';
-import { pixelsToMeters, round } from '../../utils';
+import { pixelsToMeters, round, metersToPixels } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import lShapedHouseSchema from '../../schema/lShapedHouse';
@@ -56,7 +56,7 @@ const LShapedHouseForm = ({ shape }: LShapedHouseFormProps) => {
           name="exteriorWidth"
           label={t('forms.exteriorWidth')}
           transformedValue={pixelsToMeters(shape.exteriorWidth)}
-          updateRedux={(value) => updateRedux({ exteriorWidth: value })}
+          updateRedux={(value) => updateRedux({ exteriorWidth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -65,7 +65,7 @@ const LShapedHouseForm = ({ shape }: LShapedHouseFormProps) => {
           name="exteriorHeight"
           label={t('forms.exteriorHeight')}
           transformedValue={pixelsToMeters(shape.exteriorHeight)}
-          updateRedux={(value) => updateRedux({ exteriorHeight: value })}
+          updateRedux={(value) => updateRedux({ exteriorHeight: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -74,7 +74,7 @@ const LShapedHouseForm = ({ shape }: LShapedHouseFormProps) => {
           name="wallThickness"
           label={t('forms.exteriorWallThickness')}
           transformedValue={pixelsToMeters(shape.wallThickness)}
-          updateRedux={(value) => updateRedux({ wallThickness: value })}
+          updateRedux={(value) => updateRedux({ wallThickness: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -83,7 +83,7 @@ const LShapedHouseForm = ({ shape }: LShapedHouseFormProps) => {
           name="firstWingWidth"
           label={t('forms.firstWingWidth')}
           transformedValue={pixelsToMeters(shape.firstWingWidth)}
-          updateRedux={(value) => updateRedux({ firstWingWidth: value })}
+          updateRedux={(value) => updateRedux({ firstWingWidth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -92,7 +92,7 @@ const LShapedHouseForm = ({ shape }: LShapedHouseFormProps) => {
           name="secondWingWidth"
           label={t('forms.secondWingWidth')}
           transformedValue={pixelsToMeters(shape.secondWingWidth)}
-          updateRedux={(value) => updateRedux({ secondWingWidth: value })}
+          updateRedux={(value) => updateRedux({ secondWingWidth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />

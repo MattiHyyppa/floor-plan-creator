@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Field, useField, useFormikContext } from 'formik';
 import { Input, FormControl, FormLabel, InputProps } from '@chakra-ui/react';
 
-import { round, numDecimals, metersToPixels, almostEqual } from '../../utils';
+import { round, numDecimals, almostEqual } from '../../utils';
 
 /**
  * Return a formatted version of `value`. If `value` can be converted to a valid number,
@@ -99,7 +99,7 @@ const NumberFormControl = (props: NumberFormControlProps & InputProps) => {
           const value = getFormattedValue(e.target.value, decimals);
           setFieldValue(name, value);
           if (typeof value === 'number') {
-            updateRedux(metersToPixels(value));
+            updateRedux(value);
           }
         }}
       />

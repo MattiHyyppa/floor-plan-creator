@@ -6,7 +6,7 @@ import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import type { BoxConfig } from '../../types';
-import { pixelsToMeters, round } from '../../utils';
+import { pixelsToMeters, round, metersToPixels } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import boxSchema from '../../schema/box';
@@ -47,7 +47,7 @@ const BoxForm = ({ shape }: BoxFormProps) => {
           name="width"
           label={t('forms.width')}
           transformedValue={pixelsToMeters(shape.width)}
-          updateRedux={(value) => updateRedux({ width: value })}
+          updateRedux={(value) => updateRedux({ width: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -56,7 +56,7 @@ const BoxForm = ({ shape }: BoxFormProps) => {
           name="height"
           label={t('forms.height')}
           transformedValue={pixelsToMeters(shape.height)}
-          updateRedux={(value) => updateRedux({ height: value })}
+          updateRedux={(value) => updateRedux({ height: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />

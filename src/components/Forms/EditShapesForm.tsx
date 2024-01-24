@@ -15,6 +15,7 @@ import WallForm from './WallForm';
 import WindowForm from './WindowForm';
 import BoxForm from './BoxForm';
 import ColdApplianceForm from './ColdApplianceForm';
+import TextForm from './TextForm';
 import { useAppSelector } from '../../hooks';
 import type {
   CustomShapeConfig,
@@ -25,6 +26,7 @@ import type {
   WindowConfig,
   BoxConfig,
   ColdApplianceConfig,
+  TextConfig,
 } from '../../types';
 
 const shapeToFormComponent = (shape: CustomShapeConfig) => {
@@ -36,6 +38,7 @@ const shapeToFormComponent = (shape: CustomShapeConfig) => {
     window: () => <WindowForm shape={shape as WindowConfig} />,
     box: () => <BoxForm shape={shape as BoxConfig} />,
     coldAppliance: () => <ColdApplianceForm shape={shape as ColdApplianceConfig} />,
+    text: () => <TextForm shape={shape as TextConfig} />,
   };
 
   return options[shape.shape];

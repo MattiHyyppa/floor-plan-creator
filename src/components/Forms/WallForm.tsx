@@ -6,7 +6,7 @@ import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import type { WallConfig } from '../../types';
-import { pixelsToMeters, round } from '../../utils';
+import { pixelsToMeters, round, metersToPixels } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import wallSchema from '../../schema/wall';
@@ -47,7 +47,7 @@ const WallForm = ({ shape }: WallFormProps) => {
           name="width"
           label={t('forms.width')}
           transformedValue={pixelsToMeters(shape.width)}
-          updateRedux={(value) => updateRedux({ width: value })}
+          updateRedux={(value) => updateRedux({ width: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -56,7 +56,7 @@ const WallForm = ({ shape }: WallFormProps) => {
           name="wallThickness"
           label={t('forms.wallThickness')}
           transformedValue={pixelsToMeters(shape.wallThickness)}
-          updateRedux={(value) => updateRedux({ wallThickness: value })}
+          updateRedux={(value) => updateRedux({ wallThickness: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />

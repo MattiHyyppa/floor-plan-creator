@@ -6,6 +6,7 @@ import type {
   WindowConfig,
   BoxConfig,
   ColdApplianceConfig,
+  TextConfig,
 } from './shapes';
 
 export type CustomShapeConfig =
@@ -15,7 +16,8 @@ export type CustomShapeConfig =
   | WallConfig
   | WindowConfig
   | BoxConfig
-  | ColdApplianceConfig;
+  | ColdApplianceConfig
+  | TextConfig;
 
 export const isDoor = (shape: CustomShapeConfig): shape is DoorConfig => {
   return (shape as DoorConfig).shape === 'door';
@@ -43,6 +45,10 @@ export const isBox = (shape: CustomShapeConfig): shape is BoxConfig => {
 
 export const isColdAppliance = (shape: CustomShapeConfig): shape is ColdApplianceConfig => {
   return (shape as ColdApplianceConfig).shape === 'coldAppliance';
+};
+
+export const isText = (shape: CustomShapeConfig): shape is TextConfig => {
+  return (shape as TextConfig).shape === 'text';
 };
 
 export type CanvasUpdate =

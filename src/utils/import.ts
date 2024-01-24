@@ -1,26 +1,7 @@
-import doorSchema from '../schema/door';
-import rectangleHouseSchema from '../schema/rectangleHouse';
-import lShapedHouseSchema from '../schema/lShapedHouse';
-import wallSchema from '../schema/wall';
-import windowSchema from '../schema/window';
-import boxSchema from '../schema/box';
-import coldApplianceSchema from '../schema/coldAppliance';
-
 import { setAllShapes } from '../redux/slices/canvasSlice';
 import type { CustomShapeConfig } from '../types';
 import type { AppDispatch } from '../redux';
-
-
-const shapeToSchema = {
-  door: doorSchema,
-  rectangleHouse: rectangleHouseSchema,
-  lShapedHouse: lShapedHouseSchema,
-  wall: wallSchema,
-  window: windowSchema,
-  box: boxSchema,
-  coldAppliance: coldApplianceSchema,
-};
-
+import { shapeToSchema } from '../schema';
 
 export const loadShapesFromFile = async (fileContent: string, dispatch: AppDispatch): Promise<{ status: 'success' | 'error' }> => {
   const validatedShapes = await validateShapesJSON(JSON.parse(fileContent));

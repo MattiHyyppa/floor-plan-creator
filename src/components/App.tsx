@@ -9,6 +9,7 @@ import SnappingStage from './SnappingStage';
 import Window from './Shapes/Window';
 import BoxShape from './Shapes/Box';
 import ColdAppliance from './Shapes/ColdAppliance';
+import Text from './Shapes/Text';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import type {
@@ -20,6 +21,17 @@ import type {
   WindowConfig,
   BoxConfig,
   ColdApplianceConfig,
+  TextConfig,
+} from '../types';
+import {
+  isRectangleHouse,
+  isLShapedHouse,
+  isDoor,
+  isWall,
+  isWindow,
+  isBox,
+  isColdAppliance,
+  isText,
 } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
@@ -66,10 +78,23 @@ const mapShapeToComponent = (
     window: () => <Window {...getProps(shape as WindowConfig)} />,
     box: () => <BoxShape {...getProps(shape as BoxConfig)} />,
     coldAppliance: () => <ColdAppliance {...getProps(shape as ColdApplianceConfig)} />,
+    text: () => <Text {...getProps(shape as TextConfig)} />,
   };
 
   return options[shape.shape];
 };
+
+
+const predicatesInDrawingOrder = [
+  isRectangleHouse,
+  isLShapedHouse,
+  isWall,
+  isWindow,
+  isDoor,
+  isBox,
+  isColdAppliance,
+  isText,
+];
 
 
 const App = (): JSX.Element => {
@@ -110,9 +135,13 @@ const App = (): JSX.Element => {
           allShapes={allShapes}
           menuWidth={menuWidth}
         >
-          {allShapes.map(shape => {
-            const getShapeComponent = mapShapeToComponent(shape, selectedId, selectShape, dispatch);
-            return getShapeComponent();
+          {predicatesInDrawingOrder.flatMap((predicate) => {
+            return (
+              allShapes.filter(predicate).map(shape => {
+                const getShapeComponent = mapShapeToComponent(shape, selectedId, selectShape, dispatch);
+                return getShapeComponent();
+              })
+            );
           })}
         </SnappingStage>
       </div>

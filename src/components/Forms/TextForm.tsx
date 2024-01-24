@@ -5,60 +5,53 @@ import { useTranslation } from 'react-i18next';
 import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
-import type { ColdApplianceConfig } from '../../types';
-import { pixelsToMeters, round, metersToPixels } from '../../utils';
+import TextFormControl from './TextFormControl';
+import type { TextConfig } from '../../types';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
-import coldApplianceSchema from '../../schema/coldAppliance';
+import textSchema from '../../schema/text';
 
-const validationSchema = coldApplianceSchema.pick(['width', 'height']).shape({
+const validationSchema = textSchema.pick(['text', 'fontSize']).shape({
   disabled: Yup.boolean().required(),
 });
 
-interface ColdApplianceFormProps {
-  shape: ColdApplianceConfig;
+interface TextFormProps {
+  shape: TextConfig;
 }
 
-const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
+const TextForm = ({ shape }: TextFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
-  const decimals = 2;
 
   const initialValues = {
-    width: round(pixelsToMeters(shape.width), decimals),
-    height: round(pixelsToMeters(shape.height), decimals),
+    text: shape.text,
+    fontSize: shape.fontSize,
     disabled: !shape.draggable,
   };
 
-  const updateRedux = (newAttrs: Partial<ColdApplianceConfig>) => {
+  const updateRedux = (newAttrs: Partial<TextConfig>) => {
     dispatch(updateShape({ id: shape.id, newAttrs }));
-  };
-
-  const commonNumberFormProps = {
-    decimals,
-    disabled: !shape.draggable,
   };
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={() => void(0)}>
       <Form>
-        <NumberFormControl
-          id="coldApplianceWidth"
-          name="width"
-          label={t('forms.width')}
-          transformedValue={pixelsToMeters(shape.width)}
-          updateRedux={(value) => updateRedux({ width: metersToPixels(value) })}
+        <TextFormControl
+          id="text"
+          name="text"
+          label={t('forms.text')}
+          updateRedux={(value) => updateRedux({ text: value })}
           mb={3}
-          {...commonNumberFormProps}
+          isDisabled={!shape.draggable}
         />
         <NumberFormControl
-          id="coldApplianceHeight"
-          name="height"
-          label={t('forms.height')}
-          transformedValue={pixelsToMeters(shape.height)}
-          updateRedux={(value) => updateRedux({ height: metersToPixels(value) })}
+          id="fontSize"
+          name="fontSize"
+          label={t('forms.fontSize')}
+          transformedValue={shape.fontSize}
+          updateRedux={(value) => updateRedux({ fontSize: value })}
+          decimals={0}
           mb={3}
-          {...commonNumberFormProps}
         />
         <SwitchFormControl
           id={`disabled-${shape.id}`}
@@ -80,4 +73,4 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
   );
 };
 
-export default ColdApplianceForm;
+export default TextForm;

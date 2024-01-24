@@ -13,7 +13,7 @@ import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import type { DoorConfig } from '../../types';
-import { pixelsToMeters, round } from '../../utils';
+import { pixelsToMeters, round, metersToPixels } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import doorSchema, { isDoorKind, isOpeningDirection } from '../../schema/door';
@@ -56,7 +56,7 @@ const DoorForm = ({ shape }: DoorFormProps) => {
           name="doorWidth"
           label={t('forms.doorWidth')}
           transformedValue={pixelsToMeters(shape.doorWidth)}
-          updateRedux={(value) => updateRedux({ doorWidth: value })}
+          updateRedux={(value) => updateRedux({ doorWidth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -65,7 +65,7 @@ const DoorForm = ({ shape }: DoorFormProps) => {
           name="wallThickness"
           label={t('forms.wallThickness')}
           transformedValue={pixelsToMeters(shape.wallThickness)}
-          updateRedux={(value) => updateRedux({ wallThickness: value })}
+          updateRedux={(value) => updateRedux({ wallThickness: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />

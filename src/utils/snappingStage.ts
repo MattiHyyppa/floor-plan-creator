@@ -59,6 +59,12 @@ export const handleLineGuidesUpdate: LineGuideUpdateFunc = (
     // The target is the transformer and we want to find the node corresponding to the actual shape
     : stageRef.current.findOne(`#${movedShape.id}`);
 
+  if (movedNode.attrs.name !== 'object') {
+    // The `name` attribute has been set to 'object' for all custom shapes except for the text nodes.
+    // Don't trigger line guides for text nodes.
+    return;
+  }
+
   // Get all x and y values that could trigger the snapping effect for all nodes except for
   // `movedNode` itself.
   const lineGuidePositions = getLineGuidePositions(stageRef.current, movedNode);

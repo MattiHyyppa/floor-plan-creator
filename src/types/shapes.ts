@@ -7,6 +7,7 @@ import wallSchema from '../schema/wall';
 import windowSchema from '../schema/window';
 import boxSchema from '../schema/box';
 import coldApplianceSchema from '../schema/coldAppliance';
+import textSchema from '../schema/text';
 
 export type DoorConfig = InferType<typeof doorSchema>;
 export type RectangleHouseConfig = InferType<typeof rectangleHouseSchema>;
@@ -15,3 +16,4 @@ export type WallConfig = InferType<typeof wallSchema>;
 export type WindowConfig = InferType<typeof windowSchema>;
 export type BoxConfig = InferType<typeof boxSchema>;
 export type ColdApplianceConfig = InferType<typeof coldApplianceSchema>;
+export type TextConfig = InferType<typeof textSchema>;

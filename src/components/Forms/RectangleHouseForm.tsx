@@ -6,7 +6,7 @@ import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
 import type { RectangleHouseConfig } from '../../types';
-import { pixelsToMeters, round } from '../../utils';
+import { pixelsToMeters, round, metersToPixels } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import rectangleHouseSchema from '../../schema/rectangleHouse';
@@ -48,7 +48,7 @@ const RectangleHouseForm = ({ shape }: RectangleHouseFormProps) => {
           name="exteriorWidth"
           label={t('forms.exteriorWidth')}
           transformedValue={pixelsToMeters(shape.exteriorWidth)}
-          updateRedux={(value) => updateRedux({ exteriorWidth: value })}
+          updateRedux={(value) => updateRedux({ exteriorWidth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -57,7 +57,7 @@ const RectangleHouseForm = ({ shape }: RectangleHouseFormProps) => {
           name="exteriorHeight"
           label={t('forms.exteriorHeight')}
           transformedValue={pixelsToMeters(shape.exteriorHeight)}
-          updateRedux={(value) => updateRedux({ exteriorHeight: value })}
+          updateRedux={(value) => updateRedux({ exteriorHeight: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
@@ -66,7 +66,7 @@ const RectangleHouseForm = ({ shape }: RectangleHouseFormProps) => {
           name="wallThickness"
           label={t('forms.exteriorWallThickness')}
           transformedValue={pixelsToMeters(shape.wallThickness)}
-          updateRedux={(value) => updateRedux({ wallThickness: value })}
+          updateRedux={(value) => updateRedux({ wallThickness: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
