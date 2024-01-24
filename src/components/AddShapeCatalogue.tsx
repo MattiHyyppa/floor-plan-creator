@@ -28,6 +28,7 @@ import interiorDoorImage from '../assets/images/interior-door.png';
 import wallImage from '../assets/images/wall.png';
 import windowImage from '../assets/images/window.png';
 import boxImage from '../assets/images/box.png';
+import coldApplianceImage from '../assets/images/cold-appliance.png';
 
 const getHouseShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps[] => {
   return [
@@ -81,7 +82,7 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
     {
       text: t('shapes.coldAppliance'),
       width: '60px',
-      src: boxImage,
+      src: coldApplianceImage,
       addShape: () => dispatch(addColdAppliance()),
     },
   ];

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import Konva from 'konva';
-import { Rect, Transformer, Group } from 'react-konva';
+import { Rect, Transformer, Group, Shape } from 'react-konva';
 
 import type { ColdApplianceConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
@@ -78,6 +78,25 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
           fill="white"
           onClick={onSelect}
           onTap={onSelect}
+        />
+        <Shape
+          x={0}
+          y={0}
+          onClick={onSelect}
+          onTap={onSelect}
+          width={shape.width}
+          height={shape.height}
+          sceneFunc={(context, canvasShape) => {
+            const dx = Math.min(5, shape.width / 2);
+            context.beginPath();
+            context.moveTo(shape.width, 0);
+            context.lineTo(shape.width / 2 - dx, shape.height / 2);
+            context.lineTo(shape.width / 2 + dx, shape.height / 2);
+            context.lineTo(0, shape.height);
+            context.fillStrokeShape(canvasShape);
+          }}
+          stroke={theme.strokeColor}
+          strokeWidth={theme.strokeWidth}
         />
       </Group>
       {isSelected && shape.draggable && (
