@@ -6,7 +6,6 @@ import {
 } from 'yup';
 
 const textSchema = object({
-  // Required
   id: string().required(),
   shape: string<'text'>().oneOf(['text']).required(),
   x: number().required(),
@@ -14,9 +13,7 @@ const textSchema = object({
   rotation: number().required(),
   fontSize: number().required(),
   text: string().required().max(30),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default textSchema;

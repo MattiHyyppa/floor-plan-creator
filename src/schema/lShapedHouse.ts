@@ -6,7 +6,6 @@ import {
 } from 'yup';
 
 const lShapedHouseSchema = object({
-  // Required
   id: string().required(),
   shape: string<'lShapedHouse'>().oneOf(['lShapedHouse']).required(),
   x: number().required(),
@@ -17,9 +16,7 @@ const lShapedHouseSchema = object({
   wallThickness: number().positive().required(),
   firstWingWidth: number().positive().required(),
   secondWingWidth: number().positive().required(),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default lShapedHouseSchema;

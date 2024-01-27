@@ -19,8 +19,8 @@ const initialDoorWidth = cmToPixels(80);
 type InitialTransformerBoxFunc = (
   x: number,
   y: number,
-  rotation:number,
-  wallThickness:number,
+  rotation: number,
+  wallThickness: number,
   kind: 'interior' | 'exterior'
 ) => Box;
 
@@ -176,10 +176,6 @@ const Door = ({ shape, onChange, onSelect, isSelected }: DoorProps): JSX.Element
       )}
     </>
   );
-};
-
-Door.defaultProps = {
-  isSelected: false,
 };
 
 export default Door;

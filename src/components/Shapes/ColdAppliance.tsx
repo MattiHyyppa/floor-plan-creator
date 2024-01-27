@@ -4,7 +4,6 @@ import { Rect, Transformer, Group, Shape } from 'react-konva';
 
 import type { ColdApplianceConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
-import { cmToPixels } from '../../utils';
 
 export interface ColdApplianceProps {
   shape: ColdApplianceConfig;
@@ -13,9 +12,6 @@ export interface ColdApplianceProps {
   onChange?: (newAttrs: ColdApplianceConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
-
-const defaultWidth = cmToPixels(60);
-const defaultHeight = cmToPixels(60);
 
 const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
@@ -112,12 +108,6 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
       )}
     </>
   );
-};
-
-ColdAppliance.defaultProps = {
-  width: defaultWidth,
-  height: defaultHeight,
-  isSelected: false,
 };
 
 export default ColdAppliance;

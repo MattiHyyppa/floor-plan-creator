@@ -4,7 +4,6 @@ import { Rect, Transformer, Group } from 'react-konva';
 
 import type { BoxConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
-import { cmToPixels } from '../../utils';
 
 export interface BoxProps {
   shape: BoxConfig;
@@ -13,9 +12,6 @@ export interface BoxProps {
   onChange?: (newAttrs: BoxConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
-
-const defaultWidth = cmToPixels(100);
-const defaultHeight = cmToPixels(60);
 
 const Box = (props: BoxProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
@@ -93,12 +89,6 @@ const Box = (props: BoxProps): JSX.Element => {
       )}
     </>
   );
-};
-
-Box.defaultProps = {
-  width: defaultWidth,
-  height: defaultHeight,
-  isSelected: false,
 };
 
 export default Box;

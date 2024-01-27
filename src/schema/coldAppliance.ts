@@ -6,7 +6,6 @@ import {
 } from 'yup';
 
 const coldApplianceSchema = object({
-  // Required
   id: string().required(),
   shape: string<'coldAppliance'>().oneOf(['coldAppliance']).required(),
   x: number().required(),
@@ -14,9 +13,7 @@ const coldApplianceSchema = object({
   rotation: number().required(),
   width: number().positive().required(),
   height: number().positive().required(),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default coldApplianceSchema;

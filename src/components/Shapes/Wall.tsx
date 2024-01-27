@@ -169,8 +169,4 @@ const Wall = (props: WallProps): JSX.Element => {
   );
 };
 
-Wall.defaultProps = {
-  isSelected: false,
-};
-
 export default Wall;

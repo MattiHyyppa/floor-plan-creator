@@ -4,7 +4,6 @@ import { Rect, Transformer, Group } from 'react-konva';
 
 import type { RectangleHouseConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
-import { cmToPixels } from '../../utils';
 
 export interface RectangleHouseProps {
   shape: RectangleHouseConfig;
@@ -13,9 +12,6 @@ export interface RectangleHouseProps {
   onChange?: (newAttrs: RectangleHouseConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
-
-const defaultExteriorWidth = cmToPixels(1000);
-const defaultExteriorHeight = cmToPixels(800);
 
 const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
@@ -106,12 +102,6 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
       )}
     </>
   );
-};
-
-RectangleHouse.defaultProps = {
-  exteriorWidth: defaultExteriorWidth,
-  exteriorHeight: defaultExteriorHeight,
-  isSelected: false,
 };
 
 export default RectangleHouse;

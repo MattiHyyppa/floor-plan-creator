@@ -4,7 +4,6 @@ import { Shape, Transformer, Group } from 'react-konva';
 
 import type { LShapedHouseConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
-import { cmToPixels } from '../../utils';
 
 /* An L-shaped house has the following dimensions:
               4
@@ -37,10 +36,9 @@ import { cmToPixels } from '../../utils';
   Therefore, we don't have to worry about swapping any names when rotating.
 
   NOTE! All the the custom shapes have a stroke of width `theme.strokeWidth` as determined
-  in the project-dir/src/utils/shapeTheme.ts file. Konva handles drawing the stroke such that
-  half of it is outside and half is inside the bounds of the shape. This means that if the x
-  and y params are both set to 100 and `theme.strokeWidth === 1`, the top-left corner is actually
-  drawn at (99.5, 99.5).
+  in src/utils/shapeTheme.ts. Konva handles drawing the stroke such that half of it is outside
+  and half is inside the bounds of the shape. This means that if the x and y params are both
+  set to 100 and `theme.strokeWidth === 1`, the top-left corner is actually drawn at (99.5, 99.5).
 */
 
 export interface LShapedHouseProps {
@@ -50,11 +48,6 @@ export interface LShapedHouseProps {
   onChange?: (newAttrs: LShapedHouseConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
-
-const defaultExteriorWidth = cmToPixels(1400);
-const defaultExteriorHeight = cmToPixels(1000);
-const defaultFirstWingWidth = cmToPixels(500);
-const defaultSecondWingWidth = cmToPixels(500);
 
 const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
@@ -177,14 +170,6 @@ const LShapedHouse = (props: LShapedHouseProps): JSX.Element => {
       )}
     </>
   );
-};
-
-LShapedHouse.defaultProps = {
-  exteriorWidth: defaultExteriorWidth,
-  exteriorHeight: defaultExteriorHeight,
-  firstWingWidth: defaultFirstWingWidth,
-  secondWingWidth: defaultSecondWingWidth,
-  isSelected: false,
 };
 
 export default LShapedHouse;

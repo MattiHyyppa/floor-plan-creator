@@ -6,7 +6,6 @@ import {
 } from 'yup';
 
 const boxSchema = object({
-  // Required
   id: string().required(),
   shape: string<'box'>().oneOf(['box']).required(),
   x: number().required(),
@@ -14,9 +13,7 @@ const boxSchema = object({
   rotation: number().required(),
   width: number().positive().required(),
   height: number().positive().required(),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default boxSchema;

@@ -99,8 +99,4 @@ const Window = (props: WindowProps): JSX.Element => {
   );
 };
 
-Window.defaultProps = {
-  isSelected: false,
-};
-
 export default Window;

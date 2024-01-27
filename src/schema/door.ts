@@ -21,7 +21,6 @@ export const isOpeningDirection = (value: unknown): value is OpeningDirection =>
 };
 
 const doorSchema = object({
-  // Required
   id: string().required(),
   shape: string<'door'>().oneOf(['door']).required(),
   x: number().positive().required(),
@@ -31,9 +30,7 @@ const doorSchema = object({
   wallThickness: number().positive().required(),
   kind: mixed<DoorKind>().oneOf(doorKinds).required(),
   openingDirection: mixed<OpeningDirection>().oneOf(openingDirections).required(),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default doorSchema;

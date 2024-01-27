@@ -6,7 +6,6 @@ import {
 } from 'yup';
 
 const rectangleHouseSchema = object({
-  // Required
   id: string().required(),
   shape: string<'rectangleHouse'>().oneOf(['rectangleHouse']).required(),
   x: number().required(),
@@ -15,9 +14,7 @@ const rectangleHouseSchema = object({
   exteriorWidth: number().positive().required(),
   exteriorHeight: number().positive().required(),
   wallThickness: number().positive().required(),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default rectangleHouseSchema;

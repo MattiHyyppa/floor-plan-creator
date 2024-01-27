@@ -6,7 +6,6 @@ import {
 } from 'yup';
 
 const windowSchema = object({
-  // Required
   id: string().required(),
   shape: string<'window'>().oneOf(['window']).required(),
   x: number().required(),
@@ -14,9 +13,7 @@ const windowSchema = object({
   rotation: number().required(),
   windowWidth: number().positive().required(),
   wallThickness: number().positive().required(),
-
-  // Optional
-  draggable: boolean(),
+  draggable: boolean().required(),
 });
 
 export default windowSchema;
