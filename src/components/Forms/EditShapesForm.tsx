@@ -17,6 +17,7 @@ import BoxForm from './BoxForm';
 import ColdApplianceForm from './ColdApplianceForm';
 import TextForm from './TextForm';
 import SinkForm from './SinkForm';
+import StoveForm from './StoveForm';
 import { useAppSelector } from '../../hooks';
 import type {
   CustomShapeConfig,
@@ -29,6 +30,7 @@ import type {
   ColdApplianceConfig,
   TextConfig,
   SinkConfig,
+  StoveConfig,
 } from '../../types';
 
 const shapeToFormComponent = (shape: CustomShapeConfig) => {
@@ -42,6 +44,7 @@ const shapeToFormComponent = (shape: CustomShapeConfig) => {
     coldAppliance: () => <ColdApplianceForm shape={shape as ColdApplianceConfig} />,
     text: () => <TextForm shape={shape as TextConfig} />,
     sink: () => <SinkForm shape={shape as SinkConfig} />,
+    stove: () => <StoveForm shape={shape as StoveConfig} />,
   };
 
   return options[shape.shapeName];

@@ -19,6 +19,7 @@ import {
   addColdAppliance,
   addText,
   addSink,
+  addStove,
 } from '../redux/slices/canvasSlice';
 import ImageWithText from './ImageWithText';
 import type { ImageWithTextProps } from './ImageWithText';
@@ -33,6 +34,7 @@ import boxImage from '../assets/images/box.png';
 import coldApplianceImage from '../assets/images/cold-appliance.png';
 import textImage from '../assets/images/text.png';
 import sinkImage from '../assets/images/sink.png';
+import stoveImage from '../assets/images/stove.png';
 
 const getHouseShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps[] => {
   return [
@@ -85,7 +87,7 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
     },
     {
       text: t('shapes.coldAppliance'),
-      width: '50px',
+      width: '40px',
       src: coldApplianceImage,
       addShape: () => dispatch(addColdAppliance()),
     },
@@ -98,9 +100,16 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
     },
     {
       text: t('shapes.sink'),
-      width: '40px',
+      width: '36px',
       src: sinkImage,
       addShape: () => dispatch(addSink()),
+      mb: 1,
+    },
+    {
+      text: t('shapes.stove'),
+      width: '40px',
+      src: stoveImage,
+      addShape: () => dispatch(addStove()),
       mb: 1,
     },
   ];

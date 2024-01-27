@@ -9,6 +9,7 @@ import boxSchema from '../schema/box';
 import coldApplianceSchema from '../schema/coldAppliance';
 import textSchema from '../schema/text';
 import sinkSchema from '../schema/sink';
+import stoveSchema from '../schema/stove';
 
 export type DoorConfig = InferType<typeof doorSchema>;
 export type RectangleHouseConfig = InferType<typeof rectangleHouseSchema>;
@@ -19,3 +20,4 @@ export type BoxConfig = InferType<typeof boxSchema>;
 export type ColdApplianceConfig = InferType<typeof coldApplianceSchema>;
 export type TextConfig = InferType<typeof textSchema>;
 export type SinkConfig = InferType<typeof sinkSchema>;
+export type StoveConfig = InferType<typeof stoveSchema>;

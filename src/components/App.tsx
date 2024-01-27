@@ -11,6 +11,7 @@ import BoxShape from './Shapes/Box';
 import ColdAppliance from './Shapes/ColdAppliance';
 import Text from './Shapes/Text';
 import Sink from './Shapes/Sink';
+import Stove from './Shapes/Stove';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import type {
@@ -24,6 +25,7 @@ import type {
   ColdApplianceConfig,
   TextConfig,
   SinkConfig,
+  StoveConfig,
 } from '../types';
 import {
   isRectangleHouse,
@@ -35,6 +37,7 @@ import {
   isColdAppliance,
   isText,
   isSink,
+  isStove,
 } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
@@ -83,6 +86,7 @@ const mapShapeToComponent = (
     coldAppliance: () => <ColdAppliance {...getProps(shape as ColdApplianceConfig)} />,
     text: () => <Text {...getProps(shape as TextConfig)} />,
     sink: () => <Sink {...getProps(shape as SinkConfig)} />,
+    stove: () => <Stove {...getProps(shape as StoveConfig)} />,
   };
 
   return options[shape.shapeName];
@@ -99,6 +103,7 @@ const predicatesInDrawingOrder = [
   isColdAppliance,
   isText,
   isSink,
+  isStove,
 ];
 
 
