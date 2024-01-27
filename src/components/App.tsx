@@ -10,6 +10,7 @@ import Window from './Shapes/Window';
 import BoxShape from './Shapes/Box';
 import ColdAppliance from './Shapes/ColdAppliance';
 import Text from './Shapes/Text';
+import Sink from './Shapes/Sink';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import type {
@@ -22,6 +23,7 @@ import type {
   BoxConfig,
   ColdApplianceConfig,
   TextConfig,
+  SinkConfig,
 } from '../types';
 import {
   isRectangleHouse,
@@ -32,6 +34,7 @@ import {
   isBox,
   isColdAppliance,
   isText,
+  isSink,
 } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
@@ -79,6 +82,7 @@ const mapShapeToComponent = (
     box: () => <BoxShape {...getProps(shape as BoxConfig)} />,
     coldAppliance: () => <ColdAppliance {...getProps(shape as ColdApplianceConfig)} />,
     text: () => <Text {...getProps(shape as TextConfig)} />,
+    sink: () => <Sink {...getProps(shape as SinkConfig)} />,
   };
 
   return options[shape.shapeName];
@@ -94,6 +98,7 @@ const predicatesInDrawingOrder = [
   isBox,
   isColdAppliance,
   isText,
+  isSink,
 ];
 
 

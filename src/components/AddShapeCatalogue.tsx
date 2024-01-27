@@ -18,6 +18,7 @@ import {
   addBox,
   addColdAppliance,
   addText,
+  addSink,
 } from '../redux/slices/canvasSlice';
 import ImageWithText from './ImageWithText';
 import type { ImageWithTextProps } from './ImageWithText';
@@ -31,6 +32,7 @@ import windowImage from '../assets/images/window.png';
 import boxImage from '../assets/images/box.png';
 import coldApplianceImage from '../assets/images/cold-appliance.png';
 import textImage from '../assets/images/text.png';
+import sinkImage from '../assets/images/sink.png';
 
 const getHouseShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps[] => {
   return [
@@ -65,13 +67,13 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
     },
     {
       text: t('shapes.wall'),
-      width: '60px',
+      width: '70px',
       src: wallImage,
       addShape: () => dispatch(addWall()),
     },
     {
       text: t('shapes.window'),
-      width: '60px',
+      width: '70px',
       src: windowImage,
       addShape: () => dispatch(addWindow()),
     },
@@ -83,7 +85,7 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
     },
     {
       text: t('shapes.coldAppliance'),
-      width: '60px',
+      width: '50px',
       src: coldApplianceImage,
       addShape: () => dispatch(addColdAppliance()),
     },
@@ -93,6 +95,13 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
       src: textImage,
       addShape: () => dispatch(addText()),
       mb: 3,
+    },
+    {
+      text: t('shapes.sink'),
+      width: '40px',
+      src: sinkImage,
+      addShape: () => dispatch(addSink()),
+      mb: 1,
     },
   ];
 };

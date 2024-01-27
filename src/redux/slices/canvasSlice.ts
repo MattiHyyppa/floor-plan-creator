@@ -12,6 +12,7 @@ import type {
   BoxConfig,
   ColdApplianceConfig,
   TextConfig,
+  SinkConfig,
 } from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
@@ -249,6 +250,26 @@ export const canvasSlice = createSlice({
       });
     },
 
+    addSink: (state) => {
+      const shape: SinkConfig = {
+        id: uuidv4(),
+        shapeName: 'sink',
+        x: 75,
+        y: 75,
+        width: cmToPixels(50),
+        depth: cmToPixels(50),
+        rotation: 0,
+        draggable: true,
+      };
+
+      state.shapes.push(shape);
+      addToHistory(state, {
+        operation: 'add',
+        current: shape,
+        index: state.shapes.length - 1,
+      });
+    },
+
     deleteShape: (state, action: PayloadAction<{ id: string }>) => {
       const indexToDelete = state.shapes.findIndex(shape => shape.id === action.payload.id);
 
@@ -367,6 +388,7 @@ export const {
   addBox,
   addColdAppliance,
   addText,
+  addSink,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;
