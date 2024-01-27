@@ -12,7 +12,7 @@ import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import coldApplianceSchema from '../../schema/coldAppliance';
 
-const validationSchema = coldApplianceSchema.pick(['width', 'height']).shape({
+const validationSchema = coldApplianceSchema.pick(['width', 'depth']).shape({
   disabled: Yup.boolean().required(),
 });
 
@@ -27,7 +27,7 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
 
   const initialValues: InferType<typeof validationSchema> = {
     width: round(pixelsToMeters(shape.width), decimals),
-    height: round(pixelsToMeters(shape.height), decimals),
+    depth: round(pixelsToMeters(shape.depth), decimals),
     disabled: !shape.draggable,
   };
 
@@ -53,11 +53,11 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id="coldApplianceHeight"
-          name="height"
-          label={t('forms.height')}
-          transformedValue={pixelsToMeters(shape.height)}
-          updateRedux={(value) => updateRedux({ height: metersToPixels(value) })}
+          id="coldApplianceDepth"
+          name="depth"
+          label={t('forms.depth')}
+          transformedValue={pixelsToMeters(shape.depth)}
+          updateRedux={(value) => updateRedux({ depth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />

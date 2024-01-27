@@ -34,7 +34,7 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
         name="object"
         {...shape}
         width={shape.width}
-        height={shape.height}
+        height={shape.depth}
         onDragEnd={(e) => {
           onChange && onChange({
             ...shape,
@@ -60,7 +60,7 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
             y: node.y(),
             rotation: node.rotation(),
             width: shape.width * scaleX,
-            height: shape.height * scaleY,
+            depth: shape.depth * scaleY,
           });
         }}
       >
@@ -68,7 +68,7 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
           x={0}
           y={0}
           width={shape.width}
-          height={shape.height}
+          height={shape.depth}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
           fill="white"
@@ -81,14 +81,14 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
           onClick={onSelect}
           onTap={onSelect}
           width={shape.width}
-          height={shape.height}
+          height={shape.depth}
           sceneFunc={(context, canvasShape) => {
             const dx = Math.min(5, shape.width / 2);
             context.beginPath();
             context.moveTo(shape.width, 0);
-            context.lineTo(shape.width / 2 - dx, shape.height / 2);
-            context.lineTo(shape.width / 2 + dx, shape.height / 2);
-            context.lineTo(0, shape.height);
+            context.lineTo(shape.width / 2 - dx, shape.depth / 2);
+            context.lineTo(shape.width / 2 + dx, shape.depth / 2);
+            context.lineTo(0, shape.depth);
             context.fillStrokeShape(canvasShape);
           }}
           stroke={theme.strokeColor}
