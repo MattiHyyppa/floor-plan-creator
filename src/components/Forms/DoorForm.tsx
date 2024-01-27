@@ -7,6 +7,7 @@ import {
 } from '@chakra-ui/react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import type { InferType } from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import BlackButton from '../BlackButton';
@@ -31,7 +32,7 @@ const DoorForm = ({ shape }: DoorFormProps) => {
   const dispatch = useAppDispatch();
   const decimals = 2;
 
-  const initialValues = {
+  const initialValues: InferType<typeof validationSchema> = {
     doorWidth: round(pixelsToMeters(shape.doorWidth), decimals),
     kind: shape.kind,
     openingDirection: shape.openingDirection,

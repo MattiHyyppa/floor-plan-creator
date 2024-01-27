@@ -12,7 +12,7 @@ const boxSchema = object({
   y: number().required(),
   rotation: number().required(),
   width: number().positive().required(),
-  height: number().positive().required(),
+  depth: number().positive().required(),
   draggable: boolean().required(),
 });
 

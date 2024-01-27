@@ -1,5 +1,6 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import type { InferType } from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import BlackButton from '../BlackButton';
@@ -24,7 +25,7 @@ const WindowForm = ({ shape }: WindowFormProps) => {
   const dispatch = useAppDispatch();
   const decimals = 2;
 
-  const initialValues = {
+  const initialValues: InferType<typeof validationSchema> = {
     windowWidth: round(pixelsToMeters(shape.windowWidth), decimals),
     wallThickness: round(pixelsToMeters(shape.wallThickness), decimals),
     disabled: !shape.draggable,

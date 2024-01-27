@@ -1,4 +1,4 @@
-import { InferType } from 'yup';
+import type { InferType } from 'yup';
 
 import doorSchema from '../schema/door';
 import rectangleHouseSchema from '../schema/rectangleHouse';

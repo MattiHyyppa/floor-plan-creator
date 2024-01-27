@@ -1,5 +1,6 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import type { InferType } from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import BlackButton from '../BlackButton';
@@ -23,7 +24,7 @@ const TextForm = ({ shape }: TextFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
 
-  const initialValues = {
+  const initialValues: InferType<typeof validationSchema> = {
     text: shape.text,
     fontSize: shape.fontSize,
     disabled: !shape.draggable,

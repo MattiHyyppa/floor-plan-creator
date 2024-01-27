@@ -197,7 +197,7 @@ export const canvasSlice = createSlice({
         y: 75,
         rotation: 0,
         width: cmToPixels(100),
-        height: cmToPixels(60),
+        depth: cmToPixels(60),
         draggable: true,
       };
 

@@ -34,7 +34,7 @@ const Box = (props: BoxProps): JSX.Element => {
         name="object"
         {...shape}
         width={shape.width}
-        height={shape.height}
+        height={shape.depth}
         onDragEnd={(e) => {
           onChange && onChange({
             ...shape,
@@ -60,7 +60,7 @@ const Box = (props: BoxProps): JSX.Element => {
             y: node.y(),
             rotation: node.rotation(),
             width: shape.width * scaleX,
-            height: shape.height * scaleY,
+            depth: shape.depth * scaleY,
           });
         }}
       >
@@ -68,7 +68,7 @@ const Box = (props: BoxProps): JSX.Element => {
           x={0}
           y={0}
           width={shape.width}
-          height={shape.height}
+          height={shape.depth}
           stroke={theme.strokeColor}
           strokeWidth={theme.strokeWidth}
           fill="white"

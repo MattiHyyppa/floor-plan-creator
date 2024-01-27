@@ -1,5 +1,6 @@
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import type { InferType } from 'yup';
 import { useTranslation } from 'react-i18next';
 
 import BlackButton from '../BlackButton';
@@ -11,7 +12,7 @@ import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
 import boxSchema from '../../schema/box';
 
-const validationSchema = boxSchema.pick(['width', 'height']).shape({
+const validationSchema = boxSchema.pick(['width', 'depth']).shape({
   disabled: Yup.boolean().required(),
 });
 
@@ -24,9 +25,9 @@ const BoxForm = ({ shape }: BoxFormProps) => {
   const dispatch = useAppDispatch();
   const decimals = 2;
 
-  const initialValues = {
+  const initialValues: InferType<typeof validationSchema> = {
     width: round(pixelsToMeters(shape.width), decimals),
-    height: round(pixelsToMeters(shape.height), decimals),
+    depth: round(pixelsToMeters(shape.depth), decimals),
     disabled: !shape.draggable,
   };
 
@@ -52,11 +53,11 @@ const BoxForm = ({ shape }: BoxFormProps) => {
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id="boxHeight"
-          name="height"
-          label={t('forms.height')}
-          transformedValue={pixelsToMeters(shape.height)}
-          updateRedux={(value) => updateRedux({ height: metersToPixels(value) })}
+          id="boxDepth"
+          name="depth"
+          label={t('forms.depth')}
+          transformedValue={pixelsToMeters(shape.depth)}
+          updateRedux={(value) => updateRedux({ depth: metersToPixels(value) })}
           mb={3}
           {...commonNumberFormProps}
         />
