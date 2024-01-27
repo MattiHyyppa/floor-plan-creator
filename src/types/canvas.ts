@@ -20,35 +20,35 @@ export type CustomShapeConfig =
   | TextConfig;
 
 export const isDoor = (shape: CustomShapeConfig): shape is DoorConfig => {
-  return (shape as DoorConfig).shape === 'door';
+  return (shape as DoorConfig).shapeName === 'door';
 };
 
 export const isRectangleHouse = (shape: CustomShapeConfig): shape is RectangleHouseConfig => {
-  return (shape as RectangleHouseConfig).shape === 'rectangleHouse';
+  return (shape as RectangleHouseConfig).shapeName === 'rectangleHouse';
 };
 
 export const isLShapedHouse = (shape: CustomShapeConfig): shape is LShapedHouseConfig => {
-  return (shape as LShapedHouseConfig).shape === 'lShapedHouse';
+  return (shape as LShapedHouseConfig).shapeName === 'lShapedHouse';
 };
 
 export const isWall = (shape: CustomShapeConfig): shape is WallConfig => {
-  return (shape as WallConfig).shape === 'wall';
+  return (shape as WallConfig).shapeName === 'wall';
 };
 
 export const isWindow = (shape: CustomShapeConfig): shape is WindowConfig => {
-  return (shape as WindowConfig).shape === 'window';
+  return (shape as WindowConfig).shapeName === 'window';
 };
 
 export const isBox = (shape: CustomShapeConfig): shape is BoxConfig => {
-  return (shape as BoxConfig).shape === 'box';
+  return (shape as BoxConfig).shapeName === 'box';
 };
 
 export const isColdAppliance = (shape: CustomShapeConfig): shape is ColdApplianceConfig => {
-  return (shape as ColdApplianceConfig).shape === 'coldAppliance';
+  return (shape as ColdApplianceConfig).shapeName === 'coldAppliance';
 };
 
 export const isText = (shape: CustomShapeConfig): shape is TextConfig => {
-  return (shape as TextConfig).shape === 'text';
+  return (shape as TextConfig).shapeName === 'text';
 };
 
 export type CanvasUpdate =

@@ -7,7 +7,7 @@ import {
 
 const wallSchema = object({
   id: string().required(),
-  shape: string<'wall'>().oneOf(['wall']).required(),
+  shapeName: string<'wall'>().oneOf(['wall']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

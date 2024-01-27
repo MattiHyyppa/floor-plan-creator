@@ -81,7 +81,7 @@ const mapShapeToComponent = (
     text: () => <Text {...getProps(shape as TextConfig)} />,
   };
 
-  return options[shape.shape];
+  return options[shape.shapeName];
 };
 
 

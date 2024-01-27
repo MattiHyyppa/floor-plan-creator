@@ -7,7 +7,7 @@ import {
 
 const rectangleHouseSchema = object({
   id: string().required(),
-  shape: string<'rectangleHouse'>().oneOf(['rectangleHouse']).required(),
+  shapeName: string<'rectangleHouse'>().oneOf(['rectangleHouse']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

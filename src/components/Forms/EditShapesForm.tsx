@@ -41,7 +41,7 @@ const shapeToFormComponent = (shape: CustomShapeConfig) => {
     text: () => <TextForm shape={shape as TextConfig} />,
   };
 
-  return options[shape.shape];
+  return options[shape.shapeName];
 };
 
 const FormWithAlert = ({ children }: { children: React.ReactNode }) => {

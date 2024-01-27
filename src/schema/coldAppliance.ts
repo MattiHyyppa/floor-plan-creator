@@ -7,7 +7,7 @@ import {
 
 const coldApplianceSchema = object({
   id: string().required(),
-  shape: string<'coldAppliance'>().oneOf(['coldAppliance']).required(),
+  shapeName: string<'coldAppliance'>().oneOf(['coldAppliance']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

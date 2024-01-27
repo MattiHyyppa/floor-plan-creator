@@ -7,7 +7,7 @@ import {
 
 const boxSchema = object({
   id: string().required(),
-  shape: string<'box'>().oneOf(['box']).required(),
+  shapeName: string<'box'>().oneOf(['box']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

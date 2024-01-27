@@ -7,7 +7,7 @@ import {
 
 const textSchema = object({
   id: string().required(),
-  shape: string<'text'>().oneOf(['text']).required(),
+  shapeName: string<'text'>().oneOf(['text']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

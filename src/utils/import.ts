@@ -22,12 +22,12 @@ export const validateShapesJSON = async (data: unknown): Promise<CustomShapeConf
   const validatedData: CustomShapeConfig[] = [];
 
   for (const shape of data) {
-    if ((typeof shape !== 'object') || !('shape' in shape) || (typeof shape['shape'] !== 'string')) {
+    if ((typeof shape !== 'object') || !('shapeName' in shape) || (typeof shape['shapeName'] !== 'string')) {
       console.log('The shape', shape, 'is not formatted correctly');
       return null;
     }
 
-    const shapeName = shape['shape'];
+    const shapeName = shape['shapeName'];
     if (!(shapeName in shapeToSchema)) {
       console.log('Validation schema could not be found for shape', shape);
       return null;

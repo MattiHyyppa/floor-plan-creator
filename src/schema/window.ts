@@ -7,7 +7,7 @@ import {
 
 const windowSchema = object({
   id: string().required(),
-  shape: string<'window'>().oneOf(['window']).required(),
+  shapeName: string<'window'>().oneOf(['window']).required(),
   x: number().required(),
   y: number().required(),
   rotation: number().required(),

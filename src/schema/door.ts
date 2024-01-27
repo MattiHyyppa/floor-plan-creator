@@ -22,7 +22,7 @@ export const isOpeningDirection = (value: unknown): value is OpeningDirection =>
 
 const doorSchema = object({
   id: string().required(),
-  shape: string<'door'>().oneOf(['door']).required(),
+  shapeName: string<'door'>().oneOf(['door']).required(),
   x: number().positive().required(),
   y: number().positive().required(),
   doorWidth: number().positive().required(),

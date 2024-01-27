@@ -64,7 +64,7 @@ export const canvasSlice = createSlice({
     addRectangleHouse: (state) => {
       const house: RectangleHouseConfig = {
         id: uuidv4(),
-        shape: 'rectangleHouse',
+        shapeName: 'rectangleHouse',
         x: 100,
         y: 100,
         rotation: 0,
@@ -85,7 +85,7 @@ export const canvasSlice = createSlice({
     addLShapedHouse: (state) => {
       const house: LShapedHouseConfig = {
         id: uuidv4(),
-        shape: 'lShapedHouse',
+        shapeName: 'lShapedHouse',
         x: 100,
         y: 100,
         rotation: 0,
@@ -108,7 +108,7 @@ export const canvasSlice = createSlice({
     addExteriorDoor: (state) => {
       const door: DoorConfig = {
         id: uuidv4(),
-        shape: 'door',
+        shapeName: 'door',
         x: 75,
         y: 75,
         rotation: 0,
@@ -130,7 +130,7 @@ export const canvasSlice = createSlice({
     addInteriorDoor: (state) => {
       const door: DoorConfig = {
         id: uuidv4(),
-        shape: 'door',
+        shapeName: 'door',
         x: 75,
         y: 75,
         rotation: 0,
@@ -152,7 +152,7 @@ export const canvasSlice = createSlice({
     addWall: (state) => {
       const wall: WallConfig = {
         id: uuidv4(),
-        shape: 'wall',
+        shapeName: 'wall',
         x: 75,
         y: 75,
         rotation: 0,
@@ -172,7 +172,7 @@ export const canvasSlice = createSlice({
     addWindow: (state) => {
       const w: WindowConfig = {
         id: uuidv4(),
-        shape: 'window',
+        shapeName: 'window',
         x: 75,
         y: 75,
         rotation: 0,
@@ -192,7 +192,7 @@ export const canvasSlice = createSlice({
     addBox: (state) => {
       const box: BoxConfig = {
         id: uuidv4(),
-        shape: 'box',
+        shapeName: 'box',
         x: 75,
         y: 75,
         rotation: 0,
@@ -212,7 +212,7 @@ export const canvasSlice = createSlice({
     addColdAppliance: (state) => {
       const shape: ColdApplianceConfig = {
         id: uuidv4(),
-        shape: 'coldAppliance',
+        shapeName: 'coldAppliance',
         x: 75,
         y: 75,
         rotation: 0,
@@ -232,7 +232,7 @@ export const canvasSlice = createSlice({
     addText: (state) => {
       const shape: TextConfig = {
         id: uuidv4(),
-        shape: 'text',
+        shapeName: 'text',
         x: 75,
         y: 75,
         rotation: 0,
@@ -266,7 +266,7 @@ export const canvasSlice = createSlice({
       });
     },
 
-    updateShape: (state, action: PayloadAction<{ id: string, newAttrs: Partial<Omit<CustomShapeConfig, 'shape'>> }>) => {
+    updateShape: (state, action: PayloadAction<{ id: string, newAttrs: Partial<Omit<CustomShapeConfig, 'shapeName'>> }>) => {
       const index = state.shapes.findIndex((shape) => shape.id === action.payload.id);
       if (index === -1) {
         return;
