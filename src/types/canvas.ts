@@ -5,7 +5,7 @@ import type {
   WallConfig,
   WindowConfig,
   BoxConfig,
-  ColdApplianceConfig,
+  ElectricApplianceConfig,
   TextConfig,
   SinkConfig,
   StoveConfig,
@@ -19,7 +19,7 @@ export type CustomShapeConfig =
   | WallConfig
   | WindowConfig
   | BoxConfig
-  | ColdApplianceConfig
+  | ElectricApplianceConfig
   | TextConfig
   | SinkConfig
   | StoveConfig
@@ -49,8 +49,8 @@ export const isBox = (shape: CustomShapeConfig): shape is BoxConfig => {
   return (shape as BoxConfig).shapeName === 'box';
 };
 
-export const isColdAppliance = (shape: CustomShapeConfig): shape is ColdApplianceConfig => {
-  return (shape as ColdApplianceConfig).shapeName === 'coldAppliance';
+export const isElectricAppliance = (shape: CustomShapeConfig): shape is ElectricApplianceConfig => {
+  return (shape as ElectricApplianceConfig).shapeName === 'electricAppliance';
 };
 
 export const isText = (shape: CustomShapeConfig): shape is TextConfig => {

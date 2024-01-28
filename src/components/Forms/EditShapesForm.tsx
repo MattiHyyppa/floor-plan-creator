@@ -14,7 +14,7 @@ import DoorForm from './DoorForm';
 import WallForm from './WallForm';
 import WindowForm from './WindowForm';
 import BoxForm from './BoxForm';
-import ColdApplianceForm from './ColdApplianceForm';
+import ElectricApplianceForm from './ElectricApplianceForm';
 import TextForm from './TextForm';
 import SinkForm from './SinkForm';
 import StoveForm from './StoveForm';
@@ -29,7 +29,7 @@ import type {
   WallConfig,
   WindowConfig,
   BoxConfig,
-  ColdApplianceConfig,
+  ElectricApplianceConfig,
   TextConfig,
   SinkConfig,
   StoveConfig,
@@ -44,7 +44,7 @@ const shapeToFormComponent = (shape: CustomShapeConfig) => {
     wall: () => <WallForm shape={shape as WallConfig} />,
     window: () => <WindowForm shape={shape as WindowConfig} />,
     box: () => <BoxForm shape={shape as BoxConfig} />,
-    coldAppliance: () => <ColdApplianceForm shape={shape as ColdApplianceConfig} />,
+    electricAppliance: () => <ElectricApplianceForm shape={shape as ElectricApplianceConfig} />,
     text: () => <TextForm shape={shape as TextConfig} />,
     sink: () => <SinkForm shape={shape as SinkConfig} />,
     stove: () => <StoveForm shape={shape as StoveConfig} />,

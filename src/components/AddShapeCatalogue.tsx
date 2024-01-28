@@ -16,7 +16,7 @@ import {
   addWall,
   addWindow,
   addBox,
-  addColdAppliance,
+  addElectricAppliance,
   addText,
   addSink,
   addStove,
@@ -32,7 +32,7 @@ import interiorDoorImage from '../assets/images/interior-door.png';
 import wallImage from '../assets/images/wall.png';
 import windowImage from '../assets/images/window.png';
 import boxImage from '../assets/images/box.png';
-import coldApplianceImage from '../assets/images/cold-appliance.png';
+import electricApplianceImage from '../assets/images/electric-appliance.png';
 import textImage from '../assets/images/text.png';
 import sinkImage from '../assets/images/sink.png';
 import stoveImage from '../assets/images/stove.png';
@@ -88,10 +88,10 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
       addShape: () => dispatch(addBox()),
     },
     {
-      text: t('shapes.coldAppliance'),
+      text: t('shapes.electricAppliance'),
       width: '40px',
-      src: coldApplianceImage,
-      addShape: () => dispatch(addColdAppliance()),
+      src: electricApplianceImage,
+      addShape: () => dispatch(addElectricAppliance()),
     },
     {
       text: t('shapes.text'),

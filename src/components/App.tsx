@@ -7,7 +7,7 @@ import Wall, { type WallProps } from './Shapes/Wall';
 import SnappingStage from './SnappingStage';
 import Window from './Shapes/Window';
 import BoxShape from './Shapes/Box';
-import ColdAppliance from './Shapes/ColdAppliance';
+import ElectricAppliance from './Shapes/ElectricAppliance';
 import Text from './Shapes/Text';
 import Sink from './Shapes/Sink';
 import Stove from './Shapes/Stove';
@@ -24,7 +24,7 @@ import type {
   WallConfig,
   WindowConfig,
   BoxConfig,
-  ColdApplianceConfig,
+  ElectricApplianceConfig,
   TextConfig,
   SinkConfig,
   StoveConfig,
@@ -37,7 +37,7 @@ import {
   isWall,
   isWindow,
   isBox,
-  isColdAppliance,
+  isElectricAppliance,
   isText,
   isSink,
   isStove,
@@ -87,7 +87,7 @@ const mapShapeToComponent = (
     wall: () => <Wall {...getWallProps(shape as WallConfig)} />,
     window: () => <Window {...getProps(shape as WindowConfig)} />,
     box: () => <BoxShape {...getProps(shape as BoxConfig)} />,
-    coldAppliance: () => <ColdAppliance {...getProps(shape as ColdApplianceConfig)} />,
+    electricAppliance: () => <ElectricAppliance {...getProps(shape as ElectricApplianceConfig)} />,
     text: () => <Text {...getProps(shape as TextConfig)} />,
     sink: () => <Sink {...getProps(shape as SinkConfig)} />,
     stove: () => <Stove {...getProps(shape as StoveConfig)} />,
@@ -106,7 +106,7 @@ const predicatesInDrawingOrder = [
   isDoor,
   isBox,
   isToilet,
-  isColdAppliance,
+  isElectricAppliance,
   isSink,
   isStove,
   isText,

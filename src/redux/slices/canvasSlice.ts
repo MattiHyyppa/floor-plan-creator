@@ -10,7 +10,7 @@ import type {
   DoorConfig,
   WindowConfig,
   BoxConfig,
-  ColdApplianceConfig,
+  ElectricApplianceConfig,
   TextConfig,
   SinkConfig,
   StoveConfig,
@@ -212,10 +212,10 @@ export const canvasSlice = createSlice({
       });
     },
 
-    addColdAppliance: (state) => {
-      const shape: ColdApplianceConfig = {
+    addElectricAppliance: (state) => {
+      const shape: ElectricApplianceConfig = {
         id: uuidv4(),
-        shapeName: 'coldAppliance',
+        shapeName: 'electricAppliance',
         x: 75,
         y: 75,
         rotation: 0,
@@ -428,7 +428,7 @@ export const {
   addWall,
   addWindow,
   addBox,
-  addColdAppliance,
+  addElectricAppliance,
   addText,
   addSink,
   addStove,

@@ -6,21 +6,21 @@ import { useTranslation } from 'react-i18next';
 import BlackButton from '../BlackButton';
 import NumberFormControl from './NumberFormControl';
 import SwitchFormControl from './SwitchFormControl';
-import type { ColdApplianceConfig } from '../../types';
+import type { ElectricApplianceConfig } from '../../types';
 import { pixelsToMeters, round, metersToPixels } from '../../utils';
 import { useAppDispatch } from '../../hooks';
 import { updateShape, deleteShape } from '../../redux/slices/canvasSlice';
-import coldApplianceSchema from '../../schema/coldAppliance';
+import electricApplianceSchema from '../../schema/electricAppliance';
 
-const validationSchema = coldApplianceSchema.pick(['width', 'depth']).shape({
+const validationSchema = electricApplianceSchema.pick(['width', 'depth']).shape({
   disabled: Yup.boolean().required(),
 });
 
-interface ColdApplianceFormProps {
-  shape: ColdApplianceConfig;
+interface ElectricApplianceFormProps {
+  shape: ElectricApplianceConfig;
 }
 
-const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
+const ElectricApplianceForm = ({ shape }: ElectricApplianceFormProps) => {
   const { t } = useTranslation();
   const dispatch = useAppDispatch();
   const decimals = 2;
@@ -31,7 +31,7 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
     disabled: !shape.draggable,
   };
 
-  const updateRedux = (newAttrs: Partial<ColdApplianceConfig>) => {
+  const updateRedux = (newAttrs: Partial<ElectricApplianceConfig>) => {
     dispatch(updateShape({ id: shape.id, newAttrs }));
   };
 
@@ -44,7 +44,7 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={() => void(0)}>
       <Form>
         <NumberFormControl
-          id="coldApplianceWidth"
+          id="electricApplianceWidth"
           name="width"
           label={t('forms.width')}
           transformedValue={pixelsToMeters(shape.width)}
@@ -53,7 +53,7 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
           {...commonNumberFormProps}
         />
         <NumberFormControl
-          id="coldApplianceDepth"
+          id="electricApplianceDepth"
           name="depth"
           label={t('forms.depth')}
           transformedValue={pixelsToMeters(shape.depth)}
@@ -81,4 +81,4 @@ const ColdApplianceForm = ({ shape }: ColdApplianceFormProps) => {
   );
 };
 
-export default ColdApplianceForm;
+export default ElectricApplianceForm;

@@ -2,18 +2,18 @@ import { useEffect, useRef } from 'react';
 import Konva from 'konva';
 import { Rect, Transformer, Group, Shape } from 'react-konva';
 
-import type { ColdApplianceConfig } from '../../types';
+import type { ElectricApplianceConfig } from '../../types';
 import theme from '../../utils/shapeTheme';
 
-export interface ColdApplianceProps {
-  shape: ColdApplianceConfig;
+export interface ElectricApplianceProps {
+  shape: ElectricApplianceConfig;
   isSelected?: boolean;
 
-  onChange?: (newAttrs: ColdApplianceConfig) => void;
+  onChange?: (newAttrs: ElectricApplianceConfig) => void;
   onSelect?: (e: Konva.KonvaEventObject<MouseEvent>) => void;
 }
 
-const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
+const ElectricAppliance = (props: ElectricApplianceProps): JSX.Element => {
   const groupRef = useRef<Konva.Group>(null);
   const transformerRef = useRef<Konva.Transformer>(null);
 
@@ -110,4 +110,4 @@ const ColdAppliance = (props: ColdApplianceProps): JSX.Element => {
   );
 };
 
-export default ColdAppliance;
+export default ElectricAppliance;

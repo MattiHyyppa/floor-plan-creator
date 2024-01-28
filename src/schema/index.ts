@@ -4,7 +4,7 @@ import lShapedHouseSchema from './lShapedHouse';
 import wallSchema from './wall';
 import windowSchema from './window';
 import boxSchema from './box';
-import coldApplianceSchema from './coldAppliance';
+import electricApplianceSchema from './electricAppliance';
 import textSchema from './text';
 import sinkSchema from './sink';
 import stoveSchema from './stove';
@@ -17,7 +17,7 @@ export const shapeToSchema = {
   wall: wallSchema,
   window: windowSchema,
   box: boxSchema,
-  coldAppliance: coldApplianceSchema,
+  electricAppliance: electricApplianceSchema,
   text: textSchema,
   sink: sinkSchema,
   stove: stoveSchema,
