@@ -22,6 +22,7 @@
     "width": "Width",
     "height": "Height",
     "depth": "Depth",
+    "length": "Length",
     "disableEditing": "Disable editing",
     "deleteObject": "Delete object",
     "text": "Text",

@@ -45,7 +45,7 @@ const TapeMeasureForm = ({ shape }: TapeMeasureFormProps) => {
         <NumberFormControl
           id="tapeMeasureWidth"
           name="width"
-          label={t('forms.width')}
+          label={t('forms.length')}
           transformedValue={pixelsToMeters(shape.width)}
           updateRedux={(value) => updateRedux({ width: metersToPixels(value) })}
           mb={3}
