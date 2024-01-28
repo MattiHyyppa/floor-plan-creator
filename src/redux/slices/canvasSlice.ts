@@ -14,6 +14,7 @@ import type {
   TextConfig,
   SinkConfig,
   StoveConfig,
+  ToiletConfig,
 } from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
@@ -291,6 +292,26 @@ export const canvasSlice = createSlice({
       });
     },
 
+    addToilet: (state) => {
+      const shape: ToiletConfig = {
+        id: uuidv4(),
+        shapeName: 'toilet',
+        x: 75,
+        y: 75,
+        width: cmToPixels(36),
+        depth: cmToPixels(65),
+        rotation: 0,
+        draggable: true,
+      };
+
+      state.shapes.push(shape);
+      addToHistory(state, {
+        operation: 'add',
+        current: shape,
+        index: state.shapes.length - 1,
+      });
+    },
+
     deleteShape: (state, action: PayloadAction<{ id: string }>) => {
       const indexToDelete = state.shapes.findIndex(shape => shape.id === action.payload.id);
 
@@ -411,6 +432,7 @@ export const {
   addText,
   addSink,
   addStove,
+  addToilet,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

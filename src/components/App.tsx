@@ -1,6 +1,5 @@
 import { Box } from '@chakra-ui/react';
 
-import FullScreen from './FullScreen';
 import Door from './Shapes/Door';
 import RectangleHouse from './Shapes/RectangleHouse';
 import LShapedHouse from './Shapes/LShapedHouse';
@@ -12,6 +11,9 @@ import ColdAppliance from './Shapes/ColdAppliance';
 import Text from './Shapes/Text';
 import Sink from './Shapes/Sink';
 import Stove from './Shapes/Stove';
+import Toilet from './Shapes/Toilet';
+
+import FullScreen from './FullScreen';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
 import { useWindowSize, useAppDispatch, useAppSelector } from '../hooks';
 import type {
@@ -26,6 +28,7 @@ import type {
   TextConfig,
   SinkConfig,
   StoveConfig,
+  ToiletConfig,
 } from '../types';
 import {
   isRectangleHouse,
@@ -38,6 +41,7 @@ import {
   isText,
   isSink,
   isStove,
+  isToilet,
 } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
@@ -87,6 +91,7 @@ const mapShapeToComponent = (
     text: () => <Text {...getProps(shape as TextConfig)} />,
     sink: () => <Sink {...getProps(shape as SinkConfig)} />,
     stove: () => <Stove {...getProps(shape as StoveConfig)} />,
+    toilet: () => <Toilet {...getProps(shape as ToiletConfig)} />,
   };
 
   return options[shape.shapeName];
@@ -100,10 +105,11 @@ const predicatesInDrawingOrder = [
   isWindow,
   isDoor,
   isBox,
+  isToilet,
   isColdAppliance,
-  isText,
   isSink,
   isStove,
+  isText,
 ];
 
 

@@ -8,6 +8,7 @@ import coldApplianceSchema from './coldAppliance';
 import textSchema from './text';
 import sinkSchema from './sink';
 import stoveSchema from './stove';
+import toiletSchema from './toilet';
 
 export const shapeToSchema = {
   door: doorSchema,
@@ -20,4 +21,5 @@ export const shapeToSchema = {
   text: textSchema,
   sink: sinkSchema,
   stove: stoveSchema,
+  toilet: toiletSchema,
 };

@@ -20,6 +20,7 @@ import {
   addText,
   addSink,
   addStove,
+  addToilet,
 } from '../redux/slices/canvasSlice';
 import ImageWithText from './ImageWithText';
 import type { ImageWithTextProps } from './ImageWithText';
@@ -35,6 +36,7 @@ import coldApplianceImage from '../assets/images/cold-appliance.png';
 import textImage from '../assets/images/text.png';
 import sinkImage from '../assets/images/sink.png';
 import stoveImage from '../assets/images/stove.png';
+import toiletImage from '../assets/images/toilet.png';
 
 const getHouseShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps[] => {
   return [
@@ -57,13 +59,13 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
   return [
     {
       text: t('shapes.exteriorDoor'),
-      width: '60px',
+      width: '52px',
       src: exteriorDoorImage,
       addShape: () => dispatch(addExteriorDoor()),
     },
     {
       text: t('shapes.interiorDoor'),
-      width: '60px',
+      width: '52px',
       src: interiorDoorImage,
       addShape: () => dispatch(addInteriorDoor()),
     },
@@ -110,6 +112,13 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
       width: '40px',
       src: stoveImage,
       addShape: () => dispatch(addStove()),
+      mb: 1,
+    },
+    {
+      text: t('shapes.toilet'),
+      width: '28px',
+      src: toiletImage,
+      addShape: () => dispatch(addToilet()),
       mb: 1,
     },
   ];
