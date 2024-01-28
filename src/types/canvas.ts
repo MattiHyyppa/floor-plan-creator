@@ -10,6 +10,7 @@ import type {
   SinkConfig,
   StoveConfig,
   ToiletConfig,
+  TapeMeasureConfig,
 } from './shapes';
 
 export type CustomShapeConfig =
@@ -23,7 +24,8 @@ export type CustomShapeConfig =
   | TextConfig
   | SinkConfig
   | StoveConfig
-  | ToiletConfig;
+  | ToiletConfig
+  | TapeMeasureConfig;
 
 export const isDoor = (shape: CustomShapeConfig): shape is DoorConfig => {
   return (shape as DoorConfig).shapeName === 'door';
@@ -67,6 +69,10 @@ export const isStove = (shape: CustomShapeConfig): shape is StoveConfig => {
 
 export const isToilet = (shape: CustomShapeConfig): shape is ToiletConfig => {
   return (shape as ToiletConfig).shapeName === 'toilet';
+};
+
+export const isTapeMeasure = (shape: CustomShapeConfig): shape is TapeMeasureConfig => {
+  return (shape as TapeMeasureConfig).shapeName === 'tapeMeasure';
 };
 
 export type CanvasUpdate =

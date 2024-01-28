@@ -53,3 +53,12 @@ export const assertNever = (value: never): never => {
     `Exhaustive type checking not done for value: ${JSON.stringify(value)}`
   );
 };
+
+export const range = (start: number, end: number, step = 1): number[] => {
+  if (start > end) {
+    return [];
+  }
+
+  const howMany = Math.ceil((end - start) / step);
+  return Array(howMany).fill(0).map((_, idx) => start + idx * step);
+};

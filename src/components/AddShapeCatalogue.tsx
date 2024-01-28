@@ -21,6 +21,7 @@ import {
   addSink,
   addStove,
   addToilet,
+  addTapeMeasure,
 } from '../redux/slices/canvasSlice';
 import ImageWithText from './ImageWithText';
 import type { ImageWithTextProps } from './ImageWithText';
@@ -37,6 +38,7 @@ import textImage from '../assets/images/text.png';
 import sinkImage from '../assets/images/sink.png';
 import stoveImage from '../assets/images/stove.png';
 import toiletImage from '../assets/images/toilet.png';
+import tapeMeasureImage from '../assets/images/tape-measure.png';
 
 const getHouseShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps[] => {
   return [
@@ -120,6 +122,13 @@ const getOtherShapes = (dispatch: AppDispatch, t: TFunction): ImageWithTextProps
       src: toiletImage,
       addShape: () => dispatch(addToilet()),
       mb: 1,
+    },
+    {
+      text: t('shapes.tapeMeasure'),
+      width: '70px',
+      src: tapeMeasureImage,
+      addShape: () => dispatch(addTapeMeasure()),
+      mb: 2,
     },
   ];
 };

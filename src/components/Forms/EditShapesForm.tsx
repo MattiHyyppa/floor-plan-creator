@@ -19,6 +19,7 @@ import TextForm from './TextForm';
 import SinkForm from './SinkForm';
 import StoveForm from './StoveForm';
 import ToiletForm from './ToiletForm';
+import TapeMeasureForm from './TapeMeasureForm';
 
 import { useAppSelector } from '../../hooks';
 import type {
@@ -34,6 +35,7 @@ import type {
   SinkConfig,
   StoveConfig,
   ToiletConfig,
+  TapeMeasureConfig,
 } from '../../types';
 
 const shapeToFormComponent = (shape: CustomShapeConfig) => {
@@ -49,6 +51,7 @@ const shapeToFormComponent = (shape: CustomShapeConfig) => {
     sink: () => <SinkForm shape={shape as SinkConfig} />,
     stove: () => <StoveForm shape={shape as StoveConfig} />,
     toilet: () => <ToiletForm shape={shape as ToiletConfig} />,
+    tapeMeasure: () => <TapeMeasureForm shape={shape as TapeMeasureConfig} />,
   };
 
   return options[shape.shapeName];

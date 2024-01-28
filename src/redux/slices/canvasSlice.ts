@@ -15,6 +15,7 @@ import type {
   SinkConfig,
   StoveConfig,
   ToiletConfig,
+  TapeMeasureConfig,
 } from '../../types';
 import { assertNever, cmToPixels } from '../../utils';
 
@@ -312,6 +313,25 @@ export const canvasSlice = createSlice({
       });
     },
 
+    addTapeMeasure: (state) => {
+      const shape: TapeMeasureConfig = {
+        id: uuidv4(),
+        shapeName: 'tapeMeasure',
+        x: 75,
+        y: 75,
+        width: cmToPixels(500),
+        rotation: 0,
+        draggable: true,
+      };
+
+      state.shapes.push(shape);
+      addToHistory(state, {
+        operation: 'add',
+        current: shape,
+        index: state.shapes.length - 1,
+      });
+    },
+
     deleteShape: (state, action: PayloadAction<{ id: string }>) => {
       const indexToDelete = state.shapes.findIndex(shape => shape.id === action.payload.id);
 
@@ -433,6 +453,7 @@ export const {
   addSink,
   addStove,
   addToilet,
+  addTapeMeasure,
 } = canvasSlice.actions;
 
 export default canvasSlice.reducer;

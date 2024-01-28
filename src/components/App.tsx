@@ -12,6 +12,7 @@ import Text from './Shapes/Text';
 import Sink from './Shapes/Sink';
 import Stove from './Shapes/Stove';
 import Toilet from './Shapes/Toilet';
+import TapeMeasure from './Shapes/TapeMeasure';
 
 import FullScreen from './FullScreen';
 import { handleLineGuidesUpdateOnResize } from '../utils/snappingStage';
@@ -29,6 +30,7 @@ import type {
   SinkConfig,
   StoveConfig,
   ToiletConfig,
+  TapeMeasureConfig,
 } from '../types';
 import {
   isRectangleHouse,
@@ -42,6 +44,7 @@ import {
   isSink,
   isStove,
   isToilet,
+  isTapeMeasure,
 } from '../types';
 import { setSelectedShape } from '../redux/slices/selectedIdSlice';
 import { updateShape } from '../redux/slices/canvasSlice';
@@ -92,6 +95,7 @@ const mapShapeToComponent = (
     sink: () => <Sink {...getProps(shape as SinkConfig)} />,
     stove: () => <Stove {...getProps(shape as StoveConfig)} />,
     toilet: () => <Toilet {...getProps(shape as ToiletConfig)} />,
+    tapeMeasure: () => <TapeMeasure {...getProps(shape as TapeMeasureConfig)} />,
   };
 
   return options[shape.shapeName];
@@ -109,6 +113,7 @@ const predicatesInDrawingOrder = [
   isElectricAppliance,
   isSink,
   isStove,
+  isTapeMeasure,
   isText,
 ];
 
