@@ -1,46 +1,58 @@
-# Getting Started with Create React App
+# Floor plan creator
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The purpose of this project was to develop a frontend application for designing and drawing 2D floor plans for a house. The application was developed with TypeScript, React and Konva.js.
 
-## Available Scripts
+![Screenshot of the application](./images/screenshot.png)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+The application includes the following features:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- [x] Drawing an L-shaped or a rectangular house on the canvas.
+- [x] Adding other shapes, including interior and exterior doors, walls, windows and kitchen appliances.
+- [x] Resizing and rotating the shapes added on the canvas.
+- [x] Snapping effect when a shape is being moved close to another shape to help moving the shape next to the other shape.
+- [x] Zooming in and out the canvas using buttons.
+- [x] Undo and redo buttons to undo/redo previous canvas operations.
+- [x] Exporting a floor plan project into a JSON file.
+- [x] Importing an existing floor plan project from a JSON file.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+## Quickstart
 
-### `npm test`
+- Clone the repository from GitHub.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- `cd` to the project directory.
 
-### `npm run build`
+- Install [Node.js](https://nodejs.org/en/download). This project was developed with the Node.js version `18.13.0`.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+- Install dependencies by running the command:
+    ```
+    npm install
+    ```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- For running end-to-end tests using Playwright, you can install the default browsers with the command:
+    ```
+    npx playwright install
+    ```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- Run the application with the command:
+    ```
+    npm run dev
+    ```
+    The application will be available on http://localhost:5173.
 
-### `npm run eject`
+## Running end-to-end tests
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+This project contains some end-to-end tests which have been implemented using [Playwright](https://playwright.dev/). The tests can be run by launching the UI Mode with the command:
+```
+npm run test:e2e
+```
+Then, you can run all the tests by clicking the triangle icon in the sidebar. Notice that to be able to run e2e tests, you need to install the default browsers as instructed in the [quickstart section](#quickstart).
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Deployment
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+To build the application for deployment, run the following command:
+```
+npm run build
+```
+This command will produce an application bundle which can be served over a static hosting service. The application bundle will be outputted to a `dist` directory.
