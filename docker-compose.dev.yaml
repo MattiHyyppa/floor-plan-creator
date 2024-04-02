@@ -1,0 +1,12 @@
+version: '3.7'
+
+services:
+  frontend-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./src:/usr/src/app/src
+      - ./e2e:/usr/src/app/e2e
+    ports:
+      - 5173:5173

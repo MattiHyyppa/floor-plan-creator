@@ -23,6 +23,25 @@ The application includes the following features:
 
 - `cd` to the project directory.
 
+### With Docker
+
+Docker and Docker Compose can be utilized for quickly setting up a development environment for the application.
+
+- Build the application by running the command:
+    ```
+    docker compose -f docker-compose.dev.yaml build
+    ```
+
+- Run the application with the command:
+    ```
+    docker compose -f docker-compose.dev.yaml up
+    ```
+    The application will be available on http://localhost:5173.
+
+### Without Docker
+
+Alternatively, you can install the dependencies and run the application without Docker by following the steps below.
+
 - Install [Node.js](https://nodejs.org/en/download). This project was developed with the Node.js version `18.13.0`.
 
 - Install dependencies by running the command:
@@ -54,6 +73,14 @@ You can also run the E2E tests in headless mode, which is useful in CI, for exam
 npm run test:e2e-ci
 ```
 This command also requires that you have installed the supported browsers as described in the [quickstart section](#quickstart).
+
+### With Docker
+
+You can also run the E2E tests in headless mode using Docker and Docker Compose. E2E tests can be run using the following command:
+
+```
+docker compose -f docker-compose.dev.yaml run frontend-dev npm run test:e2e-ci
+```
 
 ## Deployment
 
