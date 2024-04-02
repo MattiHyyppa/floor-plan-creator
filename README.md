@@ -30,7 +30,7 @@ The application includes the following features:
     npm install
     ```
 
-- For running end-to-end tests using Playwright, you can install the default browsers with the command:
+- For running end-to-end tests using Playwright, you can install the supported browsers with the command:
     ```
     npx playwright install
     ```
@@ -47,7 +47,13 @@ This project contains some end-to-end tests which have been implemented using [P
 ```
 npm run test:e2e
 ```
-Then, you can run all the tests by clicking the triangle icon in the sidebar. Notice that to be able to run e2e tests, you need to install the default browsers as instructed in the [quickstart section](#quickstart).
+Then, you can run all the tests by clicking the triangle icon in the sidebar. Notice that to be able to run E2E tests, you need to install the supported browsers as instructed in the [quickstart section](#quickstart).
+
+You can also run the E2E tests in headless mode, which is useful in CI, for example. To run the tests in headless mode, use the command:
+```
+npm run test:e2e-ci
+```
+This command also requires that you have installed the supported browsers as described in the [quickstart section](#quickstart).
 
 ## Deployment
 
