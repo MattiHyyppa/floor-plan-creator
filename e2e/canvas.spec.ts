@@ -156,6 +156,8 @@ test('resizing a house works correctly', async ({ page }) => {
 
   await page.mouse.click(xCorner + 1, yCorner + 1);  // Select the shape
 
+  await expect(page.getByLabel('Exterior width')).toHaveValue(initialWidthMeters.toString());
+
   // Move the mouse to the position of the transformer's anchor at the right edge of the shape.
   // Resize the shape using the anchor.
   await page.mouse.move(xCorner + initialWidthPixels, yCorner + initialHeightPixels / 2);
