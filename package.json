@@ -9,7 +9,8 @@
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
-    "test:e2e": "npx playwright test --ui"
+    "test:e2e": "npx playwright test --ui",
+    "test:e2e-ci": "npx playwright test --reporter=line"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.9",
