@@ -8,7 +8,12 @@ import ZoomButtons from './ZoomButtons';
 import UndoRedoButtons from './UndoRedoButtons';
 import LineGuide from './Shapes/LineGuide';
 import { handleLineGuidesUpdate } from '../utils/snappingStage';
-import { useWindowSize, useAppSelector, useAppDispatch } from '../hooks';
+import {
+  useWindowSize,
+  useAppSelector,
+  useAppDispatch,
+  useArrowKeyEvents,
+} from '../hooks';
 import { setVerticalLineGuide, setHorizontalLineGuide } from '../redux/slices/lineGuidesSlice';
 import { setSelectedId } from '../redux/slices/selectedIdSlice';
 import { undoShapeOperation, redoShapeOperation, } from '../redux/slices/canvasSlice';
@@ -38,6 +43,8 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   const allShapes = canvasState.shapes;
 
   const dispatch = useAppDispatch();
+
+  useArrowKeyEvents();
 
   const removeLineGuides = (): void => {
     horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
