@@ -11,7 +11,8 @@ The application includes the following features:
 - [x] Drawing an L-shaped or a rectangular house on the canvas.
 - [x] Adding other shapes, including interior and exterior doors, walls, windows and kitchen appliances.
 - [x] Resizing and rotating the shapes added on the canvas.
-- [x] Snapping effect when a shape is being moved close to another shape to help moving the shape next to the other shape.
+- [x] Moving the shapes either by dragging a shape or by using the arrow keys.
+- [x] Snapping effect when a shape is being dragged close to another shape to help moving the shape exactly next to the other shape.
 - [x] Zooming in and out the canvas using buttons.
 - [x] Undo and redo buttons to undo/redo previous canvas operations.
 - [x] Exporting a floor plan project into a JSON file.
