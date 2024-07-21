@@ -74,6 +74,9 @@ export const useArrowKeyEvents = () => {
         xNew += DELTA;
         event.preventDefault();
         break;
+      default:
+        // Don't trigger unnecessary state update in the case of some other key
+        return;
       }
 
       dispatch(updateShape({
