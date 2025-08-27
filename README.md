@@ -63,7 +63,11 @@ Alternatively, you can install the dependencies and run the application without 
 
 ## Running end-to-end tests
 
-This project contains some end-to-end tests which have been implemented using [Playwright](https://playwright.dev/). The tests can be run by launching the UI Mode with the command:
+This project contains some end-to-end tests which have been implemented using [Playwright](https://playwright.dev/).
+
+>NOTE: If you encounter problems when running the tests, check the [know issues section](#known-issues).
+
+The tests can be run by launching the UI Mode with the command:
 ```
 npm run test:e2e
 ```
@@ -80,7 +84,7 @@ This command also requires that you have installed the supported browsers as des
 You can also run the E2E tests in headless mode using Docker and Docker Compose. E2E tests can be run using the following command:
 
 ```
-docker compose -f docker-compose.dev.yaml run frontend-dev npm run test:e2e-ci
+docker compose -f docker-compose.dev.yaml run --rm frontend-dev npm run test:e2e-ci
 ```
 
 ## Deployment
@@ -90,3 +94,7 @@ To build the application for deployment, run the following command:
 npm run build
 ```
 This command will produce an application bundle which can be served over a static hosting service. The application bundle will be outputted to a `dist` directory.
+
+## Known issues
+
+- Some of the implemented end-to-end tests might be flaky and, therefore, if some of the tests fail, simply running them again could result in all tests being passed. This might result from timing issues and from the way the tests have been implemented because interacting with the shapes within a canvas does not work the same way as interacting with DOM elements (the contents of a canvas is just a bitmap and doesn't provide information about any drawn objects). Therefore, the tests rely on the assumption that the initial position of the shapes drawn on the canvas are known. This way, we can use mouse click events at those known positions and see how the user interface responds. For example, to test the dimensions of a shape added on the canvas, we could click the corner points of the shape one at a time and then see whether the shape was selected or not by checking if a menu for editing the shape become visible or not. There could be more elegant ways of writing the tests but this approach was selected because it was simple enough to get quickly started with experimenting with Playwright for this hobby project.
