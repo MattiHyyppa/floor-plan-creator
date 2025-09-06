@@ -43,7 +43,7 @@ Docker and Docker Compose can be utilized for quickly setting up a development e
 
 Alternatively, you can install the dependencies and run the application without Docker by following the steps below.
 
-- Install [Node.js](https://nodejs.org/en/download). This project was developed with the Node.js version `18.13.0`.
+- Install [Node.js](https://nodejs.org/en/download). This project was developed with the Node.js version `22.18.0`.
 
 - Install dependencies by running the command:
     ```
@@ -65,7 +65,7 @@ Alternatively, you can install the dependencies and run the application without 
 
 This project contains some end-to-end tests which have been implemented using [Playwright](https://playwright.dev/).
 
->NOTE: If you encounter problems when running the tests, check the [know issues section](#known-issues).
+>NOTE: If you encounter problems when running the tests, check the [known issues section](#known-issues).
 
 The tests can be run by launching the UI Mode with the command:
 ```
