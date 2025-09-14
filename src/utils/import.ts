@@ -4,12 +4,20 @@ import type { AppDispatch } from '../redux';
 import { shapeToSchema } from '../schema';
 
 export const loadShapesFromFile = async (fileContent: string, dispatch: AppDispatch): Promise<{ status: 'success' | 'error' }> => {
-  const validatedShapes = await validateShapesJSON(JSON.parse(fileContent));
-  if (!validatedShapes) {
+  try {
+    const parsedJSON = JSON.parse(fileContent);
+    const validatedShapes = await validateShapesJSON(parsedJSON);
+
+    if (!validatedShapes) {
+      return { status: 'error' };
+    }
+
+    dispatch(setAllShapes(validatedShapes));
+    return { status: 'success' };
+  } catch (error) {
+    console.log('JSON parsing failed:', error);
     return { status: 'error' };
   }
-  dispatch(setAllShapes(validatedShapes));
-  return { status: 'success' };
 };
 
 
