@@ -36,7 +36,7 @@ const ElectricAppliance = (props: ElectricApplianceProps): JSX.Element => {
         width={shape.width}
         height={shape.depth}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: e.target.x(),
             y: e.target.y(),
@@ -54,7 +54,7 @@ const ElectricAppliance = (props: ElectricApplianceProps): JSX.Element => {
           node.scaleX(1);
           node.scaleY(1);
 
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),

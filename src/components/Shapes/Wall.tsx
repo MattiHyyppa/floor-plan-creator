@@ -29,8 +29,12 @@ const Wall = (props: WallProps): JSX.Element => {
   const { isSelected, onSelect, onChange, shape, handleLineGuidesOnResize } = props;
 
   const removeLineGuides = (): void => {
-    horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
-    verticalLineGuide && dispatch(setVerticalLineGuide(null));
+    if (horizontalLineGuide) {
+      dispatch(setHorizontalLineGuide(null));
+    }
+    if (verticalLineGuide) {
+      dispatch(setVerticalLineGuide(null));
+    }
   };
 
   useEffect(() => {
@@ -54,7 +58,7 @@ const Wall = (props: WallProps): JSX.Element => {
         onClick={onSelect}
         onTap={onSelect}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             // previous state
             ...shape,
             // transformed state
@@ -74,7 +78,7 @@ const Wall = (props: WallProps): JSX.Element => {
           node.scaleX(1);
           node.scaleY(1);
 
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),

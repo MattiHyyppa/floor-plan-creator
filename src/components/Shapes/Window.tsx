@@ -44,7 +44,7 @@ const Window = (props: WindowProps): JSX.Element => {
         strokeWidth={theme.strokeWidth}
         fill={theme.floorColor}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             // previous state
             ...shape,
             // transformed state
@@ -64,7 +64,7 @@ const Window = (props: WindowProps): JSX.Element => {
           node.scaleX(1);
           node.scaleY(1);
 
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),

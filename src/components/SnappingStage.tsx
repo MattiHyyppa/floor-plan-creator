@@ -47,8 +47,12 @@ const SnappingStage = (props: SnappingStageProps): JSX.Element => {
   useArrowKeyEvents();
 
   const removeLineGuides = (): void => {
-    horizontalLineGuide && dispatch(setHorizontalLineGuide(null));
-    verticalLineGuide && dispatch(setVerticalLineGuide(null));
+    if (horizontalLineGuide) {
+      dispatch(setHorizontalLineGuide(null));
+    }
+    if (verticalLineGuide) {
+      dispatch(setVerticalLineGuide(null));
+    }
   };
 
   const deselectShape = <EventType,>(e: Konva.KonvaEventObject<EventType>) => {

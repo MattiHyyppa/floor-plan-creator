@@ -36,7 +36,7 @@ const Text = (props: TextProps): JSX.Element => {
         onClick={onSelect}
         onTap={onSelect}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: e.target.x(),
             y: e.target.y(),
@@ -47,7 +47,7 @@ const Text = (props: TextProps): JSX.Element => {
           if (!node) {
             return;
           }
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),
