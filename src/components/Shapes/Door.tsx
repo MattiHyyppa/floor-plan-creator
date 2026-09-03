@@ -61,7 +61,7 @@ const Door = ({ shape, onChange, onSelect, isSelected }: DoorProps): JSX.Element
         width={doorWidth}
         height={doorWidth + additionalHeight}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             // previous state
             ...shape,
             // transformed state
@@ -80,7 +80,7 @@ const Door = ({ shape, onChange, onSelect, isSelected }: DoorProps): JSX.Element
           node.scaleX(1);
           node.scaleY(1);
 
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),

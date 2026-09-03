@@ -36,7 +36,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
         width={shape.exteriorWidth}
         height={shape.exteriorHeight}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             // previous state
             ...shape,
             // transformed state
@@ -56,7 +56,7 @@ const RectangleHouse = (props: RectangleHouseProps): JSX.Element => {
           node.scaleX(1);
           node.scaleY(1);
 
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),

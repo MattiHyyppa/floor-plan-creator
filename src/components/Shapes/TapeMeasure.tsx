@@ -50,7 +50,7 @@ const TapeMeasure = (props: TapeMeasureProps): JSX.Element => {
         width={shape.width}
         height={height}
         onDragEnd={(e) => {
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: e.target.x(),
             y: e.target.y(),
@@ -63,7 +63,7 @@ const TapeMeasure = (props: TapeMeasureProps): JSX.Element => {
           }
           const scaleX = node.scaleX();
           node.scaleX(1);
-          onChange && onChange({
+          onChange?.({
             ...shape,
             x: node.x(),
             y: node.y(),
