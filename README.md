@@ -24,7 +24,7 @@ The application includes the following features:
 
 - `cd` to the project directory.
 
-### With Docker
+### Running with Docker
 
 Docker and Docker Compose can be utilized for quickly setting up a development environment for the application.
 
@@ -39,7 +39,7 @@ Docker and Docker Compose can be utilized for quickly setting up a development e
     ```
     The application will be available on http://localhost:5173.
 
-### Without Docker
+### Running without Docker
 
 Alternatively, you can install the dependencies and run the application without Docker by following the steps below.
 
@@ -65,7 +65,8 @@ Alternatively, you can install the dependencies and run the application without 
 
 This project contains some end-to-end tests which have been implemented using [Playwright](https://playwright.dev/).
 
->NOTE: If you encounter problems when running the tests, check the [known issues section](#known-issues).
+> [!NOTE]
+> If you encounter problems when running the tests, check the [known issues section](#known-issues).
 
 The tests can be run by launching the UI Mode with the command:
 ```
@@ -79,7 +80,7 @@ npm run test:e2e-ci
 ```
 This command also requires that you have installed the supported browsers as described in the [quickstart section](#quickstart).
 
-### With Docker
+### Running tests with Docker
 
 You can also run the E2E tests in headless mode using Docker and Docker Compose. E2E tests can be run using the following command:
 
